@@ -10,41 +10,44 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="客户姓名" prop="phone">
+      <el-form-item label="电话" prop="phone">
         <el-input
           v-model="queryParams.phone"
-          placeholder="请输入客户姓名"
+          placeholder="请输入电话"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="客户姓名" prop="companyId">
-        <el-input
-          v-model="queryParams.companyId"
-          placeholder="请输入客户姓名"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="城市" prop="companyId">
+        <el-select v-model="queryParams.companyId" placeholder="请选择城市" clearable size="small">
+          <el-option
+            v-for="dict in companyIdOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="客户姓名" prop="province">
-        <el-input
-          v-model="queryParams.province"
-          placeholder="请输入客户姓名"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="省" prop="province">
+        <el-select v-model="queryParams.province" placeholder="请选择省" clearable size="small">
+          <el-option
+            v-for="dict in provinceOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="客户姓名" prop="city">
-        <el-input
-          v-model="queryParams.city"
-          placeholder="请输入客户姓名"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="城市" prop="city">
+        <el-select v-model="queryParams.city" placeholder="请选择城市" clearable size="small">
+          <el-option
+            v-for="dict in cityOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="线索来源" prop="resource">
         <el-input
@@ -64,21 +67,12 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="是否线索变为客户(0：否，1：是)" prop="isCustomer">
-        <el-input
-          v-model="queryParams.isCustomer"
-          placeholder="请输入是否线索变为客户(0：否，1：是)"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="是否线索变为客户(0：否，1：是)" prop="createTime">
+      <el-form-item label="创建时间" prop="createTime">
         <el-date-picker clearable size="small" style="width: 200px"
           v-model="queryParams.createTime"
           type="date"
           value-format="yyyy-MM-dd"
-          placeholder="选择是否线索变为客户(0：否，1：是)">
+          placeholder="选择创建时间">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="最新跟进时间" prop="updateTime">
@@ -139,16 +133,15 @@
 
     <el-table v-loading="loading" :data="xiansuoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="最新跟进时间" align="center" prop="id" />
+      <el-table-column label="客户id" align="center" prop="id" />
       <el-table-column label="客户姓名" align="center" prop="name" />
-      <el-table-column label="客户姓名" align="center" prop="phone" />
-      <el-table-column label="客户姓名" align="center" prop="companyId" />
-      <el-table-column label="客户姓名" align="center" prop="province" />
-      <el-table-column label="客户姓名" align="center" prop="city" />
-      <el-table-column label="线索来源" align="center" prop="resource" />
+      <el-table-column label="电话" align="center" prop="phone" />
+      <el-table-column label="城市" align="center" prop="companyId" :formatter="companyIdFormat" />
+      <el-table-column label="省" align="center" prop="province" :formatter="provinceFormat" />
+      <el-table-column label="城市" align="center" prop="city" :formatter="cityFormat" />
+      <el-table-column label="线索来源" align="center" prop="resource" :formatter="resourceFormat" />
       <el-table-column label="负责人" align="center" prop="sysUserId" />
-      <el-table-column label="是否线索变为客户(0：否，1：是)" align="center" prop="isCustomer" />
-      <el-table-column label="是否线索变为客户(0：否，1：是)" align="center" prop="createTime" width="180">
+      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
         </template>
@@ -177,7 +170,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -192,26 +185,44 @@
         <el-form-item label="客户姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入客户姓名" />
         </el-form-item>
-        <el-form-item label="客户姓名" prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入客户姓名" />
+        <el-form-item label="电话" prop="phone">
+          <el-input v-model="form.phone" placeholder="请输入电话" />
         </el-form-item>
-        <el-form-item label="客户姓名" prop="companyId">
-          <el-input v-model="form.companyId" placeholder="请输入客户姓名" />
+        <el-form-item label="城市" prop="companyId">
+          <el-select v-model="form.companyId" placeholder="请选择城市">
+            <el-option
+              v-for="dict in companyIdOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="parseInt(dict.dictValue)"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="客户姓名" prop="province">
-          <el-input v-model="form.province" placeholder="请输入客户姓名" />
+        <el-form-item label="省" prop="province">
+          <el-select v-model="form.province" placeholder="请选择省">
+            <el-option
+              v-for="dict in provinceOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="客户姓名" prop="city">
-          <el-input v-model="form.city" placeholder="请输入客户姓名" />
+        <el-form-item label="城市" prop="city">
+          <el-select v-model="form.city" placeholder="请选择城市">
+            <el-option
+              v-for="dict in cityOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="线索来源" prop="resource">
           <el-input v-model="form.resource" placeholder="请输入线索来源" />
         </el-form-item>
         <el-form-item label="负责人" prop="sysUserId">
           <el-input v-model="form.sysUserId" placeholder="请输入负责人" />
-        </el-form-item>
-        <el-form-item label="是否线索变为客户(0：否，1：是)" prop="isCustomer">
-          <el-input v-model="form.isCustomer" placeholder="请输入是否线索变为客户(0：否，1：是)" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -247,6 +258,14 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 城市字典
+      companyIdOptions: [],
+      // 省字典
+      provinceOptions: [],
+      // 城市字典
+      cityOptions: [],
+      // 线索来源字典
+      resourceOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -258,7 +277,6 @@ export default {
         city: null,
         resource: null,
         sysUserId: null,
-        isCustomer: null,
         createTime: null,
         updateTime: null
       },
@@ -270,16 +288,16 @@ export default {
           { required: true, message: "客户姓名不能为空", trigger: "blur" }
         ],
         phone: [
-          { required: true, message: "客户姓名不能为空", trigger: "blur" }
+          { required: true, message: "电话不能为空", trigger: "blur" }
         ],
         companyId: [
-          { required: true, message: "客户姓名不能为空", trigger: "blur" }
+          { required: true, message: "城市不能为空", trigger: "change" }
         ],
         province: [
-          { required: true, message: "客户姓名不能为空", trigger: "blur" }
+          { required: true, message: "省不能为空", trigger: "change" }
         ],
         city: [
-          { required: true, message: "客户姓名不能为空", trigger: "blur" }
+          { required: true, message: "城市不能为空", trigger: "change" }
         ],
         resource: [
           { required: true, message: "线索来源不能为空", trigger: "blur" }
@@ -291,7 +309,7 @@ export default {
           { required: true, message: "是否线索变为客户(0：否，1：是)不能为空", trigger: "blur" }
         ],
         createTime: [
-          { required: true, message: "是否线索变为客户(0：否，1：是)不能为空", trigger: "blur" }
+          { required: true, message: "创建时间不能为空", trigger: "blur" }
         ],
         updateTime: [
           { required: true, message: "最新跟进时间不能为空", trigger: "blur" }
@@ -301,6 +319,18 @@ export default {
   },
   created() {
     this.getList();
+    this.getDicts("sys_company").then(response => {
+      this.companyIdOptions = response.data;
+    });
+    this.getDicts("sys_province").then(response => {
+      this.provinceOptions = response.data;
+    });
+    this.getDicts("sys_company").then(response => {
+      this.cityOptions = response.data;
+    });
+    this.getDicts("sys_customer_resource").then(response => {
+      this.resourceOptions = response.data;
+    });
   },
   methods: {
     /** 查询客户线索列表 */
@@ -311,6 +341,22 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
+    },
+    // 城市字典翻译
+    companyIdFormat(row, column) {
+      return this.selectDictLabel(this.companyIdOptions, row.companyId);
+    },
+    // 省字典翻译
+    provinceFormat(row, column) {
+      return this.selectDictLabel(this.provinceOptions, row.province);
+    },
+    // 城市字典翻译
+    cityFormat(row, column) {
+      return this.selectDictLabel(this.cityOptions, row.city);
+    },
+    // 线索来源字典翻译
+    resourceFormat(row, column) {
+      return this.selectDictLabel(this.resourceOptions, row.resource);
     },
     // 取消按钮
     cancel() {
