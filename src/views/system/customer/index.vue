@@ -1,15 +1,6 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="负责人id" prop="xiansuoId">
-        <el-input
-          v-model="queryParams.xiansuoId"
-          placeholder="请输入负责人id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="客户名称" prop="name">
         <el-input
           v-model="queryParams.name"
@@ -19,54 +10,63 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="客户名称" prop="phone">
+      <el-form-item label="客户电话" prop="phone">
         <el-input
           v-model="queryParams.phone"
-          placeholder="请输入客户名称"
+          placeholder="请输入客户电话"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item label="客户等级" prop="level">
-        <el-input
-          v-model="queryParams.level"
-          placeholder="请输入客户等级"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.level" placeholder="请选择客户等级" clearable size="small">
+          <el-option
+            v-for="dict in levelOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="客户等级" prop="companyId">
-        <el-input
-          v-model="queryParams.companyId"
-          placeholder="请输入客户等级"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="公司" prop="companyId">
+        <el-select v-model="queryParams.companyId" placeholder="请选择公司" clearable size="small">
+          <el-option
+            v-for="dict in companyIdOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="客户等级" prop="province">
-        <el-input
-          v-model="queryParams.province"
-          placeholder="请输入客户等级"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="省份" prop="province">
+        <el-select v-model="queryParams.province" placeholder="请选择省份" clearable size="small">
+          <el-option
+            v-for="dict in provinceOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="客户等级" prop="city">
-        <el-input
-          v-model="queryParams.city"
-          placeholder="请输入客户等级"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="城市" prop="city">
+        <el-select v-model="queryParams.city" placeholder="请选择城市" clearable size="small">
+          <el-option
+            v-for="dict in cityOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="客户等级" prop="genjinStatus">
-        <el-select v-model="queryParams.genjinStatus" placeholder="请选择客户等级" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
+      <el-form-item label="跟进状态" prop="genjinStatus">
+        <el-select v-model="queryParams.genjinStatus" placeholder="请选择跟进状态" clearable size="small">
+          <el-option
+            v-for="dict in genjinStatusOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
         </el-select>
       </el-form-item>
       <el-form-item label="客户来源" prop="resource">
@@ -78,21 +78,21 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="负责人id" prop="sysUserId">
+      <el-form-item label="负责人" prop="sysUserId">
         <el-input
           v-model="queryParams.sysUserId"
-          placeholder="请输入负责人id"
+          placeholder="请输入负责人"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="负责人id" prop="createTime">
+      <el-form-item label="创建时间" prop="createTime">
         <el-date-picker clearable size="small" style="width: 200px"
           v-model="queryParams.createTime"
           type="date"
           value-format="yyyy-MM-dd"
-          placeholder="选择负责人id">
+          placeholder="选择创建时间">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="最新跟进时间" prop="updateTime">
@@ -154,17 +154,16 @@
     <el-table v-loading="loading" :data="customerList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="客户id" align="center" prop="id" />
-      <el-table-column label="客户id" align="center" prop="xiansuoId" />
       <el-table-column label="客户名称" align="center" prop="name" />
-      <el-table-column label="客户名称" align="center" prop="phone" />
+      <el-table-column label="客户电话" align="center" prop="phone" />
       <el-table-column label="客户等级" align="center" prop="level" :formatter="levelFormat" />
-      <el-table-column label="客户等级" align="center" prop="companyId" />
-      <el-table-column label="客户等级" align="center" prop="province" />
-      <el-table-column label="客户等级" align="center" prop="city" />
-      <el-table-column label="客户等级" align="center" prop="genjinStatus" />
-      <el-table-column label="客户来源" align="center" prop="resource" />
-      <el-table-column label="负责人id" align="center" prop="sysUserId" />
-      <el-table-column label="负责人id" align="center" prop="createTime" width="180">
+      <el-table-column label="公司" align="center" prop="companyId" :formatter="companyIdFormat" />
+      <el-table-column label="省份" align="center" prop="province" :formatter="provinceFormat" />
+      <el-table-column label="城市" align="center" prop="city" :formatter="cityFormat" />
+      <el-table-column label="跟进状态" align="center" prop="genjinStatus" :formatter="genjinStatusFormat" />
+      <el-table-column label="客户来源" align="center" prop="resource" :formatter="resourceFormat" />
+      <el-table-column label="负责人" align="center" prop="sysUserId" />
+      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
         </template>
@@ -205,37 +204,67 @@
     <!-- 添加或修改我的客户对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="最新跟进时间" prop="xiansuoId">
-          <el-input v-model="form.xiansuoId" placeholder="请输入最新跟进时间" />
-        </el-form-item>
         <el-form-item label="客户名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入客户名称" />
         </el-form-item>
-        <el-form-item label="客户名称" prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入客户名称" />
+        <el-form-item label="客户电话" prop="phone">
+          <el-input v-model="form.phone" placeholder="请输入客户电话" />
         </el-form-item>
         <el-form-item label="客户等级" prop="level">
-          <el-input v-model="form.level" placeholder="请输入客户等级" />
+          <el-select v-model="form.level" placeholder="请选择客户等级">
+            <el-option
+              v-for="dict in levelOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="parseInt(dict.dictValue)"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="客户等级" prop="companyId">
-          <el-input v-model="form.companyId" placeholder="请输入客户等级" />
+        <el-form-item label="公司" prop="companyId">
+          <el-select v-model="form.companyId" placeholder="请选择公司">
+            <el-option
+              v-for="dict in companyIdOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="parseInt(dict.dictValue)"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="客户等级" prop="province">
-          <el-input v-model="form.province" placeholder="请输入客户等级" />
+        <el-form-item label="省份" prop="province">
+          <el-select v-model="form.province" placeholder="请选择省份">
+            <el-option
+              v-for="dict in provinceOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="客户等级" prop="city">
-          <el-input v-model="form.city" placeholder="请输入客户等级" />
+        <el-form-item label="城市" prop="city">
+          <el-select v-model="form.city" placeholder="请选择城市">
+            <el-option
+              v-for="dict in cityOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="客户等级">
-          <el-radio-group v-model="form.genjinStatus">
-            <el-radio label="1">请选择字典生成</el-radio>
-          </el-radio-group>
+        <el-form-item label="跟进状态" prop="genjinStatus">
+          <el-select v-model="form.genjinStatus" placeholder="请选择跟进状态">
+            <el-option
+              v-for="dict in genjinStatusOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="parseInt(dict.dictValue)"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="客户来源" prop="resource">
           <el-input v-model="form.resource" placeholder="请输入客户来源" />
         </el-form-item>
-        <el-form-item label="负责人id" prop="sysUserId">
-          <el-input v-model="form.sysUserId" placeholder="请输入负责人id" />
+        <el-form-item label="负责人" prop="sysUserId">
+          <el-input v-model="form.sysUserId" placeholder="请输入负责人" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -273,11 +302,20 @@ export default {
       open: false,
       // 客户等级字典
       levelOptions: [],
+      // 公司字典
+      companyIdOptions: [],
+      // 省份字典
+      provinceOptions: [],
+      // 城市字典
+      cityOptions: [],
+      // 跟进状态字典
+      genjinStatusOptions: [],
+      // 客户来源字典
+      resourceOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        xiansuoId: null,
         name: null,
         phone: null,
         level: null,
@@ -301,31 +339,31 @@ export default {
           { required: true, message: "客户名称不能为空", trigger: "blur" }
         ],
         phone: [
-          { required: true, message: "客户名称不能为空", trigger: "blur" }
+          { required: true, message: "客户电话不能为空", trigger: "blur" }
         ],
         level: [
-          { required: true, message: "客户等级不能为空", trigger: "blur" }
+          { required: true, message: "客户等级不能为空", trigger: "change" }
         ],
         companyId: [
-          { required: true, message: "客户等级不能为空", trigger: "blur" }
+          { required: true, message: "公司不能为空", trigger: "change" }
         ],
         province: [
-          { required: true, message: "客户等级不能为空", trigger: "blur" }
+          { required: true, message: "省份不能为空", trigger: "change" }
         ],
         city: [
-          { required: true, message: "客户等级不能为空", trigger: "blur" }
+          { required: true, message: "城市不能为空", trigger: "change" }
         ],
         genjinStatus: [
-          { required: true, message: "客户等级不能为空", trigger: "blur" }
+          { required: true, message: "跟进状态不能为空", trigger: "change" }
         ],
         resource: [
           { required: true, message: "客户来源不能为空", trigger: "blur" }
         ],
         sysUserId: [
-          { required: true, message: "负责人id不能为空", trigger: "blur" }
+          { required: true, message: "负责人不能为空", trigger: "blur" }
         ],
         createTime: [
-          { required: true, message: "负责人id不能为空", trigger: "blur" }
+          { required: true, message: "创建时间不能为空", trigger: "blur" }
         ],
         updateTime: [
           { required: true, message: "最新跟进时间不能为空", trigger: "blur" }
@@ -337,6 +375,21 @@ export default {
     this.getList();
     this.getDicts("用户等级").then(response => {
       this.levelOptions = response.data;
+    });
+    this.getDicts("sys_company").then(response => {
+      this.companyIdOptions = response.data;
+    });
+    this.getDicts("sys_province").then(response => {
+      this.provinceOptions = response.data;
+    });
+    this.getDicts("sys_city").then(response => {
+      this.cityOptions = response.data;
+    });
+    this.getDicts("customer_genjin").then(response => {
+      this.genjinStatusOptions = response.data;
+    });
+    this.getDicts("sys_customer_resource").then(response => {
+      this.resourceOptions = response.data;
     });
   },
   methods: {
@@ -352,6 +405,26 @@ export default {
     // 客户等级字典翻译
     levelFormat(row, column) {
       return this.selectDictLabel(this.levelOptions, row.level);
+    },
+    // 公司字典翻译
+    companyIdFormat(row, column) {
+      return this.selectDictLabel(this.companyIdOptions, row.companyId);
+    },
+    // 省份字典翻译
+    provinceFormat(row, column) {
+      return this.selectDictLabel(this.provinceOptions, row.province);
+    },
+    // 城市字典翻译
+    cityFormat(row, column) {
+      return this.selectDictLabel(this.cityOptions, row.city);
+    },
+    // 跟进状态字典翻译
+    genjinStatusFormat(row, column) {
+      return this.selectDictLabel(this.genjinStatusOptions, row.genjinStatus);
+    },
+    // 客户来源字典翻译
+    resourceFormat(row, column) {
+      return this.selectDictLabel(this.resourceOptions, row.resource);
     },
     // 取消按钮
     cancel() {
@@ -369,7 +442,7 @@ export default {
         companyId: null,
         province: null,
         city: null,
-        genjinStatus: 0,
+        genjinStatus: null,
         resource: null,
         sysUserId: null,
         createTime: null,
