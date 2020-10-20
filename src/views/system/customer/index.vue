@@ -29,6 +29,16 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="客户需求" prop="customerNeeds">
+        <el-select v-model="queryParams.customerNeeds" placeholder="请选择客户需求" clearable size="small">
+          <el-option
+            v-for="dict in customerNeedsOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="公司" prop="companyId">
         <el-select v-model="queryParams.companyId" placeholder="请选择公司" clearable size="small">
           <el-option
@@ -70,13 +80,14 @@
         </el-select>
       </el-form-item>
       <el-form-item label="客户来源" prop="resource">
-        <el-input
-          v-model="queryParams.resource"
-          placeholder="请输入客户来源"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.resource" placeholder="请选择客户来源" clearable size="small">
+          <el-option
+            v-for="dict in resourceOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="负责人" prop="sysUserId">
         <el-input
@@ -157,6 +168,7 @@
       <el-table-column label="客户名称" align="center" prop="name" />
       <el-table-column label="客户电话" align="center" prop="phone" />
       <el-table-column label="客户等级" align="center" prop="level" :formatter="levelFormat" />
+      <el-table-column label="客户需求" align="center" prop="customerNeeds" :formatter="customerNeedsFormat" />
       <el-table-column label="公司" align="center" prop="companyId" :formatter="companyIdFormat" />
       <el-table-column label="省份" align="center" prop="province" :formatter="provinceFormat" />
       <el-table-column label="城市" align="center" prop="city" :formatter="cityFormat" />
@@ -220,6 +232,16 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="客户需求" prop="customerNeeds">
+          <el-select v-model="form.customerNeeds" placeholder="请选择客户需求">
+            <el-option
+              v-for="dict in customerNeedsOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="parseInt(dict.dictValue)"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="公司" prop="companyId">
           <el-select v-model="form.companyId" placeholder="请选择公司">
             <el-option
@@ -261,7 +283,14 @@
           </el-select>
         </el-form-item>
         <el-form-item label="客户来源" prop="resource">
-          <el-input v-model="form.resource" placeholder="请输入客户来源" />
+          <el-select v-model="form.resource" placeholder="请选择客户来源">
+            <el-option
+              v-for="dict in resourceOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="负责人" prop="sysUserId">
           <el-input v-model="form.sysUserId" placeholder="请输入负责人" />
@@ -302,6 +331,8 @@ export default {
       open: false,
       // 客户等级字典
       levelOptions: [],
+      // 客户需求字典
+      customerNeedsOptions: [],
       // 公司字典
       companyIdOptions: [],
       // 省份字典
@@ -319,6 +350,7 @@ export default {
         name: null,
         phone: null,
         level: null,
+        customerNeeds: null,
         companyId: null,
         province: null,
         city: null,
@@ -344,6 +376,9 @@ export default {
         level: [
           { required: true, message: "客户等级不能为空", trigger: "change" }
         ],
+        customerNeeds: [
+          { required: true, message: "客户需求不能为空", trigger: "change" }
+        ],
         companyId: [
           { required: true, message: "公司不能为空", trigger: "change" }
         ],
@@ -357,7 +392,7 @@ export default {
           { required: true, message: "跟进状态不能为空", trigger: "change" }
         ],
         resource: [
-          { required: true, message: "客户来源不能为空", trigger: "blur" }
+          { required: true, message: "客户来源不能为空", trigger: "change" }
         ],
         sysUserId: [
           { required: true, message: "负责人不能为空", trigger: "blur" }
@@ -373,8 +408,11 @@ export default {
   },
   created() {
     this.getList();
-    this.getDicts("用户等级").then(response => {
+    this.getDicts("customer_level").then(response => {
       this.levelOptions = response.data;
+    });
+    this.getDicts("sys_user_need").then(response => {
+      this.customerNeedsOptions = response.data;
     });
     this.getDicts("sys_company").then(response => {
       this.companyIdOptions = response.data;
@@ -405,6 +443,10 @@ export default {
     // 客户等级字典翻译
     levelFormat(row, column) {
       return this.selectDictLabel(this.levelOptions, row.level);
+    },
+    // 客户需求字典翻译
+    customerNeedsFormat(row, column) {
+      return this.selectDictLabel(this.customerNeedsOptions, row.customerNeeds);
     },
     // 公司字典翻译
     companyIdFormat(row, column) {
@@ -439,6 +481,7 @@ export default {
         name: null,
         phone: null,
         level: null,
+        customerNeeds: null,
         companyId: null,
         province: null,
         city: null,
