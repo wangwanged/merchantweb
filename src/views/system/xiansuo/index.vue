@@ -50,13 +50,14 @@
         </el-select>
       </el-form-item>
       <el-form-item label="线索来源" prop="resource">
-        <el-input
-          v-model="queryParams.resource"
-          placeholder="请输入线索来源"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.resource" placeholder="请选择线索来源" clearable size="small">
+          <el-option
+            v-for="dict in resourceOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="负责人" prop="sysUserId">
         <el-input
@@ -133,7 +134,7 @@
 
     <el-table v-loading="loading" :data="xiansuoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="客户id" align="center" prop="id" />
+      <el-table-column label="最新跟进时间" align="center" prop="id" />
       <el-table-column label="客户姓名" align="center" prop="name" />
       <el-table-column label="电话" align="center" prop="phone" />
       <el-table-column label="城市" align="center" prop="companyId" :formatter="companyIdFormat" />
@@ -170,7 +171,7 @@
         </template>
       </el-table-column>
     </el-table>
-
+    
     <pagination
       v-show="total>0"
       :total="total"
@@ -219,7 +220,14 @@
           </el-select>
         </el-form-item>
         <el-form-item label="线索来源" prop="resource">
-          <el-input v-model="form.resource" placeholder="请输入线索来源" />
+          <el-select v-model="form.resource" placeholder="请选择线索来源">
+            <el-option
+              v-for="dict in resourceOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="负责人" prop="sysUserId">
           <el-input v-model="form.sysUserId" placeholder="请输入负责人" />
@@ -300,7 +308,7 @@ export default {
           { required: true, message: "城市不能为空", trigger: "change" }
         ],
         resource: [
-          { required: true, message: "线索来源不能为空", trigger: "blur" }
+          { required: true, message: "线索来源不能为空", trigger: "change" }
         ],
         sysUserId: [
           { required: true, message: "负责人不能为空", trigger: "blur" }
