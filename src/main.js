@@ -52,6 +52,9 @@ Vue.component('RightToolbar', RightToolbar)
 
 Vue.use(permission)
 
+import echarts from "echarts";
+Vue.prototype.$echarts = echarts;
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

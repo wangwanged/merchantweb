@@ -1,6 +1,15 @@
 <template>
-  <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+  <div class="app-container">       
+      <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+          <el-form-item label="客户公司" prop="companyName">
+        <el-input
+          v-model="queryParams.companyName"
+          placeholder="请输入客户公司"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+        </el-form-item>
       <el-form-item label="客户名称" prop="name">
         <el-input
           v-model="queryParams.name"
@@ -10,64 +19,13 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="客户电话" prop="phone">
-        <el-input
-          v-model="queryParams.phone"
-          placeholder="请输入客户电话"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="客户等级" prop="level">
-        <el-select v-model="queryParams.level" placeholder="请选择客户等级" clearable size="small">
-          <el-option
-            v-for="dict in levelOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="客户需求" prop="customerNeeds">
-        <el-select v-model="queryParams.customerNeeds" placeholder="请选择客户需求" clearable size="small">
-          <el-option
-            v-for="dict in customerNeedsOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="公司" prop="companyId">
-        <el-select v-model="queryParams.companyId" placeholder="请选择公司" clearable size="small">
-          <el-option
-            v-for="dict in companyIdOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="省份" prop="province">
-        <el-select v-model="queryParams.province" placeholder="请选择省份" clearable size="small">
-          <el-option
-            v-for="dict in provinceOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="城市" prop="city">
-        <el-select v-model="queryParams.city" placeholder="请选择城市" clearable size="small">
-          <el-option
-            v-for="dict in cityOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
+        <el-form-item label="录入时间" prop="inputDate">
+        <el-date-picker clearable size="small" style="width: 200px"
+          v-model="queryParams.inputDate"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="选择创建时间">
+        </el-date-picker>
       </el-form-item>
       <el-form-item label="跟进状态" prop="genjinStatus">
         <el-select v-model="queryParams.genjinStatus" placeholder="请选择跟进状态" clearable size="small">
@@ -89,35 +47,41 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="负责人" prop="sysUserId">
-        <el-input
-          v-model="queryParams.sysUserId"
-          placeholder="请输入负责人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-form-item label="客户等级" prop="level">
+          <el-select v-model="form.level" placeholder="请选择客户等级">
+            <el-option
+              v-for="dict in levelOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="parseInt(dict.dictValue)"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      <el-form-item label="客户需求" prop="customerNeeds">
+        <el-select v-model="queryParams.customerNeeds" placeholder="请选择客户需求" clearable size="small">
+          <el-option
+            v-for="dict in customerNeedsOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="创建时间" prop="createTime">
+      <el-form-item label="客户跟进时间" prop="genjinDate">
         <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.createTime"
+          v-model="queryParams.genjinDate"
           type="date"
           value-format="yyyy-MM-dd"
-          placeholder="选择创建时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="最新跟进时间" prop="updateTime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.updateTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择最新跟进时间">
+          placeholder="选择客户跟进时间">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
+      <div class='datafilter'>
+          qwr
+      </div>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
@@ -164,25 +128,32 @@
 
     <el-table v-loading="loading" :data="customerList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="客户id" align="center" prop="id" />
       <el-table-column label="客户名称" align="center" prop="name" />
       <el-table-column label="客户电话" align="center" prop="phone" />
       <el-table-column label="客户等级" align="center" prop="level" :formatter="levelFormat" />
       <el-table-column label="客户需求" align="center" prop="customerNeeds" :formatter="customerNeedsFormat" />
-      <el-table-column label="公司" align="center" prop="companyId" :formatter="companyIdFormat" />
+      <el-table-column label="客户公司" align="center" prop="companyName" />
       <el-table-column label="省份" align="center" prop="province" :formatter="provinceFormat" />
       <el-table-column label="城市" align="center" prop="city" :formatter="cityFormat" />
+      <el-table-column label="区" align="center" prop="district" />
       <el-table-column label="跟进状态" align="center" prop="genjinStatus" :formatter="genjinStatusFormat" />
       <el-table-column label="客户来源" align="center" prop="resource" :formatter="resourceFormat" />
-      <el-table-column label="负责人" align="center" prop="sysUserId" />
-      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
+      <el-table-column label="负责人" align="center" prop="username" />
+      <!-- <el-table-column label="录入人" align="center" prop="luruName" />
+      <el-table-column label="线索还是客户" align="center" prop="status" /> -->
+      <el-table-column label="创建时间" align="center" prop="inputDate" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.inputDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="最新跟进时间" align="center" prop="updateTime" width="180">
+      <el-table-column label="更新时间" align="center" prop="updateDate" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.updateDate, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="客户跟进时间" align="center" prop="genjinDate" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.genjinDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -242,15 +213,8 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="公司" prop="companyId">
-          <el-select v-model="form.companyId" placeholder="请选择公司">
-            <el-option
-              v-for="dict in companyIdOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="parseInt(dict.dictValue)"
-            ></el-option>
-          </el-select>
+        <el-form-item label="客户公司" prop="companyName">
+          <el-input v-model="form.companyName" placeholder="请输入客户公司" />
         </el-form-item>
         <el-form-item label="省份" prop="province">
           <el-select v-model="form.province" placeholder="请选择省份">
@@ -272,6 +236,9 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="区" prop="district">
+          <el-input v-model="form.district" placeholder="请输入区" />
+        </el-form-item>
         <el-form-item label="跟进状态" prop="genjinStatus">
           <el-select v-model="form.genjinStatus" placeholder="请选择跟进状态">
             <el-option
@@ -292,8 +259,43 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="负责人" prop="sysUserId">
-          <el-input v-model="form.sysUserId" placeholder="请输入负责人" />
+        <el-form-item label="负责人id" prop="userId">
+          <el-input v-model="form.userId" placeholder="请输入负责人id" />
+        </el-form-item>
+        <el-form-item label="负责人姓名" prop="username">
+          <el-input v-model="form.username" placeholder="请输入负责人姓名" />
+        </el-form-item>
+        <el-form-item label="录入人" prop="luruName">
+          <el-input v-model="form.luruName" placeholder="请输入录入人" />
+        </el-form-item>
+        <el-form-item label="线索还是客户">
+          <el-radio-group v-model="form.status">
+            <el-radio label="1">请选择字典生成</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="创建时间" prop="inputDate">
+          <el-date-picker clearable size="small" style="width: 200px"
+            v-model="form.inputDate"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择创建时间">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="更新时间" prop="updateDate">
+          <el-date-picker clearable size="small" style="width: 200px"
+            v-model="form.updateDate"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择更新时间">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="客户跟进时间" prop="genjinDate">
+          <el-date-picker clearable size="small" style="width: 200px"
+            v-model="form.genjinDate"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择客户跟进时间">
+          </el-date-picker>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -311,6 +313,8 @@ export default {
   name: "Customer",
   data() {
     return {
+    //   时间筛选
+      time:'',
       // 遮罩层
       loading: true,
       // 选中数组
@@ -333,8 +337,6 @@ export default {
       levelOptions: [],
       // 客户需求字典
       customerNeedsOptions: [],
-      // 公司字典
-      companyIdOptions: [],
       // 省份字典
       provinceOptions: [],
       // 城市字典
@@ -351,22 +353,24 @@ export default {
         phone: null,
         level: null,
         customerNeeds: null,
-        companyId: null,
+        companyName: null,
         province: null,
         city: null,
+        district: null,
         genjinStatus: null,
         resource: null,
-        sysUserId: null,
-        createTime: null,
-        updateTime: null
+        userId: null,
+        username: null,
+        luruName: null,
+        status: null,
+        inputDate: null,
+        updateDate: null,
+        genjinDate: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        xiansuoId: [
-          { required: true, message: "最新跟进时间不能为空", trigger: "blur" }
-        ],
         name: [
           { required: true, message: "客户名称不能为空", trigger: "blur" }
         ],
@@ -379,8 +383,8 @@ export default {
         customerNeeds: [
           { required: true, message: "客户需求不能为空", trigger: "change" }
         ],
-        companyId: [
-          { required: true, message: "公司不能为空", trigger: "change" }
+        companyName: [
+          { required: true, message: "客户公司不能为空", trigger: "blur" }
         ],
         province: [
           { required: true, message: "省份不能为空", trigger: "change" }
@@ -388,23 +392,38 @@ export default {
         city: [
           { required: true, message: "城市不能为空", trigger: "change" }
         ],
+        district: [
+          { required: true, message: "区不能为空", trigger: "blur" }
+        ],
         genjinStatus: [
           { required: true, message: "跟进状态不能为空", trigger: "change" }
         ],
         resource: [
           { required: true, message: "客户来源不能为空", trigger: "change" }
         ],
-        sysUserId: [
-          { required: true, message: "负责人不能为空", trigger: "blur" }
+        userId: [
+          { required: true, message: "负责人id不能为空", trigger: "blur" }
         ],
-        createTime: [
+        username: [
+          { required: true, message: "负责人姓名不能为空", trigger: "blur" }
+        ],
+        luruName: [
+          { required: true, message: "录入人不能为空", trigger: "blur" }
+        ],
+        status: [
+          { required: true, message: "线索还是客户不能为空", trigger: "blur" }
+        ],
+        inputDate: [
           { required: true, message: "创建时间不能为空", trigger: "blur" }
         ],
-        updateTime: [
-          { required: true, message: "最新跟进时间不能为空", trigger: "blur" }
-        ]
+        updateDate: [
+          { required: true, message: "更新时间不能为空", trigger: "blur" }
+        ],
       }
     };
+  },
+  watch(){
+
   },
   created() {
     this.getList();
@@ -413,9 +432,6 @@ export default {
     });
     this.getDicts("sys_user_need").then(response => {
       this.customerNeedsOptions = response.data;
-    });
-    this.getDicts("sys_company").then(response => {
-      this.companyIdOptions = response.data;
     });
     this.getDicts("sys_province").then(response => {
       this.provinceOptions = response.data;
@@ -448,10 +464,6 @@ export default {
     customerNeedsFormat(row, column) {
       return this.selectDictLabel(this.customerNeedsOptions, row.customerNeeds);
     },
-    // 公司字典翻译
-    companyIdFormat(row, column) {
-      return this.selectDictLabel(this.companyIdOptions, row.companyId);
-    },
     // 省份字典翻译
     provinceFormat(row, column) {
       return this.selectDictLabel(this.provinceOptions, row.province);
@@ -477,19 +489,23 @@ export default {
     reset() {
       this.form = {
         id: null,
-        xiansuoId: null,
         name: null,
         phone: null,
         level: null,
         customerNeeds: null,
-        companyId: null,
+        companyName: null,
         province: null,
         city: null,
+        district: null,
         genjinStatus: null,
         resource: null,
-        sysUserId: null,
-        createTime: null,
-        updateTime: null
+        userId: null,
+        username: null,
+        luruName: null,
+        status: 0,
+        inputDate: null,
+        updateDate: null,
+        genjinDate: null
       };
       this.resetForm("form");
     },
