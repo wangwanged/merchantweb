@@ -79,6 +79,9 @@
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
+      <div class='datafilter'>
+          qwr
+      </div>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
