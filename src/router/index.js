@@ -23,7 +23,6 @@ import Layout from '@/layout'
     breadcrumb: false            // 如果设置为false，则不会在breadcrumb面包屑中显示
   }
  */
-
 // 公共路由
 export const constantRoutes = [
   {
