@@ -2,10 +2,9 @@
   <div class="container">
     <div class="header">
       <div class="header_top">
-        <span class="title_name fl">郭富城</span>
-        <div class="circle fl">A</div>
+        <span class="title_name">郭富城</span>
         <el-dropdown @command="changeGenjin">
-          <el-button size='small' type="primary">{{ showGenjin }}<i class="el-icon-arrow-down el-icon--right"></i></el-button>
+          <el-button type="primary">{{ showGenjin }}</el-button>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item
               v-for="(item, index) in genjinStatus"
@@ -15,10 +14,7 @@
             >
           </el-dropdown-menu>
         </el-dropdown>
-        <el-button size="small" type="primary" @click='$store.state.sosoitem.dialogNewsign=true'>新签合同</el-button>
-        <el-button size="small">编辑</el-button>
-        <el-button size="small">转移</el-button>
-        <el-button size="small">失效</el-button>
+        <el-button @click="dialogrollout = true">转成客户</el-button>
       </div>
       <div class="header_bottom">
         <el-button size="small">单店加盟</el-button>
@@ -26,7 +22,6 @@
         <span>负责人:xxx</span>
       </div>
     </div>
-
     <div class="main">
       <div class="main_left">
         <div class="tab_style">
@@ -68,22 +63,6 @@
             >
           </p>
           <div class="line_between"></div>
-          <div class="main_title">合同信息</div>
-          <el-table :data="tableData" style="width: 100%">
-            <el-table-column prop="name" label="关联合同" width="120">
-            </el-table-column>
-            <el-table-column prop="name" label="合同类型" width="120">
-            </el-table-column>
-            <el-table-column prop="name" label="店面、区域名称" width="120">
-            </el-table-column>
-            <el-table-column prop="name" label="签约日期" width="120">
-            </el-table-column>
-            <el-table-column prop="name" label="合同开始日期" width="120">
-            </el-table-column>
-            <el-table-column prop="name" label="合同结束日期" width="120">
-            </el-table-column>
-            <el-table-column prop="name" label="负责人"> </el-table-column>
-          </el-table>
           <div class="main_title">系统信息</div>
           <p class="main_content_name">
             <span class="main_content_firstname">客户等级：</span>
@@ -123,17 +102,71 @@
         <Follow></Follow>
       </div>
     </div>
+    <!-- 转成客户dialog弹出 -->
+    <el-dialog title="转成客户" :visible.sync="dialogrollout" width="50%">
+      <el-form label-position="left" label-width="80px">
+        <el-form-item label="客户姓名">
+          <el-input></el-input>
+        </el-form-item>
+        <el-form-item label="客户电话">
+          <el-input></el-input>
+        </el-form-item>
+        <el-form-item label="客户等级">
+          <el-select placeholder="请选择活动区域">
+            <el-option label="区域一"></el-option>
+            <el-option label="区域二"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="客户需求">
+          <el-select placeholder="请选择活动区域">
+            <el-option label="区域一"></el-option>
+            <el-option label="区域二"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="客户地区">
+          <el-input></el-input>
+        </el-form-item>
+        <el-form-item label="客户公司">
+          <el-input></el-input>
+        </el-form-item>
+        <el-form-item label="店面地址">
+          <el-input></el-input>
+        </el-form-item>
+        <el-form-item label="中介经验">
+          <el-select placeholder="请选择活动区域">
+            <el-option label="区域一"></el-option>
+            <el-option label="区域二"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="负责人">
+          <el-select placeholder="请选择活动区域">
+            <el-option label="区域一"></el-option>
+            <el-option label="区域二"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="所属部门">
+          <el-select placeholder="请选择活动区域">
+            <el-option label="区域一"></el-option>
+            <el-option label="区域二"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="$store.state.sosoitem.dialogfollow = false">取 消</el-button>
+        <el-button type="primary" @click="$store.state.sosoitem.dialogfollow = false"
+          >保存</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import Follow from "@/components/Sosoitem/follow";
+import Follow from "@/components/Sosoitem/follow.vue";
 export default {
-  components: {
-    Follow
-  },
   data() {
     return {
+      dialogrollout: false,
       genjinStatus: [],
       showGenjin: "跟进",
       src:
@@ -160,19 +193,17 @@ export default {
         return item.dictValue;
       });
     });
+  },
+  computed: {},
+  methods: {
+    changeGenjin(i) {
+      this.showGenjin = i;
+    }
+  },
+  components: {
+    Follow
   }
 };
 </script>
 
-<style lang='scss' scoped>
-  .circle{
-      width: 34px;
-      height: 34px;
-      background-color: #1890ff;
-      border-radius:50%;
-      color:#fff;
-      text-align: center;
-      line-height: 34px;
-      font-size: 12px
-  }
-</style>
+<style lang="scss" scoped></style>

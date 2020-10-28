@@ -310,6 +310,7 @@ export default {
         var res = [];
         for (var i = 0; i < data.length; i++) {
           var geoCoord = geoCoordMap[data[i].name];
+           console.log(geoCoord)
           if (geoCoord) {
             res.push({
               name: data[i].name,
@@ -329,44 +330,44 @@ export default {
           }
         },
         tooltip: {
-          trigger: "item",
-          formatter: function(params) {
-            if (typeof params.value[2] == "undefined") {
-              var toolTiphtml = "";
-              for (var i = 0; i < toolTipData.length; i++) {
-                if (params.name == toolTipData[i].name) {
-                  toolTiphtml += toolTipData[i].name + ":<br>";
-                  for (var j = 0; j < toolTipData[i].value.length; j++) {
-                    toolTiphtml +=
-                      toolTipData[i].value[j].name +
-                      ":" +
-                      toolTipData[i].value[j].value +
-                      "<br>";
-                  }
-                }
-              }
-              console.log(toolTiphtml);
-              // console.log(convertData(data))
-              return toolTiphtml;
-            } else {
-              var toolTiphtml = "";
-              for (var i = 0; i < toolTipData.length; i++) {
-                if (params.name == toolTipData[i].name) {
-                  toolTiphtml += toolTipData[i].name + ":<br>";
-                  for (var j = 0; j < toolTipData[i].value.length; j++) {
-                    toolTiphtml +=
-                      toolTipData[i].value[j].name +
-                      ":" +
-                      toolTipData[i].value[j].value +
-                      "<br>";
-                  }
-                }
-              }
-              console.log(toolTiphtml);
-              // console.log(convertData(data))
-              return toolTiphtml;
-            }
-          }
+        //   trigger: "item",
+        //   formatter: function(params) {
+        //     if (typeof params.value[2] == "undefined") {
+        //       var toolTiphtml = "";
+        //       for (var i = 0; i < toolTipData.length; i++) {
+        //         if (params.name == toolTipData[i].name) {
+        //           toolTiphtml += toolTipData[i].name + ":<br>";
+        //           for (var j = 0; j < toolTipData[i].value.length; j++) {
+        //             toolTiphtml +=
+        //               toolTipData[i].value[j].name +
+        //               ":" +
+        //               toolTipData[i].value[j].value +
+        //               "<br>";
+        //           }
+        //         }
+        //       }
+        //       console.log(toolTiphtml);
+        //       // console.log(convertData(data))
+        //       return toolTiphtml;
+        //     } else {
+        //       var toolTiphtml = "";
+        //       for (var i = 0; i < toolTipData.length; i++) {
+        //         if (params.name == toolTipData[i].name) {
+        //           toolTiphtml += toolTipData[i].name + ":<br>";
+        //           for (var j = 0; j < toolTipData[i].value.length; j++) {
+        //             toolTiphtml +=
+        //               toolTipData[i].value[j].name +
+        //               ":" +
+        //               toolTipData[i].value[j].value +
+        //               "<br>";
+        //           }
+        //         }
+        //       }
+        //       console.log(toolTiphtml);
+        //       // console.log(convertData(data))
+        //       return toolTiphtml;
+        //     }
+        //   }
         },
         // legend: {
         //     orient: 'vertical',
@@ -392,9 +393,9 @@ export default {
             // color: ['#3C3B3F', '#605C3C'] // 黑绿
             // color: ['#0f0c29', '#302b63', '#24243e'] // 黑紫黑
             // color: ['#23074d', '#cc5333'] // 紫红
-            color: ["#00467F", "#A5CC82"] // 蓝绿
+            // color: ["#00467F", "#A5CC82"] // 蓝绿
             // color: ['#1488CC', '#2B32B2'] // 浅蓝
-            // color: ['#00467F', '#A5CC82'] // 蓝绿
+            color: ['#00467F', '#A5CC82'] // 蓝绿
             // color: ['#00467F', '#A5CC82'] // 蓝绿
             // color: ['#00467F', '#A5CC82'] // 蓝绿
             // color: ['#00467F', '#A5CC82'] // 蓝绿
