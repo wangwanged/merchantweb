@@ -1,45 +1,13 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="客户名称" prop="name">
-        <el-input
-          v-model="queryParams.name"
-          placeholder="请输入客户名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="客户电话" prop="phone">
-        <el-input
-          v-model="queryParams.phone"
-          placeholder="请输入客户电话"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="客户等级" prop="level">
-        <el-select v-model="queryParams.level" placeholder="请选择客户等级" clearable size="small">
-          <el-option
-            v-for="dict in levelOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="客户需求" prop="customerNeeds">
-        <el-select v-model="queryParams.customerNeeds" placeholder="请选择客户需求" clearable size="small">
-          <el-option
-            v-for="dict in customerNeedsOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="公司和部门" prop="companyName">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      v-show="showSearch"
+      label-width="68px"
+    >
+      <el-form-item prop="companyName">
         <el-input
           v-model="queryParams.companyName"
           placeholder="请输入公司和部门"
@@ -48,44 +16,37 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="省" prop="province">
-        <el-input
-          v-model="queryParams.province"
-          placeholder="请输入省"
+      <!-- <el-form-item prop="inputDate">
+        <el-date-picker
           clearable
           size="small"
-          @keyup.enter.native="handleQuery"
-        />
+          style="width: 200px"
+          v-model="queryParams.inputDate"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="选择创建时间"
+        >
+        </el-date-picker>
+      </el-form-item> -->
+      <el-form-item prop="inputDate">
+        <el-date-picker
+          value-format="yyyy-MM-dd"
+          placeholder="请选择时间范围"
+          v-model="queryParams.inputDate"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        >
+        </el-date-picker>
       </el-form-item>
-      <el-form-item label="门店地址" prop="dianmianAddress">
-        <el-input
-          v-model="queryParams.dianmianAddress"
-          placeholder="请输入门店地址"
+      <el-form-item prop="resource">
+        <el-select
+          v-model="queryParams.resource"
+          placeholder="请选择客户来源"
           clearable
           size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="市" prop="city">
-        <el-input
-          v-model="queryParams.city"
-          placeholder="请输入市"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="区" prop="district">
-        <el-input
-          v-model="queryParams.district"
-          placeholder="请输入区"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="客户来源" prop="resource">
-        <el-select v-model="queryParams.resource" placeholder="请选择客户来源" clearable size="small">
+        >
           <el-option
             v-for="dict in resourceOptions"
             :key="dict.dictValue"
@@ -94,7 +55,57 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="负责人姓名" prop="username">
+      <el-form-item prop="name">
+        <el-input
+          v-model="queryParams.name"
+          placeholder="请输入客户名称"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+
+      <el-form-item prop="level">
+        <el-select
+          v-model="queryParams.level"
+          placeholder="请选择客户等级"
+          clearable
+          size="small"
+        >
+          <el-option
+            v-for="dict in levelOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item prop="customerNeeds">
+        <el-select
+          v-model="queryParams.customerNeeds"
+          placeholder="请选择客户需求"
+          clearable
+          size="small"
+        >
+          <el-option
+            v-for="dict in customerNeedsOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item prop="phone">
+        <el-input
+          v-model="queryParams.phone"
+          placeholder="请输入客户电话"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <Liandong @placeInfo="getPlace(arguments)"></Liandong>
+      <el-form-item prop="username">
         <el-input
           v-model="queryParams.username"
           placeholder="请输入负责人姓名"
@@ -103,17 +114,17 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="创建时间" prop="inputDate">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.inputDate"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择创建时间">
-        </el-date-picker>
-      </el-form-item>
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="cyan"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -125,7 +136,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['system:customer:add']"
-        >新增</el-button>
+          >新增</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -135,7 +147,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['system:customer:edit']"
-        >修改</el-button>
+          >修改</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -145,7 +158,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['system:customer:remove']"
-        >删除</el-button>
+          >删除</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -154,34 +168,71 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['system:customer:export']"
-        >导出</el-button>
+          >导出</el-button
+        >
       </el-col>
-	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar
+        :showSearch.sync="showSearch"
+        @queryTable="getList"
+      ></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="customerList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="customerList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="id" align="center" prop="id" />
-      <el-table-column label="客户名称" align="center" prop="name" />
+          
+      <el-table-column label="客户名称" align="center">
+            <template slot-scope="obj">
+            <el-button @click="$router.push({path:'/customer/customeritem',query:{id:obj.row.id}})"  size="small" type='text'>{{obj.row.name}}</el-button>
+          </template>
+      </el-table-column>
       <el-table-column label="客户电话" align="center" prop="phone" />
-      <el-table-column label="客户等级" align="center" prop="level" :formatter="levelFormat" />
-      <el-table-column label="客户需求" align="center" prop="customerNeeds" :formatter="customerNeedsFormat" />
+      <el-table-column
+        label="客户等级"
+        align="center"
+        prop="level"
+        :formatter="levelFormat"
+      />
+      <el-table-column
+        label="客户需求"
+        align="center"
+        prop="customerNeeds"
+        :formatter="customerNeedsFormat"
+      />
       <el-table-column label="公司和部门" align="center" prop="companyName" />
       <el-table-column label="省" align="center" prop="province" />
       <el-table-column label="门店地址" align="center" prop="dianmianAddress" />
       <el-table-column label="市" align="center" prop="city" />
       <el-table-column label="区" align="center" prop="district" />
-      <el-table-column label="客户来源" align="center" prop="resource" :formatter="resourceFormat" />
+      <el-table-column
+        label="客户来源"
+        align="center"
+        prop="resource"
+        :formatter="resourceFormat"
+      />
       <el-table-column label="负责人姓名" align="center" prop="username" />
       <el-table-column label="录入人" align="center" prop="luruName" />
       <el-table-column label="中介经验" align="center" prop="experience" />
       <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="创建时间" align="center" prop="inputDate" width="180">
+      <el-table-column
+        label="创建时间"
+        align="center"
+        prop="inputDate"
+        width="180"
+      >
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.inputDate, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.inputDate, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -189,20 +240,22 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['system:customer:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:customer:remove']"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -241,11 +294,14 @@
         <el-form-item label="公司和部门" prop="companyName">
           <el-input v-model="form.companyName" placeholder="请输入公司和部门" />
         </el-form-item>
-        <el-form-item label="省" prop="province">
-          <el-input v-model="form.province" placeholder="请输入省" />
-        </el-form-item>
         <el-form-item label="门店地址" prop="dianmianAddress">
-          <el-input v-model="form.dianmianAddress" placeholder="请输入门店地址" />
+          <el-input
+            v-model="form.dianmianAddress"
+            placeholder="请输入门店地址"
+          />
+          <el-form-item label="省" prop="province">
+            <el-input v-model="form.province" placeholder="请输入省" />
+          </el-form-item>
         </el-form-item>
         <el-form-item label="市" prop="city">
           <el-input v-model="form.city" placeholder="请输入市" />
@@ -285,10 +341,20 @@
 </template>
 
 <script>
-import { listCustomer, getCustomer, delCustomer, addCustomer, updateCustomer, exportCustomer } from "@/api/system/customer";
-
+import {
+  listCustomer,
+  getCustomer,
+  delCustomer,
+  addCustomer,
+  updateCustomer,
+  exportCustomer
+} from "@/api/system/customer";
+import Liandong from "@/components/Liandong/liandong.vue";
 export default {
   name: "Customer",
+  components: {
+    Liandong
+  },
   data() {
     return {
       // 遮罩层
@@ -331,6 +397,8 @@ export default {
         resource: null,
         username: null,
         inputDate: null,
+        inputDateStart:null,
+        inputDateEnd:null,
       },
       // 表单参数
       form: {},
@@ -351,18 +419,12 @@ export default {
         companyName: [
           { required: true, message: "公司和部门不能为空", trigger: "blur" }
         ],
-        province: [
-          { required: true, message: "省不能为空", trigger: "blur" }
-        ],
+        province: [{ required: true, message: "省不能为空", trigger: "blur" }],
         dianmianAddress: [
           { required: true, message: "门店地址不能为空", trigger: "blur" }
         ],
-        city: [
-          { required: true, message: "市不能为空", trigger: "blur" }
-        ],
-        district: [
-          { required: true, message: "区不能为空", trigger: "blur" }
-        ],
+        city: [{ required: true, message: "市不能为空", trigger: "blur" }],
+        district: [{ required: true, message: "区不能为空", trigger: "blur" }],
         resource: [
           { required: true, message: "客户来源不能为空", trigger: "change" }
         ],
@@ -381,9 +443,7 @@ export default {
         experience: [
           { required: true, message: "中介经验不能为空", trigger: "blur" }
         ],
-        status: [
-          { required: true, message: "不能为空", trigger: "blur" }
-        ],
+        status: [{ required: true, message: "不能为空", trigger: "blur" }],
         inputDate: [
           { required: true, message: "创建时间不能为空", trigger: "blur" }
         ],
@@ -406,6 +466,12 @@ export default {
     });
   },
   methods: {
+    //   获取省市区的地址
+    getPlace(i) {
+      this.queryParams.province = i[0];
+      this.queryParams.city = i[1];
+      this.queryParams.district = i[2];
+    },
     /** 查询我的客户列表 */
     getList() {
       this.loading = true;
@@ -413,7 +479,11 @@ export default {
         this.customerList = response.rows;
         this.total = response.total;
         this.loading = false;
+        console.log(this.customerList)
+         this.$store.commit('updateAlldata',this.customerList)
       });
+       
+      
     },
     // 客户等级字典翻译
     levelFormat(row, column) {
@@ -470,9 +540,9 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
+      this.ids = selection.map(item => item.id);
+      this.single = selection.length !== 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -483,7 +553,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
+      const id = row.id || this.ids;
       getCustomer(id).then(response => {
         this.form = response.data;
         this.open = true;
@@ -513,29 +583,37 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除我的客户编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm(
+        '是否确认删除我的客户编号为"' + ids + '"的数据项?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
-        }).then(function() {
+        }
+      )
+        .then(function() {
           return delCustomer(ids);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        })
+        });
     },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有我的客户数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+      this.$confirm("是否确认导出所有我的客户数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(function() {
           return exportCustomer(queryParams);
-        }).then(response => {
-          this.download(response.msg);
         })
+        .then(response => {
+          this.download(response.msg);
+        });
     }
   }
 };

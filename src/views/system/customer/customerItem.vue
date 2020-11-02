@@ -5,7 +5,9 @@
         <span class="title_name fl">郭富城</span>
         <div class="circle fl">A</div>
         <el-dropdown @command="changeGenjin">
-          <el-button size='small' type="primary">{{ showGenjin }}<i class="el-icon-arrow-down el-icon--right"></i></el-button>
+          <el-button size="small" type="primary"
+            >{{ showGenjin }}<i class="el-icon-arrow-down el-icon--right"></i
+          ></el-button>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item
               v-for="(item, index) in genjinStatus"
@@ -15,7 +17,12 @@
             >
           </el-dropdown-menu>
         </el-dropdown>
-        <el-button size="small" type="primary" @click='$store.state.sosoitem.dialogNewsign=true'>新签合同</el-button>
+        <el-button
+          size="small"
+          type="primary"
+          @click="$store.state.sosoitem.dialogNewsign = true"
+          >新签合同</el-button
+        >
         <el-button size="small">编辑</el-button>
         <el-button size="small">转移</el-button>
         <el-button size="small">失效</el-button>
@@ -35,36 +42,36 @@
         <div class="main_content_top">
           <p class="main_content_name">
             <span class="main_content_firstname">客户等级：</span>
-            <span>A(重要客户)</span>
+            <span>{{customerList.level}}</span>
           </p>
           <p class="main_content_name">
             <span class="main_content_firstname">客户需求：</span>
-            <span>区域加盟</span>
+            <span>{{customerList.customerNeeds}}</span>
           </p>
           <p class="main_content_name">
             <span class="main_content_firstname">地区：</span>
-            <span>河北省 石家庄 长安区</span>
+            <span>{{customerList.province}} {{customerList.city}} {{customerList.district}}</span>
           </p>
           <p class="main_content_name">
             <span class="main_content_firstname">公司：</span>
-            <span>正大房产</span>
+            <span>{{customerList.companyName}}</span>
           </p>
           <p class="main_content_name">
             <span class="main_content_firstname">店面地址：</span>
-            <span>昌黎镇鼓楼东街90号</span>
+            <span>{{customerList.dianmianAddress}}</span>
           </p>
           <p class="main_content_name">
             <span class="main_content_firstname">中介经验：</span>
-            <span>创业小白</span>
+            <span>{{customerList.experience}}</span>
           </p>
           <p class="main_content_name">
             <span class="main_content_firstname">客户来源：</span>
-            <span>机器人</span>
+            <span>{{customerList.resource}}</span>
           </p>
           <p class="main_content_name">
             <span class="main_content_firstname">备注：</span>
             <span
-              >备注信息备注信息备注信息备注信息备注信息备注信息备注信息备注信息</span
+              >{{customerList.remark}}</span
             >
           </p>
           <div class="line_between"></div>
@@ -87,7 +94,7 @@
           <div class="main_title">系统信息</div>
           <p class="main_content_name">
             <span class="main_content_firstname">客户等级：</span>
-            <span>A(重要客户)</span>
+            <span>{{customerList.level}}</span>
           </p>
           <p class="main_content_name">
             <span class="main_content_firstname">客户需求：</span>
@@ -128,14 +135,25 @@
 
 <script>
 import Follow from "@/components/Sosoitem/follow";
+import {
+  listCustomer,
+  getCustomer,
+  delCustomer,
+  addCustomer,
+  updateCustomer,
+  exportCustomer
+} from "@/api/system/customer";
 export default {
-  components: {
-    Follow
-  },
   data() {
     return {
+      // 总条数
+      total: 0,
+      // 我的客户表格数据
+      customerList: [],
       genjinStatus: [],
       showGenjin: "跟进",
+    //   客户当前id
+      id: this.$route.query.id,
       src:
         "https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg",
       tableData: [
@@ -152,7 +170,11 @@ export default {
       ]
     };
   },
+  components: {
+    Follow
+  },
   created() {
+    this.getList()
     //   获取跟进状态字典
     this.getDicts("customer_genjin").then(response => {
       // console.log(response)
@@ -160,19 +182,31 @@ export default {
         return item.dictValue;
       });
     });
+  },
+  methods: {
+    //   跳转后的数据
+    getList() {
+         this.customerList=this.$store.state.sosoitem.customerList
+         this.customerList=this.customerList.filter((item)=>{
+             return   item.id===this.id
+         })[0]
+     }
+  },
+  computed:{
+     
   }
-};
+}
 </script>
 
-<style lang='scss' scoped>
-  .circle{
-      width: 34px;
-      height: 34px;
-      background-color: #1890ff;
-      border-radius:50%;
-      color:#fff;
-      text-align: center;
-      line-height: 34px;
-      font-size: 12px
-  }
+<style lang="scss" scoped>
+.circle {
+  width: 34px;
+  height: 34px;
+  background-color: #1890ff;
+  border-radius: 50%;
+  color: #fff;
+  text-align: center;
+  line-height: 34px;
+  font-size: 12px;
+}
 </style>
