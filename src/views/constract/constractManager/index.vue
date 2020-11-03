@@ -28,7 +28,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="合同类型" prop="type">
+      <el-form-item label="合同类型" prop="type"> 
         <el-select v-model="queryParams.type" placeholder="请选择合同类型" clearable size="small">
           <el-option label="请选择字典生成" value="" />
         </el-select>
@@ -203,7 +203,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"

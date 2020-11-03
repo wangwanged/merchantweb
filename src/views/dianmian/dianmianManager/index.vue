@@ -56,9 +56,9 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="所属省" prop="provice">
+      <el-form-item label="所属省" prop="province">
         <el-input
-          v-model="queryParams.provice"
+          v-model="queryParams.province"
           placeholder="请输入所属省"
           clearable
           size="small"
@@ -196,7 +196,7 @@
       <el-table-column label="所属公司id" align="center" prop="companyId" />
       <el-table-column label="门店名称" align="center" prop="name" />
       <el-table-column label="门店状态" align="center" prop="status" :formatter="statusFormat" />
-      <el-table-column label="所属省" align="center" prop="provice" />
+      <el-table-column label="所属省" align="center" prop="province" />
       <el-table-column label="所属市" align="center" prop="city" />
       <el-table-column label="所属区" align="center" prop="district" />
       <el-table-column label="店面详细地址" align="center" prop="address" />
@@ -236,7 +236,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -276,8 +276,8 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="所属省" prop="provice">
-          <el-input v-model="form.provice" placeholder="请输入所属省" />
+        <el-form-item label="所属省" prop="province">
+          <el-input v-model="form.province" placeholder="请输入所属省" />
         </el-form-item>
         <el-form-item label="所属市" prop="city">
           <el-input v-model="form.city" placeholder="请输入所属市" />
@@ -392,7 +392,7 @@ export default {
         companyId: null,
         name: null,
         status: null,
-        provice: null,
+        province: null,
         city: null,
         district: null,
         address: null,
@@ -424,7 +424,7 @@ export default {
         status: [
           { required: true, message: "门店状态不能为空", trigger: "change" }
         ],
-        provice: [
+        province: [
           { required: true, message: "所属省不能为空", trigger: "blur" }
         ],
         city: [
@@ -513,7 +513,7 @@ export default {
         companyId: null,
         name: null,
         status: null,
-        provice: null,
+        province: null,
         city: null,
         district: null,
         longitude: null,
