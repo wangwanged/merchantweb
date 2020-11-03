@@ -16,23 +16,11 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <!-- <el-form-item prop="inputDate">
-        <el-date-picker
-          clearable
-          size="small"
-          style="width: 200px"
-          v-model="queryParams.inputDate"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择创建时间"
-        >
-        </el-date-picker>
-      </el-form-item> -->
       <el-form-item prop="inputDate">
         <el-date-picker
           value-format="yyyy-MM-dd"
           placeholder="请选择时间范围"
-          v-model="queryParams.inputDate"
+          v-model="inputDate"
           type="daterange"
           range-separator="至"
           start-placeholder="开始日期"
@@ -114,6 +102,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+
       <el-form-item>
         <el-button
           type="cyan"
@@ -125,6 +114,18 @@
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
           >重置</el-button
         >
+      </el-form-item>
+      <el-form-item>
+        <div class="timesearch">
+          <span>最新跟进</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <el-button
+            v-for="(item, index) in customerGenjinnum"
+            :key="index"
+            type="text"
+            @click="getTimeRange(index)"
+            >超过{{ item }}天未跟进</el-button
+          >
+        </div>
       </el-form-item>
     </el-form>
 
@@ -184,11 +185,21 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="id" align="center" prop="id" />
-          
+
       <el-table-column label="客户名称" align="center">
-            <template slot-scope="obj">
-            <el-button @click="$router.push({path:'/customer/customeritem',query:{id:obj.row.id}})"  size="small" type='text'>{{obj.row.name}}</el-button>
-          </template>
+        <template slot-scope="obj">
+          <el-button
+            @click="
+              $router.push({
+                path: '/customer/customeritem',
+                query: { id: obj.row.id }
+              })
+            "
+            size="small"
+            type="text"
+            >{{ obj.row.name }}</el-button
+          >
+        </template>
       </el-table-column>
       <el-table-column label="客户电话" align="center" prop="phone" />
       <el-table-column
@@ -204,10 +215,16 @@
         :formatter="customerNeedsFormat"
       />
       <el-table-column label="公司和部门" align="center" prop="companyName" />
-      <el-table-column label="省" align="center" prop="province" />
       <el-table-column label="门店地址" align="center" prop="dianmianAddress" />
-      <el-table-column label="市" align="center" prop="city" />
-      <el-table-column label="区" align="center" prop="district" />
+      <el-table-column label="客户地区" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.province }}-{{ scope.row.city }}
+        </template>
+      </el-table-column>
+
+      <!-- <el-table-column label="省" align="center" prop="province" />
+      <el-table-column label="市" align="center" prop="customerList." />
+      <el-table-column label="区" align="center" prop="district" /> -->
       <el-table-column
         label="客户来源"
         align="center"
@@ -240,7 +257,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['system:customer:edit']"
-            >修改</el-button
+            >编辑</el-button
           >
           <el-button
             size="mini"
@@ -265,8 +282,8 @@
     <!-- 添加或修改我的客户对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="客户名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入客户名称" />
+        <el-form-item label="客户姓名" prop="name">
+          <el-input v-model="form.name" placeholder="请输入" />
         </el-form-item>
         <el-form-item label="客户电话" prop="phone">
           <el-input v-model="form.phone" placeholder="请输入客户电话" />
@@ -291,23 +308,14 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="公司和部门" prop="companyName">
+        <el-form-item label="客户地区" prop="dianmianAddress">
+          <Liandong @placeInfo="getPlace(arguments)"></Liandong>
+        </el-form-item>
+        <el-form-item label="客户公司" prop="companyName">
           <el-input v-model="form.companyName" placeholder="请输入公司和部门" />
         </el-form-item>
-        <el-form-item label="门店地址" prop="dianmianAddress">
-          <el-input
-            v-model="form.dianmianAddress"
-            placeholder="请输入门店地址"
-          />
-          <el-form-item label="省" prop="province">
-            <el-input v-model="form.province" placeholder="请输入省" />
-          </el-form-item>
-        </el-form-item>
-        <el-form-item label="市" prop="city">
-          <el-input v-model="form.city" placeholder="请输入市" />
-        </el-form-item>
-        <el-form-item label="区" prop="district">
-          <el-input v-model="form.district" placeholder="请输入区" />
+        <el-form-item label="中介经验" prop="experience">
+          <el-input v-model="form.experience" placeholder="请输入中介经验" />
         </el-form-item>
         <el-form-item label="客户来源" prop="resource">
           <el-select v-model="form.resource" placeholder="请选择客户来源">
@@ -319,17 +327,11 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="负责人姓名" prop="username">
-          <el-input v-model="form.username" placeholder="请输入负责人姓名" />
-        </el-form-item>
-        <el-form-item label="录入人" prop="luruName">
-          <el-input v-model="form.luruName" placeholder="请输入录入人" />
-        </el-form-item>
-        <el-form-item label="中介经验" prop="experience">
-          <el-input v-model="form.experience" placeholder="请输入中介经验" />
-        </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
+        </el-form-item>
+        <el-form-item label="负责人" prop="username">
+          <el-input v-model="form.username" placeholder="请输入负责人姓名" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -337,6 +339,7 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+    <el-button @click="getTimeRange()">aaa</el-button>
   </div>
 </template>
 
@@ -381,6 +384,12 @@ export default {
       customerNeedsOptions: [],
       // 客户来源字典
       resourceOptions: [],
+      //   筛选时间字典
+      customerGenjinOptions: [],
+      //   筛选时间index
+      customerGenjinnum: [],
+      //   选定时间
+      inputDate: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -396,9 +405,8 @@ export default {
         district: null,
         resource: null,
         username: null,
-        inputDate: null,
-        inputDateStart:null,
-        inputDateEnd:null,
+        inputDateStart: null,
+        inputDateEnd: null
       },
       // 表单参数
       form: {},
@@ -409,46 +417,6 @@ export default {
         ],
         phone: [
           { required: true, message: "客户电话不能为空", trigger: "blur" }
-        ],
-        level: [
-          { required: true, message: "客户等级不能为空", trigger: "change" }
-        ],
-        customerNeeds: [
-          { required: true, message: "客户需求不能为空", trigger: "change" }
-        ],
-        companyName: [
-          { required: true, message: "公司和部门不能为空", trigger: "blur" }
-        ],
-        province: [{ required: true, message: "省不能为空", trigger: "blur" }],
-        dianmianAddress: [
-          { required: true, message: "门店地址不能为空", trigger: "blur" }
-        ],
-        city: [{ required: true, message: "市不能为空", trigger: "blur" }],
-        district: [{ required: true, message: "区不能为空", trigger: "blur" }],
-        resource: [
-          { required: true, message: "客户来源不能为空", trigger: "change" }
-        ],
-        userId: [
-          { required: true, message: "负责人id不能为空", trigger: "blur" }
-        ],
-        username: [
-          { required: true, message: "负责人姓名不能为空", trigger: "blur" }
-        ],
-        luruId: [
-          { required: true, message: "录入人id不能为空", trigger: "blur" }
-        ],
-        luruName: [
-          { required: true, message: "录入人不能为空", trigger: "blur" }
-        ],
-        experience: [
-          { required: true, message: "中介经验不能为空", trigger: "blur" }
-        ],
-        status: [{ required: true, message: "不能为空", trigger: "blur" }],
-        inputDate: [
-          { required: true, message: "创建时间不能为空", trigger: "blur" }
-        ],
-        updateDate: [
-          { required: true, message: "更新时间不能为空", trigger: "blur" }
         ]
       }
     };
@@ -464,8 +432,34 @@ export default {
     this.getDicts("sys_customer_resource").then(response => {
       this.resourceOptions = response.data;
     });
+    this.getDicts("genjin_days").then(response => {
+      this.customerGenjinOptions = response.data;
+    });
   },
   methods: {
+    getTimeRange(i) {
+      var num = this.customerGenjinOptions.map(item => {
+        var a = Number(item.dictValue);
+        return a;
+      });
+      var num = num.map(item => {
+        return Number(item);
+      });
+      this.customerGenjinnum = num;
+      this.queryParams.pageNum = 1;
+      (this.queryParams.inputDateStart = this.getBeforeDate(num[i])),
+        (this.queryParams.inputDateEnd = this.getBeforeDate(num[i + 1]));
+      this.getList();
+    },
+    getBeforeDate(AddDayCount) {
+      var dd = new Date();
+      dd.setDate(dd.getDate() + AddDayCount); //获取AddDayCount天后的日期
+      var y = dd.getFullYear();
+      var m =
+        dd.getMonth() + 1 < 10 ? "0" + (dd.getMonth() + 1) : dd.getMonth() + 1; //获取当前月份的日期，不足10补0
+      var d = dd.getDate() < 10 ? "0" + dd.getDate() : dd.getDate(); //获取当前几号，不足10补0
+      return y + "-" + m + "-" + d;
+    },
     //   获取省市区的地址
     getPlace(i) {
       this.queryParams.province = i[0];
@@ -479,11 +473,9 @@ export default {
         this.customerList = response.rows;
         this.total = response.total;
         this.loading = false;
-        console.log(this.customerList)
-         this.$store.commit('updateAlldata',this.customerList)
+        console.log(this.customerList);
+        this.$store.commit("updateAlldata", this.customerList);
       });
-       
-      
     },
     // 客户等级字典翻译
     levelFormat(row, column) {
@@ -531,6 +523,12 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
+      (this.queryParams.inputDateStart = this.inputDate[0]),
+        (this.queryParams.inputDateEnd = this.inputDate[1]);
+      //   const params={
+      //      inputDateStart:this.inputDate && this.inputDate.length ? this.inputDate[0] : null,
+      //      inputDateEnd:this.inputDate && this.inputDate.length ? this.inputDate[1] : null,
+      //   }
       this.getList();
     },
     /** 重置按钮操作 */
@@ -549,6 +547,7 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加我的客户";
+
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
