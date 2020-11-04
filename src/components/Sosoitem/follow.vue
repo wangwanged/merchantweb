@@ -12,15 +12,15 @@
       <p class="main_content_name__placeholder">
         <el-image
           :src="src"
-          style="width: 200px; height: 150px;margin-right:20px"
+          style="width: 100px; height: 50px;margin-right:20px"
           fit="contain"
         ></el-image>
         <el-image
           :src="src"
-          style="width: 200px; height: 150px;margin-right:20px"
+          style="width: 100px; height: 50px;margin-right:20px"
           fit="contain"
         ></el-image>
-        <el-image :src="src" style="width: 200px; height: 150px"></el-image>
+        <el-image :src="src" style="width: 100px; height: 50px" fit="contain"></el-image>
       </p>
       <div class="line_between"></div>
     </div>
@@ -74,6 +74,7 @@
 </template>
 
 <script>
+import {getGenjin} from "@/api/system/customer";
 export default {
   data() {
     return {
@@ -95,6 +96,20 @@ export default {
     };
   },
   computed: {
+  },
+  created(){
+      this.getList()
+  },
+  methods:{
+    getList() {
+      getGenjin().then(response => {
+          console.log(response)
+        // this.customerList = response.rows;
+        // this.total = response.total;
+        // this.loading = false;
+        // this.$store.commit("updateAlldata", this.customerList);
+      });
+    },
   }
 };
 </script>

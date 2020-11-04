@@ -1,11 +1,11 @@
 import request from '@/utils/request'
 
 // 查询我的客户列表
-export function listCustomer(query) {
+export function listCustomer(data) {
   return request({
     url: '/system/customer/list',
-    method: 'get',
-    params: query
+    method: 'post',
+    data: data
   })
 }
 
@@ -47,6 +47,15 @@ export function delCustomer(id) {
 export function exportCustomer(query) {
   return request({
     url: '/system/customer/export',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询跟进信息
+export function getGenjin(query) {
+  return request({
+    url: 'system/genjin/list',
     method: 'get',
     params: query
   })

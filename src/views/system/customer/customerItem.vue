@@ -93,24 +93,20 @@
           </el-table>
           <div class="main_title">系统信息</div>
           <p class="main_content_name">
-            <span class="main_content_firstname">客户等级：</span>
-            <span>{{customerList.level}}</span>
+            <span class="main_content_firstname">录入人：</span>
+            <span>{{customerList.luruName}}</span>
           </p>
           <p class="main_content_name">
-            <span class="main_content_firstname">客户需求：</span>
-            <span>区域加盟</span>
+            <span class="main_content_firstname">负责人：</span>
+            <span>{{customerList.username}}</span>
           </p>
           <p class="main_content_name">
-            <span class="main_content_firstname">地区：</span>
-            <span>河北省 石家庄 长安区</span>
+            <span class="main_content_firstname">录入时间：</span>
+            <span>{{customerList.inputDate}}</span>
           </p>
           <p class="main_content_name">
-            <span class="main_content_firstname">公司：</span>
-            <span>正大房产</span>
-          </p>
-          <p class="main_content_name">
-            <span class="main_content_firstname">店面地址：</span>
-            <span>昌黎镇鼓楼东街90号</span>
+            <span class="main_content_firstname">最新跟进：</span>
+            <span>{{customerList.genjinDate}}</span>
           </p>
         </div>
       </div>
@@ -126,7 +122,6 @@
             >写跟进</el-button
           >
         </div>
-        <Follow></Follow>
         <Follow></Follow>
       </div>
     </div>
@@ -150,9 +145,10 @@ export default {
       total: 0,
       // 我的客户表格数据
       customerList: [],
+      levelOptions: [],
       genjinStatus: [],
       showGenjin: "跟进",
-    //   客户当前id
+      //   客户当前id
       id: this.$route.query.id,
       src:
         "https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg",
@@ -174,28 +170,56 @@ export default {
     Follow
   },
   created() {
-    this.getList()
+    this.getList();
     //   获取跟进状态字典
     this.getDicts("customer_genjin").then(response => {
-      // console.log(response)
       this.genjinStatus = response.data.map(item => {
         return item.dictValue;
       });
+    });
+    this.getDicts("customer_level").then(response => {
+        var a = response.data.filter(item=>{
+            if(item.dictValue===this.customerList.level){
+                return item
+            }
+        })
+        this.customerList.level=a[0].dictLabel
+    });
+    this.getDicts("sys_user_need").then(response => {
+       var a = response.data.filter(item=>{
+            if(item.dictValue===this.customerList.resource){
+                return item
+            }
+        })
+        this.customerList.resource=a[0].dictLabel
+    });
+     this.getDicts("sys_customer_resource").then(response => {
+      var a = response.data.filter(item=>{
+            if(item.dictValue===this.customerList.customerNeeds){
+                return item
+            }
+        })
+        this.customerList.customerNeeds=a[0].dictLabel
     });
   },
   methods: {
     //   跳转后的数据
     getList() {
-         this.customerList=this.$store.state.sosoitem.customerList
-         this.customerList=this.customerList.filter((item)=>{
-             return   item.id===this.id
-         })[0]
-     }
+      this.customerList = this.$store.state.sosoitem.customerList;
+      this.customerList = this.customerList.filter(item => {
+        return item.id === this.id;
+      })[0];
+    },
+    changeGenjin(i) {
+      console.log(i);
+    },
+    // 客户等级字典翻译
+    levelFormat(row, column) {
+      return this.selectDictLabel(this.levelOptions, row.level);
+    },
   },
-  computed:{
-     
-  }
-}
+  computed: {}
+};
 </script>
 
 <style lang="scss" scoped>

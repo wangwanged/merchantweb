@@ -190,8 +190,7 @@
           <el-button
             @click="
               $router.push({
-                path: '/customer/customeritem',
-                query: { id: obj.row.id }
+                path: '/customer/customeritem/obj.row.id'
               })
             "
             size="small"
@@ -444,13 +443,6 @@ export default {
       }
     };
   },
-  computed:{
-    //   filterColor(i){
-    //      return if(i=0){
-
-    //      }
-    //   }
-  },
   created() {
     this.userInfo();
     this.getList();
@@ -483,9 +475,14 @@ export default {
     userInfo() {
       listUser().then(response => {
           this.user=response.rows
-          console.log(response.rows)
       });
     },
+    // 根据天数筛选颜色
+    // filterColor({row}){
+    //    if(row.id===1){
+
+    //    }
+    // },
     //   15,30,60时间段数据获取
     getTimeRange(i) {
       this.queryParams.pageNum = 1;
@@ -523,7 +520,6 @@ export default {
         this.customerList = response.rows;
         this.total = response.total;
         this.loading = false;
-        console.log(this.customerList);
         this.$store.commit("updateAlldata", this.customerList);
       });
     },
@@ -571,7 +567,7 @@ export default {
       this.resetForm("form");
     },
     /** 搜索按钮操作 */
-    handleQuery() {
+    handleQuery() { 
       this.queryParams.pageNum = 1;
       (this.queryParams.inputDateStart = this.inputDate[0]),
         (this.queryParams.inputDateEnd = this.inputDate[1]);
@@ -598,10 +594,8 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      console.log(id);
       getCustomer(id).then(response => {
         this.form = response.data;
-        console.log(this.form);
         this.open = true;
         this.title = "修改我的客户";
       });
