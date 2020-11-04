@@ -5,7 +5,11 @@ export function listCustomer(data) {
   return request({
     url: '/system/customer/list',
     method: 'post',
+<<<<<<< HEAD
     data: data
+=======
+    data: query
+>>>>>>> e049a1ad9cc11b29d464dae8aa6cb53d00a56f86
   })
 }
 
@@ -51,6 +55,7 @@ export function exportCustomer(query) {
     params: query
   })
 }
+<<<<<<< HEAD
 
 // 查询跟进信息
 export function getGenjin(query) {
@@ -60,3 +65,5 @@ export function getGenjin(query) {
     params: query
   })
 }
+=======
+>>>>>>> e049a1ad9cc11b29d464dae8aa6cb53d00a56f86
