@@ -185,7 +185,6 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="id" align="center" prop="id" />
-
       <el-table-column label="客户名称" align="center">
         <template slot-scope="obj">
           <el-button
@@ -215,16 +214,11 @@
         :formatter="customerNeedsFormat"
       />
       <el-table-column label="公司和部门" align="center" prop="companyName" />
-      <el-table-column label="门店地址" align="center" prop="dianmianAddress" />
       <el-table-column label="客户地区" align="center">
         <template slot-scope="scope">
           {{ scope.row.province }}-{{ scope.row.city }}
         </template>
       </el-table-column>
-
-      <!-- <el-table-column label="省" align="center" prop="province" />
-      <el-table-column label="市" align="center" prop="customerList." />
-      <el-table-column label="区" align="center" prop="district" /> -->
       <el-table-column
         label="客户来源"
         align="center"
@@ -279,7 +273,7 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改我的客户对话框 -->
+    <!-- 添加或编辑我的客户对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="客户姓名" prop="name">
@@ -330,8 +324,31 @@
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
+        <!-- <el-form-item label="负责人" prop="username">
+          <template slot-scope="scope">
+            <el-input v-model='scope.row.username'></el-input>
+        </template>
+        </el-form-item> -->
         <el-form-item label="负责人" prop="username">
-          <el-input v-model="form.username" placeholder="请输入负责人姓名" />
+          <el-select
+           @change='getUserId(index)'
+            filterable
+            v-model="form.username"
+            placeholder="选择人员"
+            clearable
+            size="small"
+          >
+            <el-option
+              v-for="(item, index) in user"
+              :key="index"
+              :label="item.userName"
+              :value="item.userName"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="所属部门">
+            <el-input placeholder="人员部门">{{}}</el-input>
+          <!-- <el-input v-model="user.dept.deptName[form.userName]" placeholder="人员部门" disabled /> -->
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -339,7 +356,6 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
-    <el-button @click="getTimeRange()">aaa</el-button>
   </div>
 </template>
 
@@ -352,6 +368,7 @@ import {
   updateCustomer,
   exportCustomer
 } from "@/api/system/customer";
+import { listUser } from "@/api/system/user";
 import Liandong from "@/components/Liandong/liandong.vue";
 export default {
   name: "Customer",
@@ -360,6 +377,8 @@ export default {
   },
   data() {
     return {
+      // 用户信息
+      user:[],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -416,12 +435,24 @@ export default {
           { required: true, message: "客户名称不能为空", trigger: "blur" }
         ],
         phone: [
-          { required: true, message: "客户电话不能为空", trigger: "blur" }
+          { required: true, message: "您的手机号不能为空" },
+          {
+            pattern: /^1[3-9]\d{9}$/, // 正则表达式
+            message: "您的手机号格式不正确"
+          }
         ]
       }
     };
   },
+  computed:{
+    //   filterColor(i){
+    //      return if(i=0){
+
+    //      }
+    //   }
+  },
   created() {
+    this.userInfo();
     this.getList();
     this.getDicts("customer_level").then(response => {
       this.levelOptions = response.data;
@@ -434,10 +465,6 @@ export default {
     });
     this.getDicts("genjin_days").then(response => {
       this.customerGenjinOptions = response.data;
-    });
-  },
-  methods: {
-    getTimeRange(i) {
       var num = this.customerGenjinOptions.map(item => {
         var a = Number(item.dictValue);
         return a;
@@ -446,11 +473,31 @@ export default {
         return Number(item);
       });
       this.customerGenjinnum = num;
-      this.queryParams.pageNum = 1;
-      (this.queryParams.inputDateStart = this.getBeforeDate(num[i])),
-        (this.queryParams.inputDateEnd = this.getBeforeDate(num[i + 1]));
-      this.getList();
+    });
+  },
+  methods: {
+      getUserId(i){
+         console.log(i)
+      },
+    // 获取user用户信息
+    userInfo() {
+      listUser().then(response => {
+          this.user=response.rows
+          console.log(response.rows)
+      });
     },
+    //   15,30,60时间段数据获取
+    getTimeRange(i) {
+      this.queryParams.pageNum = 1;
+      (this.queryParams.inputDateStart = this.getBeforeDate(
+        -this.customerGenjinnum[i + 1]
+      )),
+        (this.queryParams.inputDateEnd = this.getBeforeDate(
+          -this.customerGenjinnum[i]
+        )),
+        this.getList();
+    },
+    // 日期格式
     getBeforeDate(AddDayCount) {
       var dd = new Date();
       dd.setDate(dd.getDate() + AddDayCount); //获取AddDayCount天后的日期
@@ -465,6 +512,9 @@ export default {
       this.queryParams.province = i[0];
       this.queryParams.city = i[1];
       this.queryParams.district = i[2];
+      this.form.province = i[0];
+      this.form.city = i[1];
+      this.form.district = i[2];
     },
     /** 查询我的客户列表 */
     getList() {
@@ -525,10 +575,6 @@ export default {
       this.queryParams.pageNum = 1;
       (this.queryParams.inputDateStart = this.inputDate[0]),
         (this.queryParams.inputDateEnd = this.inputDate[1]);
-      //   const params={
-      //      inputDateStart:this.inputDate && this.inputDate.length ? this.inputDate[0] : null,
-      //      inputDateEnd:this.inputDate && this.inputDate.length ? this.inputDate[1] : null,
-      //   }
       this.getList();
     },
     /** 重置按钮操作 */
@@ -547,7 +593,6 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加我的客户";
-
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -555,6 +600,7 @@ export default {
       const id = row.id || this.ids;
       getCustomer(id).then(response => {
         this.form = response.data;
+        console.log(this.form);
         this.open = true;
         this.title = "修改我的客户";
       });
@@ -564,12 +610,14 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
+            this.form.status = 1;
             updateCustomer(this.form).then(response => {
               this.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
+            this.form.status = 1;
             addCustomer(this.form).then(response => {
               this.msgSuccess("新增成功");
               this.open = false;
