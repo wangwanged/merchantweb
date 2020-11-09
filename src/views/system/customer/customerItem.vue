@@ -2,11 +2,11 @@
   <div class="container">
     <div class="header">
       <div class="header_top">
-        <span class="title_name fl">郭富城</span>
+        <span class="title_name fl">{{customerList.name}}</span>
         <div class="circle fl">A</div>
-        <el-dropdown @command="changeGenjin">
+        <el-dropdown >
           <el-button size="small" type="primary"
-            >{{ showGenjin }}<i class="el-icon-arrow-down el-icon--right"></i
+            >{{ customerList.status }}<i class="el-icon-arrow-down el-icon--right"></i
           ></el-button>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item
@@ -129,7 +129,7 @@
 </template>
 
 <script>
-import Follow from "@/components/Sosoitem/follow";
+import Follow from "@/views/components/Sosoitem/follow";
 import {
   listCustomer,
   getCustomer,
@@ -141,17 +141,16 @@ import {
 export default {
   data() {
     return {
+        // 当前详情页id
+      id: this.$route.query.id,
       // 总条数
       total: 0,
       // 我的客户表格数据
-      customerList: [],
-      levelOptions: [],
-      genjinStatus: [],
-      showGenjin: "跟进",
-      //   客户当前id
-      id: this.$route.query.id,
-      src:
-        "https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg",
+      customerList: [],      
+    //   跟进状态
+      genjinStatus:[],
+    //   显示的跟进状态
+      showGenjin: "跟进",   
       tableData: [
         {
           date: "2016-05-02",
@@ -180,10 +179,10 @@ export default {
     this.getDicts("customer_level").then(response => {
         var a = response.data.filter(item=>{
             if(item.dictValue===this.customerList.level){
-                return item
+                return item;
             }
+            this.customerList.level=a[0].dictLabel;
         })
-        this.customerList.level=a[0].dictLabel
     });
     this.getDicts("sys_user_need").then(response => {
        var a = response.data.filter(item=>{
@@ -191,6 +190,7 @@ export default {
                 return item
             }
         })
+        console.log(a)
         this.customerList.resource=a[0].dictLabel
     });
      this.getDicts("sys_customer_resource").then(response => {
@@ -203,22 +203,14 @@ export default {
     });
   },
   methods: {
-    //   跳转后的数据
+    //   当前页全部数据
     getList() {
-      this.customerList = this.$store.state.sosoitem.customerList;
-      this.customerList = this.customerList.filter(item => {
-        return item.id === this.id;
-      })[0];
-    },
-    changeGenjin(i) {
-      console.log(i);
-    },
-    // 客户等级字典翻译
-    levelFormat(row, column) {
-      return this.selectDictLabel(this.levelOptions, row.level);
+      getCustomer(this.id).then(response => {
+        this.customerList = response.data;
+        console.log(this.customerList)
+      });
     },
   },
-  computed: {}
 };
 </script>
 

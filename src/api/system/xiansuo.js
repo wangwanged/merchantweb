@@ -1,11 +1,11 @@
 import request from '@/utils/request'
 
 // 查询客户线索列表
-export function listXiansuo(query) {
+export function listXiansuo(data) {
   return request({
     url: '/system/xiansuo/list',
-    method: 'get',
-    params: query
+    method: 'post',
+    data: data
   })
 }
 

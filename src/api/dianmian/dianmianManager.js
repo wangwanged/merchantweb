@@ -1,11 +1,11 @@
 import request from '@/utils/request'
 
 // 查询店面管理列表
-export function listDianmianManager(query) {
+export function listDianmianManager(data) {
   return request({
     url: '/dianmian/dianmianManager/list',
-    method: 'get',
-    params: query
+   method: 'post',
+    data: data
   })
 }
 

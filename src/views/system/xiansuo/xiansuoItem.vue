@@ -162,7 +162,7 @@
 </template>
 
 <script>
-import Follow from "@/components/Sosoitem/follow.vue";
+import Follow from "@/views/components/Sosoitem/follow.vue";
 export default {
   data() {
     return {

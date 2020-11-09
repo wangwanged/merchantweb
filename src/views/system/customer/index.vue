@@ -190,7 +190,8 @@
           <el-button
             @click="
               $router.push({
-                path: '/customer/customeritem/obj.row.id'
+                path: '/customer/customeritem',
+                query: { id: obj.row.id }
               })
             "
             size="small"
@@ -330,7 +331,6 @@
         </el-form-item> -->
         <el-form-item label="负责人" prop="username">
           <el-select
-           @change='getUserId(index)'
             filterable
             v-model="form.username"
             placeholder="选择人员"
@@ -346,7 +346,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="所属部门">
-            <el-input placeholder="人员部门">{{}}</el-input>
+          <el-input placeholder="人员部门">{{}}</el-input>
           <!-- <el-input v-model="user.dept.deptName[form.userName]" placeholder="人员部门" disabled /> -->
         </el-form-item>
       </el-form>
@@ -444,7 +444,7 @@ export default {
     };
   },
   created() {
-    this.userInfo();
+    this.userInfo()
     this.getList();
     this.getDicts("customer_level").then(response => {
       this.levelOptions = response.data;
@@ -468,13 +468,22 @@ export default {
     });
   },
   methods: {
-      getUserId(i){
-         console.log(i)
-      },
+    //   getUserId(i){
+    //      console.log(i)
+    //   },
     // 获取user用户信息
     userInfo() {
-      listUser().then(response => {
+      listUser({}).then(response => {
           this.user=response.rows
+        //   一会在写
+        //   console.log(this.user)
+        //   var a  = this.user.filter(item=>{
+        //       console.log(item.userName)
+        //       if(this.form.username===item.userName){
+        //           return item
+        //       }
+        //   })
+        //   console.log(a)
       });
     },
     // 根据天数筛选颜色
@@ -567,7 +576,7 @@ export default {
       this.resetForm("form");
     },
     /** 搜索按钮操作 */
-    handleQuery() { 
+    handleQuery() {
       this.queryParams.pageNum = 1;
       (this.queryParams.inputDateStart = this.inputDate[0]),
         (this.queryParams.inputDateEnd = this.inputDate[1]);
@@ -576,9 +585,6 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
-      this.queryParams.province='';
-      this.queryParams.city='';
-      this.queryParams.district='';
       this.handleQuery();
     },
     // 多选框选中数据
@@ -608,14 +614,12 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            this.form.status = 1;
             updateCustomer(this.form).then(response => {
               this.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            this.form.status = 1;
             addCustomer(this.form).then(response => {
               this.msgSuccess("新增成功");
               this.open = false;
