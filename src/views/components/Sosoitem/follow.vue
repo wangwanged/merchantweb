@@ -1,16 +1,16 @@
 <template>
   <section>
-    <div v-if='this.genjinList.length!==0'>当前没有跟进信息</div>
-    <div class="main_content_top" v-else>
+    <div v-if='genjinList.length===0'>当前没有跟进信息</div>
+    <div v-for='item in genjinList' :key='item.customerId' class="main_content_top" v-else>
       <div class="main_content_name">
-        <span class="main_content_firstname">您好</span>
+        <span class="main_content_firstname">{{item.updateDate}}</span>
         <span class="right"
-          >你好 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          拜访</span
+          >{{item.customerName}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          {{item.method}}</span
         >
       </div>
       <p class="main_content_name">
-        你哄啊
+        {{item.content}}
       </p>
       <p class="main_content_name__placeholder">
         <el-image
@@ -25,18 +25,15 @@
     </div>
     <el-dialog
       title="写跟进"
-      :visible.sync="$store.state.sosoitem.dialogfollow"
+      :visible.sync="this.$store.state.sosoitem.customer.dialogfollow"
       width="45%"
       class="el_dialog_follow"
     >
-      <el-input class="input" placeholder="请输入跟进方式"></el-input>
+      <el-input v-model='addInfo.method' class="input" placeholder="请输入跟进方式"></el-input>
       <textarea
+        v-model='addInfo.content'
         class="textarea"
         placeholder="请输入跟进内容"
-        name=""
-        id=""
-        cols="30"
-        rows="10"
       ></textarea>
       <el-upload
         ref='upload'
@@ -83,7 +80,7 @@
       </el-dialog>
 
       <span slot="footer" class="dialog-footer">
-        <el-button @click="$store.state.sosoitem.dialogfollow = false"
+        <el-button @click="this.$store.state.sosoitem.customer.dialogfollow = false"
           >取 消</el-button
         >
         <el-button type="primary" @click="handleAdd()">确 定</el-button>
@@ -108,17 +105,17 @@ export default {
       },
       //   当前客户数据id
       id: this.$route.query.id,
-      //   当前页全部数据
+      //   跟进全部数据
       genjinList: [],
       // 写跟进添加数据
       addInfo: {
         imgs: [],
-        content: "string",
-        customerId: 2,
+        content: null,
+        customerId: this.$route.query.id,
         customerName: "string",
         genjinDate: "2020-11-05T08:16:05.542Z",
         image: "string",
-        method: "string",
+        method: null,
         status: "1",
         sysUserId: 0,
         updateDate: "2020-11-05T08:16:05.542Z"
@@ -138,7 +135,6 @@ export default {
       ]
     };
   },
-  computed: {},
   created() {
     this.getList();
   },
@@ -162,7 +158,6 @@ export default {
       getGenjin(this.id).then(response => {
         this.genjinList = response.rows;
         console.log(this.genjinList)
-        this.genjinList = this.genjinList[0];
       });
     },
     uploadFile(file){
@@ -174,7 +169,7 @@ export default {
         this.addInfo.imgs.push(res.url)
         console.log()
       },
-    // 写跟进确定按钮操作
+    // 添加跟进信息
     handleAdd() {
           this.$refs.upload.submit();
           
@@ -184,6 +179,7 @@ export default {
     //   });
       addGenjin(this.addInfo).then(response => {
         console.log(response);
+        this.getList()
       });
     }
   }

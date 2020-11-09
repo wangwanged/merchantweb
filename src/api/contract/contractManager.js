@@ -51,3 +51,11 @@ export function exportContractManager(query) {
     params: query
   })
 }
+
+// 请求客户合同
+export function getContractInfo(id) {
+  return request({
+    url: '/contract/contractManager/list/' + id,
+    method: 'get'
+  })
+}

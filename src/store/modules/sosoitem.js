@@ -1,8 +1,20 @@
 const state = {
-    // 写跟进按钮
+    // 客户弹窗
+  customer:{
+      // 写跟进按钮
    dialogfollow:false,
+    //  详情新签合同按钮
    dialogNewsign:false,
-   customerList:[]
+   // 详情编辑按钮
+   dialogedit:false,
+   // 详情转移按钮
+   dialogTransfor:false,
+   //  失效按钮
+   dialogeInvalid:false,
+ }
+    
+   
+   
 }
 
 const mutations = {

@@ -1,16 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="客户姓名" prop="name">
-        <el-input
-          v-model="queryParams.name"
-          placeholder="请输入客户姓名"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="电话" prop="phone">
+      <el-form-item  prop="phone">
         <el-input
           v-model="queryParams.phone"
           placeholder="请输入电话"
@@ -19,37 +10,8 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="城市" prop="companyId">
-        <el-select v-model="queryParams.companyId" placeholder="请选择城市" clearable size="small">
-          <el-option
-            v-for="dict in companyIdOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="省" prop="province">
-        <el-select v-model="queryParams.province" placeholder="请选择省" clearable size="small">
-          <el-option
-            v-for="dict in provinceOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="城市" prop="city">
-        <el-select v-model="queryParams.city" placeholder="请选择城市" clearable size="small">
-          <el-option
-            v-for="dict in cityOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="线索来源" prop="resource">
+      <Liandong @placeInfo="getPlace(arguments)"></Liandong>
+      <el-form-item  prop="resource">
         <el-select v-model="queryParams.resource" placeholder="请选择线索来源" clearable size="small">
           <el-option
             v-for="dict in resourceOptions"
@@ -59,7 +21,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="负责人" prop="sysUserId">
+      <el-form-item  prop="sysUserId">
         <el-input
           v-model="queryParams.sysUserId"
           placeholder="请输入负责人"
@@ -68,7 +30,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="创建时间" prop="createTime">
+      <el-form-item  prop="createTime">
         <el-date-picker clearable size="small" style="width: 200px"
           v-model="queryParams.createTime"
           type="date"
@@ -76,7 +38,7 @@
           placeholder="选择创建时间">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="最新跟进时间" prop="updateTime">
+      <el-form-item  prop="updateTime">
         <el-date-picker clearable size="small" style="width: 200px"
           v-model="queryParams.updateTime"
           type="date"
@@ -189,6 +151,7 @@
         <el-form-item label="电话" prop="phone">
           <el-input v-model="form.phone" placeholder="请输入电话" />
         </el-form-item>
+        <Liandong @placeInfo="getPlace(arguments)"></Liandong>
         <el-form-item label="城市" prop="companyId">
           <el-select v-model="form.companyId" placeholder="请选择城市">
             <el-option
@@ -243,7 +206,7 @@
 
 <script>
 import { listXiansuo, getXiansuo, delXiansuo, addXiansuo, updateXiansuo, exportXiansuo } from "@/api/system/xiansuo";
-
+import Liandong from "@/components/Liandong/liandong.vue";
 export default {
   name: "Xiansuo",
   data() {
@@ -325,6 +288,9 @@ export default {
       }
     };
   },
+   components: {
+    Liandong
+  },
   created() {
     this.getList();
     this.getDicts("sys_company").then(response => {
@@ -346,9 +312,18 @@ export default {
       this.loading = true;
       listXiansuo(this.queryParams).then(response => {
         this.xiansuoList = response.rows;
+        console.log(this.xiansuoList)
         this.total = response.total;
         this.loading = false;
       });
+    },
+    getPlace(i) {
+      this.queryParams.province = i[0];
+      this.queryParams.city = i[1];
+      this.queryParams.district = i[2];
+      this.form.province = i[0];
+      this.form.city = i[1];
+      this.form.district = i[2];
     },
     // 城市字典翻译
     companyIdFormat(row, column) {
