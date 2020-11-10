@@ -59,10 +59,37 @@ export function getGenjin(id) {
     method: 'get',
   })
 }
-
+// 添加跟进
 export function addGenjin(data) {
   return request({
     url: '/system/genjin',
+    method: 'post',
+    data: data
+  })
+}
+
+// 转移的模糊搜索
+export function transforCustomer(params) {
+  return request({
+    url: 'system/user/list/keywords',
+    method: 'get',
+    params:params
+  })
+}
+
+// 客户失效
+export function invalidCustomer(data) {
+  return request({
+    url: '/system/customers',
+    method: 'put',
+    data: data
+  })
+}
+
+// 新签合同
+export function newSignContrast(data) {
+  return request({
+    url: '/contract/contractManager',
     method: 'post',
     data: data
   })
