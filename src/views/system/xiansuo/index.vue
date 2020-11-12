@@ -97,7 +97,21 @@
     <el-table v-loading="loading" :data="xiansuoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="最新跟进时间" align="center" prop="id" />
-      <el-table-column label="客户姓名" align="center" prop="name" />
+      <el-table-column label="客户姓名" align="center" prop="name">
+           <template slot-scope="obj">
+          <el-button
+            @click="
+              $router.push({
+                path: '/xiansuo/xiansuoitem',
+                query: { id: obj.row.id }
+              })
+            "
+            size="small"
+            type="text"
+            >{{ obj.row.name }}</el-button
+          >
+        </template>
+      </el-table-column>
       <el-table-column label="电话" align="center" prop="phone" />
       <el-table-column label="城市" align="center" prop="companyId" :formatter="companyIdFormat" />
       <el-table-column label="省" align="center" prop="province" :formatter="provinceFormat" />

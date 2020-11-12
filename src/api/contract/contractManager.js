@@ -59,3 +59,11 @@ export function getContractInfo(id) {
     method: 'get'
   })
 }
+
+// 关联合同信息
+export function relatedContract(num) {
+  return request({
+    url: '/contract/contractManager/list/'+ num,
+    method: 'get',
+  })
+}

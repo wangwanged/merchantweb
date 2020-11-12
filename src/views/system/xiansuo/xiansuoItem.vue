@@ -2,18 +2,8 @@
   <div class="container">
     <div class="header">
       <div class="header_top">
-        <span class="title_name">郭富城</span>
-        <el-dropdown @command="changeGenjin">
-          <el-button type="primary">{{ showGenjin }}</el-button>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item
-              v-for="(item, index) in genjinStatus"
-              :key="index"
-              :command="item"
-              >{{ item }}</el-dropdown-item
-            >
-          </el-dropdown-menu>
-        </el-dropdown>
+        <span class="title_name">{{xiansuoList.name}}</span>
+          <el-button type="primary">{{xiansuoList.status  }}</el-button>
         <el-button @click="dialogrollout = true">转成客户</el-button>
       </div>
       <div class="header_bottom">
@@ -30,59 +20,55 @@
         <div class="main_content_top">
           <p class="main_content_name">
             <span class="main_content_firstname">客户等级：</span>
-            <span>A(重要客户)</span>
+            <span>{{xiansuoList.level}}</span>
           </p>
           <p class="main_content_name">
             <span class="main_content_firstname">客户需求：</span>
-            <span>区域加盟</span>
+            <span>{{xiansuoList.customerNeeds}}</span>
           </p>
           <p class="main_content_name">
             <span class="main_content_firstname">地区：</span>
-            <span>河北省 石家庄 长安区</span>
+            <span>{{xiansuoList.province}} {{xiansuoList.city}} {{xiansuoList.district}}</span>
           </p>
           <p class="main_content_name">
             <span class="main_content_firstname">公司：</span>
-            <span>正大房产</span>
+            <span>{{xiansuoList.companyName}}</span>
           </p>
           <p class="main_content_name">
             <span class="main_content_firstname">店面地址：</span>
-            <span>昌黎镇鼓楼东街90号</span>
+            <span>{{xiansuoList.dianmianAddress}}</span>
           </p>
           <p class="main_content_name">
             <span class="main_content_firstname">中介经验：</span>
-            <span>创业小白</span>
+            <span>{{xiansuoList.experience}}</span>
           </p>
           <p class="main_content_name">
             <span class="main_content_firstname">客户来源：</span>
-            <span>机器人</span>
+            <span>{{xiansuoList.resource}}</span>
           </p>
           <p class="main_content_name">
             <span class="main_content_firstname">备注：</span>
             <span
-              >备注信息备注信息备注信息备注信息备注信息备注信息备注信息备注信息</span
+              >{{xiansuoList.remark}}</span
             >
           </p>
           <div class="line_between"></div>
           <div class="main_title">系统信息</div>
-          <p class="main_content_name">
-            <span class="main_content_firstname">客户等级：</span>
-            <span>A(重要客户)</span>
+         <p class="main_content_name">
+            <span class="main_content_firstname">录入人：</span>
+            <span>{{ xiansuoList.luruName }}</span>
           </p>
           <p class="main_content_name">
-            <span class="main_content_firstname">客户需求：</span>
-            <span>区域加盟</span>
+            <span class="main_content_firstname">负责人：</span>
+            <span>{{ xiansuoList.username }}</span>
           </p>
           <p class="main_content_name">
-            <span class="main_content_firstname">地区：</span>
-            <span>河北省 石家庄 长安区</span>
+            <span class="main_content_firstname">录入时间：</span>
+            <span>{{ xiansuoList.inputDate }}</span>
           </p>
           <p class="main_content_name">
-            <span class="main_content_firstname">公司：</span>
-            <span>正大房产</span>
-          </p>
-          <p class="main_content_name">
-            <span class="main_content_firstname">店面地址：</span>
-            <span>昌黎镇鼓楼东街90号</span>
+            <span class="main_content_firstname">最新跟进：</span>
+            <span>{{ xiansuoList.genjinDate }}</span>
           </p>
         </div>
       </div>
@@ -104,42 +90,42 @@
     </div>
     <!-- 转成客户dialog弹出 -->
     <el-dialog title="转成客户" :visible.sync="dialogrollout" width="50%">
-      <el-form label-position="left" label-width="80px">
+      <el-form  label-position="left" label-width="80px">
         <el-form-item label="客户姓名">
-          <el-input></el-input>
+          <el-input v-model='xiansuoList.name'></el-input>
         </el-form-item>
         <el-form-item label="客户电话">
-          <el-input></el-input>
+          <el-input v-model='xiansuoList.phone'></el-input>
         </el-form-item>
         <el-form-item label="客户等级">
-          <el-select placeholder="请选择活动区域">
+          <el-select v-model='xiansuoList.level' placeholder="请选择活动区域">
             <el-option label="区域一"></el-option>
             <el-option label="区域二"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="客户需求">
-          <el-select placeholder="请选择活动区域">
+          <el-select v-model='xiansuoList.customerNeeds' placeholder="请选择活动区域">
             <el-option label="区域一"></el-option>
             <el-option label="区域二"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="客户地区">
-          <el-input></el-input>
+        <el-form-item  label="客户地区">
+          <el-input v-model='xiansuoList.district'></el-input>
         </el-form-item>
         <el-form-item label="客户公司">
-          <el-input></el-input>
+          <el-input v-model='xiansuoList.companyName'></el-input>
         </el-form-item>
         <el-form-item label="店面地址">
-          <el-input></el-input>
+          <el-input v-model='xiansuoList.dianmianAddress'></el-input>
         </el-form-item>
         <el-form-item label="中介经验">
-          <el-select placeholder="请选择活动区域">
+          <el-select v-model='xiansuoList.experience' placeholder="请选择活动区域">
             <el-option label="区域一"></el-option>
             <el-option label="区域二"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="负责人">
-          <el-select placeholder="请选择活动区域">
+          <el-select v-model='xiansuoList.username' placeholder="请选择活动区域">
             <el-option label="区域一"></el-option>
             <el-option label="区域二"></el-option>
           </el-select>
@@ -152,8 +138,8 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="$store.state.sosoitem.dialogfollow = false">取 消</el-button>
-        <el-button type="primary" @click="$store.state.sosoitem.dialogfollow = false"
+        <el-button @click="dialogrollout = false">取 消</el-button>
+        <el-button type="primary" @click="transforToCustomer()"
           >保存</el-button
         >
       </span>
@@ -162,33 +148,24 @@
 </template>
 
 <script>
+import { getXiansuo,listXiansuo} from "@/api/system/xiansuo";
+import { updateCustomer} from "@/api/system/customer";
 import Follow from "@/views/components/Sosoitem/follow.vue";
 export default {
   data() {
-    return {
-      dialogrollout: false,
+    return {   
+      id: this.$route.query.id,  // 当前id
+      xiansuoList:[],  // 当前线索列表
+      systemuser:[],   //系统信息
+      dialogrollout: false,  //转成客户按钮
       genjinStatus: [],
       showGenjin: "跟进",
-      src:
-        "https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg",
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄"
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄"
-        }
-      ]
     };
   },
   created() {
+    this.getList()
     //   获取跟进状态字典
     this.getDicts("customer_genjin").then(response => {
-      // console.log(response)
       this.genjinStatus = response.data.map(item => {
         return item.dictValue;
       });
@@ -196,8 +173,25 @@ export default {
   },
   computed: {},
   methods: {
-    changeGenjin(i) {
-      this.showGenjin = i;
+     /** 查询当前客户线索列表 */
+    getList() {
+      getXiansuo(this.id).then(response => {
+        this.xiansuoList = response.data;
+        console.log('getXiansuo', this.xiansuoList)
+      });
+    },
+    // 转成客户
+    transforToCustomer(){
+        this.xiansuoList.status='1'
+        this.xiansuoList.genjinDate=null
+        updateCustomer(this.xiansuoList).then(res=>{
+            //  window.location.href = 'http://localhost/xiansuo/xiansuo';
+            window.history.back(-1);
+             this.$message.success('转移成功')
+             this.dialogrollout=false
+        }).catch(error=>{
+            this.$message.error('转移失败')
+        })
     }
   },
   components: {

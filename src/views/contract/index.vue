@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="合同编号" prop="num">
+      <el-form-item  prop="num">
         <el-input
           v-model="queryParams.num"
           placeholder="请输入合同编号"
@@ -10,7 +10,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="客户姓名" prop="customerName">
+      <el-form-item  prop="customerName">
         <el-input
           v-model="queryParams.customerName"
           placeholder="请输入客户姓名"
@@ -19,7 +19,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="客户手机号" prop="customerPhone">
+      <el-form-item  prop="customerPhone">
         <el-input
           v-model="queryParams.customerPhone"
           placeholder="请输入客户手机号"
@@ -28,8 +28,8 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="合同类型(0：新签:1：续签)" prop="type">
-        <el-select v-model="queryParams.type" placeholder="请选择合同类型(0：新签:1：续签)" clearable size="small">
+      <el-form-item  prop="type">
+        <el-select v-model="queryParams.type" placeholder="请选择合同类型" clearable size="small">
           <el-option
             v-for="dict in typeOptions"
             :key="dict.dictValue"
@@ -38,7 +38,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="签约产品" prop="produce">
+      <el-form-item prop="produce">
         <el-select v-model="queryParams.produce" placeholder="请选择签约产品" clearable size="small">
           <el-option
             v-for="dict in produceOptions"
@@ -48,7 +48,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="操作" prop="operation">
+      <el-form-item  prop="operation">
         <el-input
           v-model="queryParams.operation"
           placeholder="请输入操作"
@@ -57,7 +57,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="签约日期" prop="signDate">
+      <el-form-item  prop="signDate">
         <el-date-picker clearable size="small" style="width: 200px"
           v-model="queryParams.signDate"
           type="date"
@@ -65,7 +65,7 @@
           placeholder="选择签约日期">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="合同开始日期" prop="beginDate">
+      <el-form-item  prop="beginDate">
         <el-date-picker clearable size="small" style="width: 200px"
           v-model="queryParams.beginDate"
           type="date"
@@ -73,7 +73,7 @@
           placeholder="选择合同开始日期">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="合同结束日期" prop="endDate">
+      <el-form-item  prop="endDate">
         <el-input
           v-model="queryParams.endDate"
           placeholder="请输入合同结束日期"
@@ -82,7 +82,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="生效失效状态" prop="status">
+      <el-form-item  prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择生效失效状态" clearable size="small">
           <el-option
             v-for="dict in statusOptions"
@@ -143,31 +143,41 @@
     <el-table v-loading="loading" :data="contractManagerList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="合同表主键id" align="center" prop="id" />
-      <el-table-column label="合同编号" align="center" prop="num" />
-      <el-table-column label="客户姓名" align="center" prop="customerName" />
-      <el-table-column label="客户手机号" align="center" prop="customerPhone" />
-      <el-table-column label="合同类型(0：新签:1：续签)" align="center" prop="type" :formatter="typeFormat" />
+      <el-table-column label="合同编号" align="center" prop="num">
+          <template slot-scope="obj">
+          <el-button
+            @click="
+              $router.push({
+                path: '/contract/contractItem',
+                query: { id: obj.row.id }
+              })
+            "
+            size="small"
+            type="text"
+            >{{ obj.row.num }}</el-button
+          >
+        </template>
+      </el-table-column>
+      <el-table-column label="合同类型" align="center" prop="type" :formatter="typeFormat" />
+      <el-table-column label="客户姓名" align="center" prop="customerName" />  
       <el-table-column label="签约产品" align="center" prop="produce" :formatter="produceFormat" />
-      <el-table-column label="店面或区域名称" align="center" prop="dianmianName" />
+      <el-table-column label="店面/区域名称" align="center" prop="dianmianName" />
       <el-table-column label="店面数量" align="center" prop="dianmianNum" />
-      <el-table-column label="保证金" align="center" prop="guarantee" />
-      <el-table-column label="各种费用" align="center" prop="fee" />
-      <el-table-column label="操作" align="center" prop="operation" />
+      <el-table-column label="履约保证金" align="center" prop="guarantee" />
+      <el-table-column label="费用信息" align="center" prop="fee" />
       <el-table-column label="负责人" align="center" prop="manager" />
       <el-table-column label="签约日期" align="center" prop="signDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.signDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="签约人员" align="center" prop="signUser" />
       <el-table-column label="合同开始日期" align="center" prop="beginDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.beginDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="合同结束日期" align="center" prop="endDate" />
-      <el-table-column label="生效失效状态" align="center" prop="status" :formatter="statusFormat" />
-      <el-table-column label="备注信息" align="center" prop="remark" />
+      <el-table-column label="合同状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -187,7 +197,6 @@
         </template>
       </el-table-column>
     </el-table>
-    
     <pagination
       v-show="total>0"
       :total="total"

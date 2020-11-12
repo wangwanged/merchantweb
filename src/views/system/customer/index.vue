@@ -475,7 +475,6 @@ export default {
     userInfo() {
       listUser({}).then(response => {
           this.user=response.rows
-        //   一会在写
         //   console.log(this.user)
         //   var a  = this.user.filter(item=>{
         //       console.log(item.userName)

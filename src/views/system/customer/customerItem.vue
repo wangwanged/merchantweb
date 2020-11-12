@@ -12,15 +12,14 @@
         <el-button size="small" type="primary" @click="dialogNewsign = true"
           >新签合同</el-button
         >
-        <el-button size="small" @click="handleUpdate()">编辑</el-button>
-        <el-button size="small" @click="handleTransfor()">转移</el-button>
-        <el-button size="small" @click="handleinvlid()">失效</el-button>
+        <el-button size="small" @click="dialogedit=true">编辑</el-button>
+        <el-button size="small" @click="dialogTransfor=true">转移</el-button>
+        <el-button size="small" @click=" dialogeInvalid= true">失效</el-button>
       </div>
       <div class="header_bottom">
         <span>{{ customerList.phonenumber }}</span>
       </div>
     </div>
-
     <div class="main">
       <div class="main_left">
         <div class="tab_style">
@@ -279,13 +278,13 @@
       </span>
     </el-dialog>
     <!-- 编辑我的客户 -->
-    <!-- <el-dialog
-      title="修改我的客户"
+    <el-dialog
+      title="编辑客户"
       :visible.sync="dialogedit"
       width="500px"
       append-to-body
     >
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form  :model="form" :rules="rules" label-width="80px">
         <el-form-item label="客户姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入" />
         </el-form-item>
@@ -355,10 +354,10 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogedit = false">确 定</el-button>
-        <el-button @click="dialogedit = false">取 消</el-button>
+        <el-button type="primary" @click="dialogTransfor = false">确 定</el-button>
+        <el-button @click="dialogTransfor = false">取 消</el-button>
       </div>
-    </el-dialog> -->
+    </el-dialog>
     <!-- 客户转移弹框 -->
     <el-dialog title="客户转移" :visible.sync="dialogTransfor" width="500px">
       <!-- <el-select
@@ -397,7 +396,7 @@
         </td>
       </tr>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogeInvalid = false"
+        <el-button type="primary" @click="handleinvlid()"
           >确 定</el-button
         >
         <el-button @click="dialogeInvalid = false">取 消</el-button>
@@ -462,17 +461,34 @@ export default {
         dianmianNum: null,
         dianmianProvince: "河北省"
       },
+      //   编辑按钮
+      editinfo: {
+        pageNum: 1,
+        pageSize: 10,
+        name: null,
+        phone: null,
+        level: null,
+        customerNeeds: null,
+        companyName: null,
+        province: null,
+        dianmianAddress: null,
+        city: null,
+        district: null,
+        resource: null,
+        username: null,
+        inputDateStart: null,
+        inputDateEnd: null
+      },
+      form:{},
       // 失效信息
       invalidinfo: {
         ids: [this.$route.query.id],
         status: "0"
       },
       //   转移信息
-      transforinfo: {
-        //   转移获取信息
-        transforlist: [],
-        //   关键字
-        keywords: ""
+      transforinfo: {     
+        transforlist: [],  //   转移获取信息
+        keywords: ""  //   关键字
       },
       //  详情新签合同弹框
       dialogNewsign: false,
@@ -496,7 +512,6 @@ export default {
       genjinStatus: [],
       //   显示的跟进状态
       showGenjin: "跟进",
-      form: {},
       tableData: [
         {
           date: "2016-05-02",
@@ -537,7 +552,6 @@ export default {
           return item;
         }
       });
-      console.log(a);
       this.customerList.resource = a[0].dictLabel;
     });
     this.getDicts("sys_customer_resource").then(response => {
@@ -563,14 +577,27 @@ export default {
     handlecontrast() {
       this.newsigninfo.fee = JSON.stringify(this.newsigninfo.fee);
       newSignContrast(this.newsigninfo).then(response => {
-        console.log(response);
+           this.$message.success('新签合同成功')
+      }).catch(error=>{
+          this.$message.error('新签合同失败')
+      });
+    },
+    // 编辑按钮
+     handleUpdate() {
+      getCustomer(this.id).then(response => {
+        this.form = response.data;
+        this.dialogedit = true;
       });
     },
     // 失效按钮操作
     handleinvlid() {
       this.dialogeInvalid = true;
       invalidCustomer(this.invalidinfo).then(response => {
-        console.log(response);
+         this.$message.success('转移成功')
+         this.$router.push('/customer/customer')
+         this.getList()
+      }).catch(error=>{
+          this.$message.error('转移失败')
       });
     },
     // 转移按钮操作
@@ -589,13 +616,6 @@ export default {
       //     }
       //   }
       //   return arr;
-    },
-    /** 修改按钮操作 */
-    handleUpdate(id) {
-      getCustomer(id).then(response => {
-        this.form = response.data;
-        this.dialogedit = true;
-      });
     },
     getList() {
       // 获取当前页客户信息

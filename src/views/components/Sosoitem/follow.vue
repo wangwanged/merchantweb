@@ -1,185 +1,144 @@
 <template>
   <section>
-    <div v-if='genjinList.length===0'>当前没有跟进信息</div>
-    <div v-for='item in genjinList' :key='item.customerId' class="main_content_top" v-else>
+    <div v-if="genjinList.length === 0">当前没有跟进信息</div>
+    <div
+      v-for="item in genjinList"
+      :key="item.customerId"
+      class="main_content_top"
+      v-else
+    >
       <div class="main_content_name">
-        <span class="main_content_firstname">{{item.updateDate}}</span>
+        <span class="main_content_firstname">{{ item.updateDate }}</span>
         <span class="right"
-          >{{item.customerName}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          {{item.method}}</span
+          >{{ item.customerName }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          {{ item.method }}</span
         >
       </div>
       <p class="main_content_name">
-        {{item.content}}
+        {{ item.content }}
       </p>
       <p class="main_content_name__placeholder">
         <el-image
-          v-for="(item, index) in 3"
+          v-for="(item, index) in addInfo.imgs"
           :key="index"
-          src="#"
+          :src="item"
           style="width: 120px; height: 70px;margin-right:20px"
           fit="contain"
         ></el-image>
       </p>
       <div class="line_between"></div>
     </div>
-    <el-dialog
-      title="写跟进"
-      :visible.sync="this.$store.state.sosoitem.customer.dialogfollow"
-      width="45%"
-      class="el_dialog_follow"
-    >
-      <el-input v-model='addInfo.method' class="input" placeholder="请输入跟进方式"></el-input>
-      <textarea
-        v-model='addInfo.content'
-        class="textarea"
-        placeholder="请输入跟进内容"
-      ></textarea>
-      <el-upload
-        ref='upload'
-        multiple
-        list-type="picture-card"
-        action=" http://192.168.53.237:8888/system/genjin/genjinImg"
-        :on-success="handleAvatarSuccess"
-        :auto-upload="false"
-        name='imgs'
-        :headers='imgList.myHeaders'
-        :http-request="uploadFile"
-         :on-change="handleChange"
-      >
-        <i slot="default" class="el-icon-plus"></i>
-        <div slot="file" slot-scope="{ file }">
-          <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
-          <span class="el-upload-list__item-actions">
-            <span
-              class="el-upload-list__item-preview"
-              @click="handlePictureCardPreview(file)"
+    <el-button @click="dialogfollow = true">aaa</el-button>
+    <el-dialog title="写跟进" :visible.sync="dialogfollow" width="40%">
+      <el-form>
+        <el-form-item>
+          <el-input
+            v-model="addInfo.method"
+            class="input"
+            placeholder="请输入跟进方式"
+          ></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-input
+            type="textarea"
+            :autosize="{ minRows: 8, maxRows: 10 }"
+            placeholder="请输入跟进内容"
+            v-model="addInfo.content"
+          >
+          </el-input>
+           <div class="status">
+            <el-button
+              size="small"
+              plain
+              type="info"
+              v-for="(item, index) in genjinStatus"
+              :key="index"
+              >{{ item }}</el-button
             >
-              <i class="el-icon-zoom-in"></i>
-            </span>
-            <span
-              v-if="!disabled"
-              class="el-upload-list__item-delete"
-              @click="handleDownload(file)"
-            >
-              <i class="el-icon-download"></i>
-            </span>
-            <span
-              v-if="!disabled"
-              class="el-upload-list__item-delete"
-              @click="handleRemove(file)"
-            >
-              <i class="el-icon-delete"></i>
-            </span>
-          </span>
-        </div>
-      </el-upload>
-
-      <el-dialog :visible.sync="dialogVisible">
-        <img width="100%" :src="dialogImageUrl" alt="" />
-      </el-dialog>
-
+          </div>
+        </el-form-item>
+        <!-- 图片上传 -->
+        <el-form-item>
+               <el-row type='flex' justify="end">
+          <!-- 上传组件要求必须传action属性 不传就会报错 可以给一个空字符串 show-file-list 是否显示已上传文件列表-->
+          <el-upload  :http-request="uploadImg" action="" multiple>
+           <el-button size="small" type='primary'>上传素材</el-button>
+           <!-- 传入一个内容 点击内容就会传出上传文件框 -->
+          </el-upload>
+        </el-row>
+        </el-form-item>
+      </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="this.$store.state.sosoitem.customer.dialogfollow = false"
-          >取 消</el-button
-        >
-        <el-button type="primary" @click="handleAdd()">确 定</el-button>
+        <el-button @click="dialogfollow = false">取 消</el-button>
+        <el-button type="primary" @click="handleAdd()">保存</el-button>
       </span>
     </el-dialog>
   </section>
 </template>
-
 <script>
-import { getToken } from '@/utils/auth'
-import { getGenjin, addGenjin } from "@/api/system/customer";
+import { getToken } from "@/utils/auth";
+import { getGenjin, addGenjin ,uploadImg} from "@/api/system/customer";
 export default {
   data() {
     return {
+      dialogfollow: false, //跟进按钮弹框显示
       dialogImageUrl: "",
       dialogVisible: false,
       disabled: false,
       //   图片数据
       imgList: {
-          imgs:'',
-          myHeaders:{Authorization: getToken()},
+        imgs: "",
+        myHeaders: { Authorization: getToken() }
       },
-      //   当前客户数据id
-      id: this.$route.query.id,
-      //   跟进全部数据
-      genjinList: [],
-      // 写跟进添加数据
+      id: this.$route.query.id, //   当前客户数据id
+      genjinList: [], //   跟进列表
+      genjinStatus: [], //跟进状态字典
       addInfo: {
         imgs: [],
         content: null,
-        customerId: this.$route.query.id,
-        customerName: "string",
-        genjinDate: "2020-11-05T08:16:05.542Z",
+        customerId: Number(this.$route.query.id),
         image: "string",
-        method: null,
+        method: "1",
         status: "1",
         sysUserId: 0,
-        updateDate: "2020-11-05T08:16:05.542Z"
-      },
-      //   一会删除数据
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄"
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄"
-        }
-      ]
+      } // 跟进数据添加
     };
   },
   created() {
     this.getList();
+    //   获取跟进状态字典
+    this.getDicts("customer_genjin").then(response => {
+      this.genjinStatus = response.data.map(item => {
+        return item.dictValue;
+      });
+    });
   },
   methods: {
-    handleAvatarSuccess(res, file) {
-        console.log('aaa',file)
-        console.log(res.imgUrl)
-      },
-    handleRemove(file) {
-      console.log(file);
-    },
-    handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
-    },
-    handleDownload(file) {
-      console.log(file);
-    },
-    //   获取跟进数据
+        // 获取跟进数据
     getList() {
       getGenjin(this.id).then(response => {
         this.genjinList = response.rows;
-        console.log(this.genjinList)
+        console.log("getGenjin", this.genjinList);
       });
     },
-    uploadFile(file){
-        
-      },
-      handleChange(res, file){
-          console.log('aaa',res,file)
-        let param = new FormData();
-        this.addInfo.imgs.push(res.url)
-        console.log()
-      },
+    // 上传图片
+    uploadImg(params){
+        const data = new FormData() // 实例化一个formData对象
+        data.append('imgs', params.file) // 加入文件参数
+        uploadImg(data).then(res=>{
+            this.addInfo.imgs=res.imgUrl[0]
+            console.log(this.addInfo.imgs)
+            this.$message.success('上传成功')
+            // this.getList()
+        }).catch(error=>{
+            this.$message.error('上传失败')
+        })
+    },
     // 添加跟进信息
     handleAdd() {
-          this.$refs.upload.submit();
-          
-    //   this.imgList.addInfo.forEach(file => {
-    //     param.append("files", file.raw); //此处一定是append file.raw 上传文件只需维护fileList file.raw.name要加上
-    //     param.append("fileNames", file.name);
-    //   });
       addGenjin(this.addInfo).then(response => {
         console.log(response);
-        this.getList()
+        this.getList();
       });
     }
   }
@@ -188,7 +147,13 @@ export default {
 
 <style lang="scss" scoped>
 .el_dialog_follow {
-  padding: 50px;
+  position: relative;
+  .status {
+    text-align: center;
+    position: absolute;
+    bottom: 10px;
+    margin-left: 9px;
+  }
   .input {
     width: 250px;
   }

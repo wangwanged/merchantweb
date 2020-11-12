@@ -94,3 +94,12 @@ export function newSignContrast(data) {
     data: data
   })
 }
+
+// 图片上传
+export function uploadImg(data) {
+  return request({
+    url: '/system/genjin/genjinImg',
+    method: 'post',
+    data: data
+  })
+}
