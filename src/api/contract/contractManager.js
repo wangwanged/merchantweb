@@ -63,7 +63,23 @@ export function getContractInfo(id) {
 // 关联合同信息
 export function relatedContract(num) {
   return request({
-    url: '/contract/contractManager/list/'+ num,
+    url: '/contract/contractManager/relatedList/'+ num,
+    method: 'get',
+  })
+}
+
+// 合同费用信息
+export function contractFee(num) {
+  return request({
+    url: '/fee/feeManager/getFeeByContractNum/'+ num,
+    method: 'get',
+  })
+}
+
+// 附件合同信息
+export function contractAttachment(num) {
+  return request({
+    url: '/dianmian/dianmianManager/listOfContractNum/'+ num,
     method: 'get',
   })
 }

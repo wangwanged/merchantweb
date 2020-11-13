@@ -142,7 +142,7 @@
 
     <el-table v-loading="loading" :data="contractManagerList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="合同表主键id" align="center" prop="id" />
+      <el-table-column label="id" align="center" prop="id" />
       <el-table-column label="合同编号" align="center" prop="num">
           <template slot-scope="obj">
           <el-button
@@ -220,8 +220,8 @@
         <el-form-item label="客户手机号" prop="customerPhone">
           <el-input v-model="form.customerPhone" placeholder="请输入客户手机号" />
         </el-form-item>
-        <el-form-item label="合同类型(0：新签:1：续签)" prop="type">
-          <el-select v-model="form.type" placeholder="请选择合同类型(0：新签:1：续签)">
+        <el-form-item label="合同类型" prop="type">
+          <el-select v-model="form.type" placeholder="请选择合同类型">
             <el-option
               v-for="dict in typeOptions"
               :key="dict.dictValue"

@@ -350,7 +350,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="所属部门">
-          <el-input placeholder="人员部门">{{}}</el-input>
+          <el-input placeholder="人员部门">aaa</el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
