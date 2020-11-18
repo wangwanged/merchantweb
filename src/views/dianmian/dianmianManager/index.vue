@@ -139,8 +139,7 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
       </el-form-item>
     </el-form>
 
@@ -231,7 +230,7 @@
       <el-table-column label="闭店原因" align="center" prop="closeReason" />
       <el-table-column label="验收信息" align="center" prop="checkInfo" />
       <el-table-column label="备注信息" align="center" prop="remark" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -248,7 +247,7 @@
             v-hasPermi="['dianmian:dianmianManager:remove']"
           >删除</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
 
     <pagination
@@ -550,11 +549,6 @@ export default {
     handleQuery() {
       this.queryParams.pageNum = 1;
       this.getList();
-    },
-    /** 重置按钮操作 */
-    resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
     },
     // 多选框选中数据
     handleSelectionChange(selection) {

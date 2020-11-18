@@ -127,3 +127,12 @@ export function contractAbandon(id) {
     method: 'get',
   })
 }
+
+// 合同跟进
+export function contractOperlog(params) {
+  return request({
+    url: '/system/contractOperlog/list',
+    method: 'get',
+    params:params
+  })
+}
