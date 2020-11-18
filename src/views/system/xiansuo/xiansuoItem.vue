@@ -162,6 +162,12 @@ export default {
       showGenjin: "跟进",
     };
   },
+    mounted() {
+   document.querySelector('body').setAttribute('style', 'background-color:rgb(242, 242, 242)')
+  },
+  beforeDestroy() {
+   document.querySelector('body').removeAttribute('style')
+  },
   created() {
     this.getList()
     //   获取跟进状态字典

@@ -12,9 +12,9 @@
         <el-button size="small" type="primary" @click="dialogNewsign = true"
           >新签合同</el-button
         >
-        <el-button size="small" @click="dialogedit=true">编辑</el-button>
-        <el-button size="small" @click="dialogTransfor=true">转移</el-button>
-        <el-button size="small" @click=" dialogeInvalid= true">失效</el-button>
+        <el-button size="small" @click="dialogedit=true" type="primary">编辑</el-button>
+        <el-button size="small" @click="dialogTransfor=true" type="primary">转移</el-button>
+        <el-button size="small" @click=" dialogeInvalid= true" type="primary">失效</el-button>
       </div>
       <div class="header_bottom">
         <span>{{ customerList.phonenumber }}</span>
@@ -63,7 +63,7 @@
           </p>
           <div class="line_between"></div>
           <div class="main_title">合同信息</div>
-          <el-table :data="contractList" style="width: 100%">
+          <el-table border :data="contractList" style="width: 100%">
             <el-table-column prop="num" label="关联合同" width="120">
             </el-table-column>
             <el-table-column prop="type" label="合同类型" width="120">
@@ -284,57 +284,57 @@
       width="500px"
       append-to-body
     >
-      <el-form  :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="客户姓名" prop="name">
+      <el-form  label-width="80px">
+        <el-form-item label="客户姓名" >
           <el-input v-model="form.name" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="客户电话" prop="phone">
+        <el-form-item label="客户电话" >
           <el-input v-model="form.phone" placeholder="请输入客户电话" />
         </el-form-item>
-        <el-form-item label="客户等级" prop="level">
-          <el-select v-model="form.level" placeholder="请选择客户等级">
+        <el-form-item label="客户等级" >
+          <!-- <el-select v-model="form.level" placeholder="请选择客户等级">
             <el-option
               v-for="dict in levelOptions"
               :key="dict.dictValue"
               :label="dict.dictLabel"
               :value="dict.dictValue"
             ></el-option>
-          </el-select>
+          </el-select> -->
         </el-form-item>
-        <el-form-item label="客户需求" prop="customerNeeds">
-          <el-select v-model="form.customerNeeds" placeholder="请选择客户需求">
+        <el-form-item label="客户需求" >
+          <!-- <el-select v-model="form.customerNeeds" placeholder="请选择客户需求">
             <el-option
               v-for="dict in customerNeedsOptions"
               :key="dict.dictValue"
               :label="dict.dictLabel"
               :value="dict.dictValue"
             ></el-option>
-          </el-select>
+          </el-select> -->
         </el-form-item>
-        <el-form-item label="客户地区" prop="dianmianAddress">
+        <el-form-item label="客户地区" >
           <Liandong @placeInfo="getPlace(arguments)"></Liandong>
         </el-form-item>
-        <el-form-item label="客户公司" prop="companyName">
+        <el-form-item label="客户公司" >
           <el-input v-model="form.companyName" placeholder="请输入公司和部门" />
         </el-form-item>
-        <el-form-item label="中介经验" prop="experience">
+        <el-form-item label="中介经验" >
           <el-input v-model="form.experience" placeholder="请输入中介经验" />
         </el-form-item>
-        <el-form-item label="客户来源" prop="resource">
-          <el-select v-model="form.resource" placeholder="请选择客户来源">
+        <el-form-item label="客户来源">
+          <!-- <el-select v-model="form.resource" placeholder="请选择客户来源">
             <el-option
               v-for="dict in resourceOptions"
               :key="dict.dictValue"
               :label="dict.dictLabel"
               :value="dict.dictValue"
             ></el-option>
-          </el-select>
+          </el-select> -->
         </el-form-item>
-        <el-form-item label="备注" prop="remark">
+        <el-form-item label="备注" >
           <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
-        <el-form-item label="负责人" prop="username">
-          <el-select
+        <el-form-item label="负责人">
+          <!-- <el-select
             filterable
             v-model="form.username"
             placeholder="选择人员"
@@ -347,7 +347,7 @@
               :label="item.userName"
               :value="item.userName"
             />
-          </el-select>
+          </el-select> -->
         </el-form-item>
         <el-form-item label="所属部门">
           <el-input placeholder="人员部门">aaa</el-input>
@@ -530,6 +530,12 @@ export default {
     Follow,
     Liandong
   },
+    mounted() {
+   document.querySelector('body').setAttribute('style', 'background-color:rgb(242, 242, 242)')
+  },
+  beforeDestroy() {
+   document.querySelector('body').removeAttribute('style')
+  },
   created() {
     this.getList();
     //   获取跟进状态字典
@@ -564,6 +570,31 @@ export default {
     });
   },
   methods: {
+    reset() {
+      this.form = {
+        id: null,
+        name: null,
+        phone: null,
+        level: null,
+        customerNeeds: null,
+        companyName: null,
+        province: null,
+        dianmianAddress: null,
+        city: null,
+        district: null,
+        resource: null,
+        userId: null,
+        username: null,
+        luruId: null,
+        luruName: null,
+        experience: null,
+        remark: null,
+        status: "0",
+        inputDate: null,
+        updateDate: null
+      };
+      this.resetForm("form");
+    },
     //   获取省市区的地址
     getPlace(i) {
       this.queryParams.province = i[0];
@@ -577,9 +608,9 @@ export default {
     handlecontrast() {
       this.newsigninfo.fee = JSON.stringify(this.newsigninfo.fee);
       newSignContrast(this.newsigninfo).then(response => {
-           this.$message.success('新签合同成功')
+           this.$message.success('操作成功')
       }).catch(error=>{
-          this.$message.error('新签合同失败')
+          this.$message.error('操作失败')
       });
     },
     // 编辑按钮

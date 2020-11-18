@@ -83,3 +83,47 @@ export function contractAttachment(num) {
     method: 'get',
   })
 }
+
+// 审核按钮
+export function contractCheck(params) {
+  return request({
+    url: '/contract/contractManager/check/',
+    method: 'post',
+    params
+  })
+}
+
+// 续签按钮
+export function contractRenew(data,id) {
+  return request({
+    url: '/contract/contractManager/renew/'+ id,
+    method: 'post',
+    data:data
+  })
+}
+
+// 审核按钮
+export function contractTransfer(data) {
+  return request({
+    url: '/contract/contractManager/transfer',
+    method: 'post',
+    data: data
+  })
+}
+
+// 解约按钮
+export function contractBreakoff(params) {
+  return request({
+    url: '/contract/contractManager/terminate',
+    method: 'post',
+    params
+  })
+}
+
+// 失效按钮
+export function contractAbandon(id) {
+  return request({
+    url: '/contract/contractManager/abandon/'+ id,
+    method: 'get',
+  })
+}

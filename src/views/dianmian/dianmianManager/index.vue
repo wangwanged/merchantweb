@@ -194,7 +194,21 @@
       <el-table-column label="店东电话" align="center" prop="diandongPhone" />
       <el-table-column label="管理人id" align="center" prop="sysUserId" />
       <el-table-column label="所属公司id" align="center" prop="companyId" />
-      <el-table-column label="门店名称" align="center" prop="name" />
+      <el-table-column label="门店名称" align="center" prop="name">
+          <template slot-scope="obj">
+          <el-button
+            @click="
+              $router.push({
+                path: '/dianmian/dianmianItem',
+                query: { id: obj.row.id }
+              })
+            "
+            size="small"
+            type="text"
+            >{{ obj.row.name }}</el-button
+          >
+          </template>
+      </el-table-column>
       <el-table-column label="门店状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="所属省" align="center" prop="province" />
       <el-table-column label="所属市" align="center" prop="city" />

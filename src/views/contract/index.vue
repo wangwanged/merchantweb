@@ -142,8 +142,7 @@
 
     <el-table v-loading="loading" :data="contractManagerList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="id" align="center" prop="id" />
-      <el-table-column label="合同编号" align="center" prop="num">
+      <el-table-column label="合同编号" align="center" prop="num" width="180">
           <template slot-scope="obj">
           <el-button
             @click="
