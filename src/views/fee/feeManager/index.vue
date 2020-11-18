@@ -10,9 +10,9 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="合同编号" prop="constractNum">
+      <el-form-item label="合同编号" prop="contractNum">
         <el-input
-          v-model="queryParams.constractNum"
+          v-model="queryParams.contractNum"
           placeholder="请输入合同编号"
           clearable
           size="small"
@@ -120,7 +120,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="合同费用表id" align="center" prop="id" />
       <el-table-column label="费用编号" align="center" prop="num" />
-      <el-table-column label="合同编号" align="center" prop="constractNum" />
+      <el-table-column label="合同编号" align="center" prop="contractNum" />
       <el-table-column label="费用类型" align="center" prop="type" />
       <el-table-column label="付款方式" align="center" prop="payMethod" />
       <el-table-column label="付款人" align="center" prop="payer" />
@@ -150,7 +150,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -165,8 +165,8 @@
         <el-form-item label="费用编号" prop="num">
           <el-input v-model="form.num" placeholder="请输入费用编号" />
         </el-form-item>
-        <el-form-item label="合同编号" prop="constractNum">
-          <el-input v-model="form.constractNum" placeholder="请输入合同编号" />
+        <el-form-item label="合同编号" prop="contractNum">
+          <el-input v-model="form.contractNum" placeholder="请输入合同编号" />
         </el-form-item>
         <el-form-item label="费用类型" prop="type">
           <el-input v-model="form.type" placeholder="请输入费用类型" />
@@ -240,7 +240,7 @@ export default {
         pageNum: 1,
         pageSize: 10,
         num: null,
-        constractNum: null,
+        contractNum: null,
         type: null,
         payMethod: null,
         payer: null,
@@ -255,7 +255,7 @@ export default {
         num: [
           { required: true, message: "费用编号不能为空", trigger: "blur" }
         ],
-        constractNum: [
+        contractNum: [
           { required: true, message: "合同编号不能为空", trigger: "blur" }
         ],
         type: [
@@ -305,7 +305,7 @@ export default {
       this.form = {
         id: null,
         num: null,
-        constractNum: null,
+        contractNum: null,
         type: null,
         payMethod: null,
         payer: null,
