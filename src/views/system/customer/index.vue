@@ -92,7 +92,8 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <Liandong @placeInfo="getPlace(arguments)"></Liandong>
+      <!-- <Liandong @placeInfo="getPlace(arguments)"></Liandong> -->
+      <Area/>
       <el-form-item prop="username">
         <el-input
           v-model="queryParams.username"
@@ -261,7 +262,6 @@
         </template>
       </el-table-column> -->
     </el-table>
-
     <pagination
       v-show="total > 0"
       :total="total"
@@ -300,7 +300,8 @@
           </el-select>
         </el-form-item>
         <el-form-item label="客户地区" prop="dianmianAddress">
-          <Liandong @placeInfo="getPlace(arguments)"></Liandong>
+          <!-- <Liandong @placeInfo="getPlace(arguments)"></Liandong> -->
+          <Area/>
         </el-form-item>
         <el-form-item label="客户公司" prop="companyName">
           <el-input v-model="form.companyName" placeholder="请输入公司和部门" />
@@ -352,6 +353,7 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+    
   </div>
 </template>
 
@@ -366,10 +368,13 @@ import {
 } from "@/api/system/customer";
 import { listUser } from "@/api/system/user";
 import Liandong from "@/components/Liandong/liandong.vue";
+import {area} from '@/components/Liandong/liandong.vue'
+import Area from '@/views/components/area'
 export default {
   name: "Customer",
   components: {
-    Liandong
+    Liandong,
+    Area
   },
   data() {
     return {
