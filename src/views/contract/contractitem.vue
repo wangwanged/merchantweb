@@ -819,7 +819,6 @@ export default {
       this.getcontractFee,
       this.getcontractAttachment
     );
-    console.log(this.checkStatus)
     this.getcontractOperlog()
   },
   methods: {

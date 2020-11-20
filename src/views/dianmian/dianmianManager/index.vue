@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="店东id" prop="diandongId">
+      <el-form-item prop="diandongId">
         <el-input
           v-model="queryParams.diandongId"
           placeholder="请输入店东id"
@@ -10,7 +10,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="店东姓名" prop="diandongName">
+      <el-form-item prop="diandongName">
         <el-input
           v-model="queryParams.diandongName"
           placeholder="请输入店东姓名"
@@ -19,7 +19,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="店东电话" prop="diandongPhone">
+      <el-form-item  prop="diandongPhone">
         <el-input
           v-model="queryParams.diandongPhone"
           placeholder="请输入店东电话"
@@ -28,7 +28,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="所属公司id" prop="companyId">
+      <el-form-item prop="companyId">
         <el-input
           v-model="queryParams.companyId"
           placeholder="请输入所属公司id"
@@ -37,7 +37,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="门店名称" prop="name">
+      <el-form-item prop="name">
         <el-input
           v-model="queryParams.name"
           placeholder="请输入门店名称"
@@ -46,7 +46,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="门店状态" prop="status">
+      <el-form-item prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择门店状态" clearable size="small">
           <el-option
             v-for="dict in statusOptions"
@@ -56,7 +56,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="所属省" prop="province">
+      <el-form-item prop="province">
         <el-input
           v-model="queryParams.province"
           placeholder="请输入所属省"
@@ -65,7 +65,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="所属市" prop="city">
+      <el-form-item prop="city">
         <el-input
           v-model="queryParams.city"
           placeholder="请输入所属市"
@@ -74,7 +74,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="所属区" prop="district">
+      <el-form-item prop="district">
         <el-input
           v-model="queryParams.district"
           placeholder="请输入所属区"
@@ -83,7 +83,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="店面详细地址" prop="address">
+      <el-form-item prop="address">
         <el-input
           v-model="queryParams.address"
           placeholder="请输入店面详细地址"
@@ -92,7 +92,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="验收结果" prop="checkResult">
+      <el-form-item prop="checkResult">
         <el-select v-model="queryParams.checkResult" placeholder="请选择验收结果" clearable size="small">
           <el-option
             v-for="dict in checkResultOptions"
@@ -102,7 +102,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="开店日期" prop="openDate">
+      <el-form-item prop="openDate">
         <el-date-picker clearable size="small" style="width: 200px"
           v-model="queryParams.openDate"
           type="date"
@@ -110,7 +110,7 @@
           placeholder="选择开店日期">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="合同编号" prop="contractnum">
+      <el-form-item prop="contractnum">
         <el-input
           v-model="queryParams.contractnum"
           placeholder="请输入合同编号"
@@ -119,7 +119,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="店面类型" prop="type">
+      <el-form-item prop="type">
         <el-select v-model="queryParams.type" placeholder="请选择店面类型" clearable size="small">
           <el-option
             v-for="dict in typeOptions"
@@ -129,7 +129,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="授权区域" prop="area">
+      <el-form-item prop="area">
         <el-input
           v-model="queryParams.area"
           placeholder="请输入授权区域"
@@ -142,7 +142,6 @@
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
       </el-form-item>
     </el-form>
-
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -155,7 +154,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="success"
+          type="primary"
           icon="el-icon-edit"
           size="mini"
           :disabled="single"
@@ -165,7 +164,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="danger"
+          type="primary"
           icon="el-icon-delete"
           size="mini"
           :disabled="multiple"
@@ -175,7 +174,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="warning"
+          type="primary"
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
@@ -187,13 +186,8 @@
 
     <el-table v-loading="loading" :data="dianmianManagerList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="店面表主键id" align="center" prop="id" />
-      <el-table-column label="店东id" align="center" prop="diandongId" />
-      <el-table-column label="店东姓名" align="center" prop="diandongName" />
-      <el-table-column label="店东电话" align="center" prop="diandongPhone" />
-      <el-table-column label="管理人id" align="center" prop="sysUserId" />
-      <el-table-column label="所属公司id" align="center" prop="companyId" />
-      <el-table-column label="门店名称" align="center" prop="name">
+      <el-table-column label="公司" align="center" prop="customer.companyName"/>
+      <el-table-column label="店面名称" align="center" prop="name">
           <template slot-scope="obj">
           <el-button
             @click="
@@ -208,28 +202,20 @@
           >
           </template>
       </el-table-column>
-      <el-table-column label="门店状态" align="center" prop="status" :formatter="statusFormat" />
-      <el-table-column label="所属省" align="center" prop="province" />
-      <el-table-column label="所属市" align="center" prop="city" />
-      <el-table-column label="所属区" align="center" prop="district" />
-      <el-table-column label="店面详细地址" align="center" prop="address" />
+      <el-table-column label="店面状态" align="center" prop="status" :formatter="statusFormat" />
+      <el-table-column label="所属地区" align="center" prop="province">{{dianmianManagerList.province}}  {{dianmianManagerList.city}}</el-table-column>
+      <el-table-column label="店面地址" align="center" prop="address" />
       <el-table-column label="验收结果" align="center" prop="checkResult" :formatter="checkResultFormat" />
-      <el-table-column label="开店日期" align="center" prop="openDate" width="180">
+      <el-table-column label="开业日期" align="center" prop="openDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.openDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="合同编号" align="center" prop="contractnum" />
+      <el-table-column label="对应合同" align="center" prop="contractnum" />
       <el-table-column label="店面类型" align="center" prop="type" :formatter="typeFormat" />
       <el-table-column label="授权区域" align="center" prop="area" />
-      <el-table-column label="闭店/停业时间" align="center" prop="closeDate" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.closeDate, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="闭店原因" align="center" prop="closeReason" />
-      <el-table-column label="验收信息" align="center" prop="checkInfo" />
-      <el-table-column label="备注信息" align="center" prop="remark" />
+      <el-table-column label="客户姓名" align="center" prop="diandongName" />
+      <el-table-column label="负责人" align="center" prop="customer.username" />
       <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
