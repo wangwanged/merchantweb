@@ -57,11 +57,10 @@
         <!-- 图片上传 -->
         <el-form-item>
                <el-row type='flex' justify="end">
-          <!-- 上传组件要求必须传action属性 不传就会报错 可以给一个空字符串 show-file-list 是否显示已上传文件列表-->
-          <el-upload :file-list='imgList' :on-change="handleChange"  :http-request="uploadImg" action=""  multiple :auto-upload=false>
-           <el-button size="small" type='primary'>上传素材</el-button>
-           <!-- 传入一个内容 点击内容就会传出上传文件框 -->
-          </el-upload>
+          <!-- <el-upload :file-list='imgList' :on-change="handleChange"  :http-request="uploadImg" action=""  multiple :auto-upload=false>
+           <el-button size="small" type='primary'>上传素材</el-button> -->
+          <!-- </el-upload> -->
+          <upload-imgs ref="uploadEle" :value="initData" />
         </el-row>
         </el-form-item>
       </el-form>
@@ -75,9 +74,14 @@
 <script>
 import { getToken } from "@/utils/auth";
 import { getGenjin, addGenjin ,uploadImg} from "@/api/system/customer";
+import {UploadImgs} from '@/views/components/upload-image/index.vue';
 export default {
+  components: {
+    UploadImgs
+  },
   data() {
     return {
+      initData: [],
       dialogfollow: false, //跟进按钮弹框显示
       dialogImageUrl: "",
       dialogVisible: false,
@@ -108,6 +112,9 @@ export default {
     });
   },
   methods: {
+    getValue() {
+      this.$refs.uploadEle.getValue();
+    },
         // 获取跟进数据
     getList() {
       getGenjin(this.id).then(response => {
@@ -146,7 +153,6 @@ export default {
     handleAdd() {
         console.log(this.imgList)
        const data = new FormData() // 实例化一个formData对象
-       
         data.append('imgs', this.imgList) // 加入文件参数
         uploadImg(data).then(res=>{
             console.log(res)

@@ -103,3 +103,25 @@ export function uploadImg(data) {
     data: data
   })
 }
+
+// 省
+export function getProvince() {
+  return request({
+    url: 'common/area/provinces',
+    method: 'get',
+  })
+}
+// 市
+export function getCity(code) {
+  return request({
+    url: 'common/area/citys/'+ code,
+    method: 'get',
+  })
+}
+// 区
+export function getDistrict(code) {
+  return request({
+    url: 'common/area/districtObjects/'+code,
+    method: 'get',
+  })
+}
