@@ -3,18 +3,29 @@
     <div class="header">
       <div class="header_top">
         <span class="title_name fl">{{ customerList.name }}</span>
-        <div class="circle fl" style="margin-right:10px">
+        <el-button style="margin:0 20px" type="primary" circle
+          ><div style="width:12px;height:12px;">
+            {{ customerList.level }}
+          </div></el-button
+        >
+        <!-- <div class="circle fl" style="margin-right:10px">
           {{ customerList.level }}
-        </div>
+        </div> -->
         <el-button size="small" type="primary">{{
           customerList.status
         }}</el-button>
         <el-button size="small" type="primary" @click="dialogNewsign = true"
           >新签合同</el-button
         >
-        <el-button size="small" @click="dialogedit=true" type="primary">编辑</el-button>
-        <el-button size="small" @click="dialogTransfor=true" type="primary">转移</el-button>
-        <el-button size="small" @click=" dialogeInvalid= true" type="primary">失效</el-button>
+        <el-button size="small" @click="handleUpdate" type="primary"
+          >编辑</el-button
+        >
+        <el-button size="small" @click="dialogTransfor = true" type="primary"
+          >转移</el-button
+        >
+        <el-button size="small" @click="dialogeInvalid = true" type="primary"
+          >失效</el-button
+        >
       </div>
       <div class="header_bottom">
         <span>{{ customerList.phonenumber }}</span>
@@ -126,20 +137,22 @@
           <el-input v-model="customerList.name"></el-input>
         </el-form-item>
         <el-form-item label="客户电话">
-          <el-input v-model="customerList.phonenumber"></el-input>
+          <el-input v-model="customerList.phone"></el-input>
         </el-form-item>
         <div style="font-size:20px;font-weight:700;margin-bottom:20px">
           签约信息
         </div>
         <el-form-item label="合同类型">
-          <el-button size="small" type="primary">{{
-            newsigninfo.type
-          }}</el-button>
+          <el-button size="small" type="primary" plain>新签</el-button>
         </el-form-item>
         <el-form-item label="签约产品">
-          <el-select v-model="newsigninfo.produce" placeholder="请选择活动区域">
-            <el-option value="1" label="单店加盟"></el-option>
-            <el-option value="2" label="区域加盟"></el-option>
+          <el-select v-model="newsigninfo.produce" @change="showdianmian">
+            <el-option
+              v-for="dict in customerNeedsOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="合同编号">
@@ -167,7 +180,7 @@
           <el-date-picker
             v-model="newsigninfo.endDate"
             type="date"
-            placeholder="选择日期"
+            placeholder="请选择"
             value-format="yyyy-MM-dd"
           >
           </el-date-picker>
@@ -175,30 +188,58 @@
         <div style="font-size:20px;font-weight:700;margin-bottom:20px">
           店面/区域信息
         </div>
-        <el-form-item label="店面名称">
-          <el-input
-            v-model="newsigninfo.dianmianName"
-            placeholder="请输入"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="所属省">
-          <el-input
-            v-model="newsigninfo.dianmianProvince"
-            placeholder="请输入"
-          ></el-input>
-        </el-form-item>
-         <el-form-item label="所属市">
-          <el-input
-            v-model="newsigninfo.dianmianCity"
-            placeholder="请输入"
-          ></el-input>
-        </el-form-item>
-         <el-form-item label="所属区">
-          <el-input
-            v-model="newsigninfo.dianmianDistrict"
-            placeholder="请输入"
-          ></el-input>
-        </el-form-item>
+        <div v-if="showDianmian">
+          <el-form-item label="店面名称">
+            <el-input
+              v-model="newsigninfo.dianmianName"
+              placeholder="请输入"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="所属省">
+            <el-input
+              v-model="newsigninfo.dianmianProvince"
+              placeholder="请输入"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="所属市">
+            <el-input
+              v-model="newsigninfo.dianmianCity"
+              placeholder="请输入"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="所属区">
+            <el-input
+              v-model="newsigninfo.dianmianDistrict"
+              placeholder="请输入"
+            ></el-input>
+          </el-form-item>
+        </div>
+        <div v-else>
+          <el-form-item label="店面名称">
+            <el-input
+              v-model="newsigninfo.dianmianName"
+              placeholder="请输入"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="所属省">
+            <el-input
+              v-model="newsigninfo.dianmianProvince"
+              placeholder="请输入"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="所属市">
+            <el-input
+              v-model="newsigninfo.dianmianCity"
+              placeholder="请输入"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="所属区">
+            <el-input
+              v-model="newsigninfo.dianmianDistrict"
+              placeholder="请输入"
+            ></el-input>
+          </el-form-item>
+        </div>
         <el-form-item label="详细地址">
           <el-input
             v-model="newsigninfo.dianmianAddress"
@@ -206,7 +247,10 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="店面经度">
-          <el-input placeholder="请输入" v-model='newsigninfo.dianmianLongitude'></el-input>
+          <el-input
+            placeholder="请输入"
+            v-model="newsigninfo.dianmianLongitude"
+          ></el-input>
         </el-form-item>
         <el-form-item label="店面纬度">
           <el-input
@@ -284,77 +328,71 @@
       width="500px"
       append-to-body
     >
-      <el-form  label-width="80px">
-        <el-form-item label="客户姓名" >
+      <el-form label-width="80px">
+        <el-form-item required label="客户姓名">
           <el-input v-model="form.name" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="客户电话" >
+        <el-form-item required label="客户电话">
           <el-input v-model="form.phone" placeholder="请输入客户电话" />
         </el-form-item>
-        <el-form-item label="客户等级" >
-          <!-- <el-select v-model="form.level" placeholder="请选择客户等级">
+        <el-form-item required label="客户等级">
+          <el-select v-model="form.level" placeholder="请选择客户等级">
             <el-option
-              v-for="dict in levelOptions"
+              v-for="dict in dict.levelOptions"
               :key="dict.dictValue"
               :label="dict.dictLabel"
               :value="dict.dictValue"
             ></el-option>
-          </el-select> -->
+          </el-select>
         </el-form-item>
-        <el-form-item label="客户需求" >
-          <!-- <el-select v-model="form.customerNeeds" placeholder="请选择客户需求">
+        <el-form-item required label="客户需求">
+          <el-select v-model="form.customerNeeds" placeholder="请选择客户需求">
             <el-option
-              v-for="dict in customerNeedsOptions"
+              v-for="dict in dict.customerNeedsOptions"
               :key="dict.dictValue"
               :label="dict.dictLabel"
               :value="dict.dictValue"
             ></el-option>
-          </el-select> -->
+          </el-select>
         </el-form-item>
-        <el-form-item label="客户地区" >
-          <Liandong @placeInfo="getPlace(arguments)"></Liandong>
+        <el-form-item required label="客户地区">
+          <avue-form v-model="location" :option="option">
+            <template slot="cascader3Type" slot-scope="{ node, data }">
+              <span>{{ (data || {}).label }}</span>
+              <span v-if="!node.isLeaf">
+                ({{ ((data || {}).children || []).length }})
+              </span>
+            </template>
+          </avue-form>
         </el-form-item>
-        <el-form-item label="客户公司" >
+        <el-form-item required label="客户公司">
           <el-input v-model="form.companyName" placeholder="请输入公司和部门" />
         </el-form-item>
-        <el-form-item label="中介经验" >
+        <el-form-item required label="店面地址">
+          <el-input
+            v-model="form.dianmianAddress"
+            placeholder="请输入公司和部门"
+          />
+        </el-form-item>
+        <el-form-item required label="中介经验">
           <el-input v-model="form.experience" placeholder="请输入中介经验" />
         </el-form-item>
-        <el-form-item label="客户来源">
-          <!-- <el-select v-model="form.resource" placeholder="请选择客户来源">
+        <el-form-item required label="客户来源">
+          <el-select v-model="form.resource" placeholder="请选择客户来源">
             <el-option
-              v-for="dict in resourceOptions"
+              v-for="dict in dict.resourceOptions"
               :key="dict.dictValue"
               :label="dict.dictLabel"
               :value="dict.dictValue"
             ></el-option>
-          </el-select> -->
+          </el-select>
         </el-form-item>
-        <el-form-item label="备注" >
+        <el-form-item required label="备注">
           <el-input v-model="form.remark" placeholder="请输入备注" />
-        </el-form-item>
-        <el-form-item label="负责人">
-          <!-- <el-select
-            filterable
-            v-model="form.username"
-            placeholder="选择人员"
-            clearable
-            size="small"
-          >
-            <el-option
-              v-for="(item, index) in user"
-              :key="index"
-              :label="item.userName"
-              :value="item.userName"
-            />
-          </el-select> -->
-        </el-form-item>
-        <el-form-item label="所属部门">
-          <el-input placeholder="人员部门">aaa</el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogTransfor = false">确 定</el-button>
+        <el-button type="primary" @click="UpdataSubmit">确 定</el-button>
         <el-button @click="dialogTransfor = false">取 消</el-button>
       </div>
     </el-dialog>
@@ -396,9 +434,7 @@
         </td>
       </tr>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleinvlid()"
-          >确 定</el-button
-        >
+        <el-button type="primary" @click="handleinvlid()">确 定</el-button>
         <el-button @click="dialogeInvalid = false">取 消</el-button>
       </div>
     </el-dialog>
@@ -447,9 +483,9 @@ export default {
         status: "", //合同状态
         managerId: 0, //负责人id
         manager: "", // 负责人username
-        signDate: "", //签约日期
+        signDate: new Date(), //签约日期
         checkDate: "", //审核日期
-        beginDate: "",
+        beginDate: new Date(),
         endDate: "",
         remark: "",
         dianmianAddress: "小破庄",
@@ -479,16 +515,16 @@ export default {
         inputDateStart: null,
         inputDateEnd: null
       },
-      form:{},
+      form: {},
       // 失效信息
       invalidinfo: {
         ids: [this.$route.query.id],
         status: "0"
       },
       //   转移信息
-      transforinfo: {     
-        transforlist: [],  //   转移获取信息
-        keywords: ""  //   关键字
+      transforinfo: {
+        transforlist: [], //   转移获取信息
+        keywords: "" //   关键字
       },
       //  详情新签合同弹框
       dialogNewsign: false,
@@ -512,64 +548,56 @@ export default {
       genjinStatus: [],
       //   显示的跟进状态
       showGenjin: "跟进",
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄"
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄"
-        }
-      ]
+      dict: {
+        //字典
+        customerNeedsOptions: [],
+        levelOptions: [],
+        resourceOptions: []
+      },
+      showDianmian: false, //新签合同按钮中显示店面或区域信息
+      location: {
+        //地址
+        "cascader4": ["110000", "110100", "110101"]
+      }
     };
   },
   components: {
     Follow,
     Liandong
   },
-    mounted() {
-   document.querySelector('body').setAttribute('style', 'background-color:rgb(242, 242, 242)')
+  mounted() {
+    document
+      .querySelector("body")
+      .setAttribute("style", "background-color:rgb(242, 242, 242)");
   },
   beforeDestroy() {
-   document.querySelector('body').removeAttribute('style')
+    document.querySelector("body").removeAttribute("style");
   },
   created() {
     this.getList();
-    //   获取跟进状态字典
-    this.getDicts("customer_genjin").then(response => {
-      this.genjinStatus = response.data.map(item => {
-        return item.dictValue;
-      });
-    });
-    this.getDicts("customer_level").then(response => {
-      var a = response.data.filter(item => {
-        if (item.dictValue === this.customerList.level) {
-          return item;
-        }
-        this.customerList.level = a[0].dictLabel;
-      });
-    });
+    // 客户需求字典
     this.getDicts("sys_user_need").then(response => {
-      var a = response.data.filter(item => {
-        if (item.dictValue === this.customerList.resource) {
-          return item;
-        }
-      });
-      this.customerList.resource = a[0].dictLabel;
+      this.dict.customerNeedsOptions = response.data;
     });
+    // 客户等级字典
+    this.getDicts("customer_level").then(response => {
+      this.dict.levelOptions = response.data;
+    });
+    // 客户来源
     this.getDicts("sys_customer_resource").then(response => {
-      var a = response.data.filter(item => {
-        if (item.dictValue === this.customerList.customerNeeds) {
-          return item;
-        }
-      });
-      this.customerList.customerNeeds = a[0].dictLabel;
+      this.dict.resourceOptions = response.data;
     });
   },
   methods: {
+    //   新签合同按钮店面或区域显示控制
+    showdianmian(i) {
+      if (i === "0") {
+        this.showDianmian = true;
+      } else {
+        this.showDianmian = false;
+      }
+      console.log(this.showDianmian);
+    },
     reset() {
       this.form = {
         id: null,
@@ -607,36 +635,51 @@ export default {
     // 新签合同按钮操作
     handlecontrast() {
       this.newsigninfo.fee = JSON.stringify(this.newsigninfo.fee);
-      newSignContrast(this.newsigninfo).then(response => {
-           this.$message.success('操作成功')
-      }).catch(error=>{
-          this.$message.error('操作失败')
-      });
+      newSignContrast(this.newsigninfo)
+        .then(response => {
+          this.$message.success("操作成功");
+        })
+        .catch(error => {
+          this.$message.error("操作失败");
+        });
     },
-    // 编辑按钮
-     handleUpdate() {
+    // 点击编辑按钮
+    handleUpdate() {
+      this.dialogedit = true;
+      this.reset();
       getCustomer(this.id).then(response => {
         this.form = response.data;
-        this.dialogedit = true;
       });
+    },
+    // 编辑按钮提交
+    UpdataSubmit() {
+      updateCustomer(this.form)
+        .then(res => {
+          this.$message.success("操作成功");
+          this.dialogedit = false;
+        })
+        .catch(error => {
+          this.$message.error("操作成功");
+        });
     },
     // 失效按钮操作
     handleinvlid() {
       this.dialogeInvalid = true;
-      invalidCustomer(this.invalidinfo).then(response => {
-         this.$message.success('转移成功')
-         this.$router.push('/customer/customer')
-         this.getList()
-      }).catch(error=>{
-          this.$message.error('转移失败')
-      });
+      invalidCustomer(this.invalidinfo)
+        .then(response => {
+          this.$message.success("转移成功");
+          this.$router.push("/customer/customer");
+          this.getList();
+        })
+        .catch(error => {
+          this.$message.error("转移失败");
+        });
     },
     // 转移按钮操作
     handleTransfor() {
       this.dialogTransfor = true;
       transforCustomer(this.transforinfo.keywords).then(response => {
         this.transforinfo.transforlist = response.rows;
-        console.log("2222222222222222222", response);
       });
       //   var len = list.length;
       //   var arr = [];

@@ -46,6 +46,10 @@ Vue.prototype.msgInfo = function (msg) {
   this.$message.info(msg);
 }
 
+// avue组件
+import Avue from '@smallwei/avue';
+import '@smallwei/avue/lib/index.css';
+Vue.use(Avue);
 // 全局组件挂载
 Vue.component('Pagination', Pagination)
 Vue.component('RightToolbar', RightToolbar)

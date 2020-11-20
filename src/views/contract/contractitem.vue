@@ -698,23 +698,25 @@
             <el-col :span="6">下载</el-col>
           </el-row>
         </div>
-        <div class="main_content_name">
-          <div class="line_between"></div>
-          <span
+        <!-- <div class="main_content_name" >
+          <div
             class="main_content_firstname"
             style="margin-top:20px;font-size:15px"
-            >2020年3月6日</span
+            >aaa</div
           >
-          <el-row :gutter="20" class="genjin-height">
-            <el-col style="color:orange" :span="4">到期解约</el-col>
-            <el-col :span="4"><span>2020年3月6日</span></el-col>
-            <el-col :span="4">到期解约</el-col>
-            <el-col :span="4">下载</el-col>
-            <el-col :span="4">到期解约到期解约</el-col>
-            <el-col :span="4"></el-col>
-          </el-row>
-          <div class="line_between"></div>
-        </div>
+        </div> -->
+        <!-- <div class="main_content_name" v-for="(item,index) in OperlogList"  :key="index">
+          <div
+            class="main_content_firstname"
+            style="margin-top:20px;font-size:15px"
+            >{{item.operTime}}</div
+          >
+          <div class='genjin-height' >
+              <span style="color:orange">{{item.operName}}</span>
+              <span>{{item.title}}</span>
+              <span>{{item.description}}</span>
+          </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -733,7 +735,8 @@ import {
   contractCheck,
   contractRenew,
   contractBreakoff,
-  contractAbandon
+  contractAbandon,
+  contractOperlog
 } from "@/api/contract/contractManager";
 export default {
   data() {
@@ -758,7 +761,8 @@ export default {
       contentBreakoff: {
         id: this.id
       },
-      checkStatus:''
+      checkStatus:'',
+      OperlogList:[]
     };
   },
   mounted() {
@@ -815,6 +819,7 @@ export default {
       this.getcontractFee,
       this.getcontractAttachment
     );
+    this.getcontractOperlog()
   },
   methods: {
     // 表单重置
@@ -846,6 +851,7 @@ export default {
       getContractManager(this.id).then(response => {
         this.contractList = response.data;
         this.rootNum = response.data.rootNum;
+        this.checkStatus=response.data.checkStatus
         aa();
         bb();
         cc();
@@ -868,6 +874,14 @@ export default {
       contractAttachment(this.rootNum).then(res => {
         console.log(res);
       });
+    },
+    // 获取合同日志跟进
+    getcontractOperlog(){
+       contractOperlog().then(res=>{
+          this.OperlogList=res.rows
+       }).catch(error=>{
+
+       })
     },
     // 审核按钮操作
     handlecheck() {
@@ -995,12 +1009,15 @@ export default {
 }
 /deep/ .is-scrollable {
 }
+/deep/ .el-tabs__nav {
+    margin-bottom: -5px;
+}
 .genjin-height {
   height: 60px;
   line-height: 60px;
 }
 .main_right_top {
-  background-color: #fff;
+  background-color: #fff; 
   padding: 20px 20px;
 }
 .contract_genjin_top {

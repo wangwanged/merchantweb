@@ -105,14 +105,11 @@
 
       <el-form-item>
         <el-button
-          type="cyan"
+          type="primary"
           icon="el-icon-search"
           size="mini"
           @click="handleQuery"
           >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
         >
       </el-form-item>
       <el-form-item>
@@ -142,7 +139,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="success"
+          type="primary"
           icon="el-icon-edit"
           size="mini"
           :disabled="single"
@@ -153,7 +150,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="danger"
+          type="primary"
           icon="el-icon-delete"
           size="mini"
           :disabled="multiple"
@@ -164,7 +161,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="warning"
+          type="primary"
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
@@ -239,7 +236,7 @@
           <span>{{ parseTime(scope.row.inputDate, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         label="操作"
         align="center"
         class-name="small-padding fixed-width"
@@ -262,7 +259,7 @@
             >删除</el-button
           >
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
 
     <pagination
@@ -580,11 +577,6 @@ export default {
       (this.queryParams.inputDateStart = this.inputDate[0]),
         (this.queryParams.inputDateEnd = this.inputDate[1]);
       this.getList();
-    },
-    /** 重置按钮操作 */
-    resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
