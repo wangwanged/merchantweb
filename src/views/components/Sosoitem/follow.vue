@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div v-if="genjinList.length === 0">当前没有跟进信息</div>
+    <div class='noinfo'  v-if="genjinList.length === 0">当前没有跟进信息</div>
     <div
       v-for="item in genjinList"
       :key="item.customerId"
@@ -43,7 +43,7 @@
             v-model="addInfo.content"
           >
           </el-input>
-           <div class="status">
+          <div class="status">
             <el-button
               size="small"
               plain
@@ -55,14 +55,12 @@
           </div>
         </el-form-item>
         <!-- 图片上传 -->
-        <el-form-item>
-               <el-row type='flex' justify="end">
-          <!-- <el-upload :file-list='imgList' :on-change="handleChange"  :http-request="uploadImg" action=""  multiple :auto-upload=false>
-           <el-button size="small" type='primary'>上传素材</el-button> -->
-          <!-- </el-upload> -->
-          <upload-imgs ref="uploadEle" :value="initData" />
-        </el-row>
-        </el-form-item>
+        <UpImg
+          :value="value"
+          :show="true"
+          @update="update"
+          :imgType="imgType"
+        ></UpImg>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogfollow = false">取 消</el-button>
@@ -72,15 +70,17 @@
   </section>
 </template>
 <script>
-import { getToken } from "@/utils/auth";
-import { getGenjin, addGenjin ,uploadImg} from "@/api/system/customer";
-import {UploadImgs} from '@/views/components/upload-image/index.vue';
+import UpImg from "@/views/components/upload-image/upImgs.vue";
+import { getGenjin, addGenjin, uploadImg } from "@/api/system/customer";
+import { UploadImgs } from "@/views/components/upload-image/index.vue";
 export default {
   components: {
-    UploadImgs
+    UpImg
   },
   data() {
     return {
+      value: [],
+      imgType: "1",
       initData: [],
       dialogfollow: false, //跟进按钮弹框显示
       dialogImageUrl: "",
@@ -95,10 +95,10 @@ export default {
         imgs: [],
         content: null,
         customerId: Number(this.$route.query.id),
-        image: "string",
-        method: "1",
-        status: "1",
-        sysUserId: 0,
+        image: "",
+        method: "",
+        status: "",
+        sysUserId: null
       } // 跟进数据添加
     };
   },
@@ -112,67 +112,46 @@ export default {
     });
   },
   methods: {
+    update() {
+      console.log(this.value);
+      let imagesArr = [];
+      imagesArr = this.value.map(item => {
+        return {
+          is_head: item.is_head,
+          image_url: item.image_url,
+          image_type: item.image_type
+        };
+      });
+      this.info.headImg = imagesArr.find(item => {
+        return item.is_head == 1;
+      })
+        ? imagesArr.find(item => {
+            return item.is_head == 1;
+          }).image_url
+        : null;
+      this.info.images = this.value ? JSON.stringify(imagesArr) : "";
+    },
     getValue() {
       this.$refs.uploadEle.getValue();
     },
-        // 获取跟进数据
+    // 获取跟进数据
     getList() {
       getGenjin(this.id).then(response => {
         this.genjinList = response.rows;
         console.log("getGenjin", this.genjinList);
       });
     },
-    // 上传图片
-    uploadImg(file){
-        console.log('000',file)
-        this.file=file
-        return false
-        // this.imgList.append('imgs', params.file)
-        // const data = new FormData() // 实例化一个formData对象
-        // data.append('imgs', params.file) // 加入文件参数
-        // uploadImg(data).then(res=>{
-        //     var imgurl = eval(res.imgUrl)
-        //     var imgurl1= imgurl[0]
-        //     var imgurl = 'http://localhost/dev-api' + imgurl1
-        //     this.addInfo.image= imgurl
-        //     this.$message.success('上传成功')
-        // }).catch(error=>{
-        //     this.$message.error('上传失败')
-        // })
-        console.log( this.imgList)
-    },
-    handleChange(file, fileList){
-        this.imgList=fileList.map(item=>{
-            return item.raw
-        })
-        console.log('333',this.imgList)
-    //   console.log('111',file)
-    //   console.log('222',fileList)
-    },
     // 添加跟进信息
     handleAdd() {
-        console.log(this.imgList)
-       const data = new FormData() // 实例化一个formData对象
-        data.append('imgs', this.imgList) // 加入文件参数
-        uploadImg(data).then(res=>{
-            console.log(res)
-            // var imgurl = eval(res.imgUrl)
-            // var imgurl1= imgurl[0]
-            // var imgurl = 'http://localhost/dev-api' + imgurl1
-            // this.addInfo.image= imgurl
-            // this.$message.success('上传成功')
-        }).catch(error=>{
-            this.$message.error('上传失败')
-        }) 
-
-
-      addGenjin(this.addInfo).then(response => {      
-        this.$message.success('操作成功')
-        this.dialogfollow=false
-        this.getList();
-      }).catch(error=>{
-          this.$message.error('操作失败')
-      });
+      addGenjin(this.addInfo)
+        .then(response => {
+          this.$message.success("操作成功");
+          this.dialogfollow = false;
+          this.getList();
+        })
+        .catch(error => {
+          this.$message.error("操作失败");
+        });
     }
   }
 };
@@ -190,5 +169,11 @@ export default {
   .input {
     width: 250px;
   }
+}
+.noinfo{
+    width: 100%;
+    height: 100px;
+    background-color: #fff;
+    text-align: center;
 }
 </style>

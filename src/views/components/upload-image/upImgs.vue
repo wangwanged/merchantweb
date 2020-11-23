@@ -19,10 +19,8 @@
                     <div>				
                 </div>
                 <div v-if="item.name_type!=curname" class="noshow_img_box" ></div>
-                <Input class="img_describe" v-model="item.name" v-if="imgName"></Input>
-                
+                <Input class="img_describe" v-model="item.name" v-if="imgName"></Input>             
             </div>
-
         </template>
         <div v-else class="show_img_box">
             <div class="showImg">
@@ -34,15 +32,6 @@
         <Modal title="图片展示" v-model="visible">
             <img :src="showImg" style="width: 100%">
         </Modal>
-         <Modal v-model="modalShow" title="重设类别" :width="450" :styles="{top: '200px'}"  @on-ok="modalOk">
-             <Form>
-              <Row>
-               <Select v-model="setTypeName">
-                <Option v-for="item in typeList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-              </Select>
-              </Row>
-              </Form>
-    </Modal>
     </div>
 </template>
 
@@ -52,6 +41,7 @@
     import {
         rejects
     } from 'assert';
+    import { getToken } from '@/utils/auth'
     export default {
         props: {
             value: {
@@ -147,13 +137,17 @@
                 })
             }, false);
         },
-        methods: {
-            
+        methods: {    
             getToken() {
-                this.$get("system/picture/getToken").then(res => {
+                // this.$get("system/picture/getToken").then(res => {
+                //     if (res) {
+                //         this.token = res.data;    
+                //     }
+                // })
+                getToken().then(res => {
+                    console.log(res)
                     if (res) {
-                        this.token = res.data;
-                        
+                        this.token = res.data;    
                     }
                 })
             },

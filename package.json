@@ -57,6 +57,7 @@
     "normalize.css": "7.0.0",
     "nprogress": "0.2.0",
     "path-to-regexp": "2.4.0",
+    "qiniu-js": "^3.1.2",
     "quill": "1.3.7",
     "screenfull": "4.2.0",
     "sortablejs": "1.8.4",
@@ -105,5 +106,10 @@
   "browserslist": [
     "> 1%",
     "last 2 versions"
-  ]
+  ],
+  "qiniu-js": {
+    "version": "2.5.5",
+    "resolved": "https://registry.npmjs.org/qiniu-js/-/qiniu-js-2.5.5.tgz",
+    "integrity": "sha512-cJcdZMCfU4OJirjCzKJwPXSgrXF0INB2qtqA6ImNBe2PJFqi8kWE7rp3qr1RKH0H4OTtPOXyBC2FVSl/zM7ERg=="
+  }
 }
