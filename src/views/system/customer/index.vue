@@ -19,10 +19,9 @@
       <el-form-item prop="inputDate">
         <el-date-picker
           value-format="yyyy-MM-dd"
-          placeholder="请选择时间范围"
+          placeholder="录入时间筛选"
           v-model="inputDate"
           type="daterange"
-          range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         >
@@ -113,9 +112,8 @@
           >搜索</el-button
         >
       </el-form-item>
-      <el-form-item>
-        <div class="timesearch">
-          <span>最新跟进</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <div class="timesearch" style='margin-bottom:20px'>
+          <span style='display:inline-block;margin-right:15px;font-size:14px'>最新跟进</span> 
           <el-button
             v-for="(item, index) in customerGenjinnum"
             :key="index"
@@ -124,7 +122,7 @@
             >超过{{ item }}天未跟进</el-button
           >
         </div>
-      </el-form-item>
+      
     </el-form>
 
     <el-row :gutter="10" class="mb8">
@@ -663,3 +661,22 @@ export default {
   }
 };
 </script>
+<style lang="less" scoped>
+  /deep/ .el-input--suffix{
+     width: 140px;
+  };
+  /deep/ .el-range-editor--medium{
+      width: 230px;
+      height: 32px;
+      padding:0px;
+  };
+  /deep/ .avue-form__menu{
+      display:none
+  }
+//   /deep/ .avue-form__row{
+//       display:inline-block
+//   }
+//   /deep/ .el-row{
+//       display: none;
+//   }
+</style>
