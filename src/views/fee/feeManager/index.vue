@@ -119,14 +119,16 @@
     <el-table v-loading="loading" :data="feeManagerList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="合同费用表id" align="center" prop="id" />
-      <el-table-column label="费用编号" align="center" prop="num" />
-      <el-table-column label="合同编号" align="center" prop="contractNum" />
-      <el-table-column label="费用类型" align="center" prop="type" />
-      <el-table-column label="付款方式" align="center" prop="payMethod" />
-      <el-table-column label="付款人" align="center" prop="payer" />
-      <el-table-column label="收款人" align="center" prop="reciever" />
-      <el-table-column label="费用状态" align="center" prop="checkStatus" />
+      <el-table-column label="公司" align="center" prop="sysCompany.name" />
       <el-table-column label="收款时间" align="center" prop="shoukuanDate" width="180">
+      <el-table-column label="费用编号" align="center" prop="num" />
+      <el-table-column label="费用类型" align="center" prop="type" />
+      <el-table-column label="费用金额" align="center" prop="amount" />
+        <el-table-column label="付款方式" align="center" prop="payMethod" />
+        <el-table-column label="收款人" align="center" prop="reciever" />
+        <el-table-column label="费用状态" align="center" prop="checkStatus" />
+        <el-table-column label="合同编号" align="center" prop="contractNum" />
+        <el-table-column label="客户姓名" align="center" prop="payer" />
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.shoukuanDate, '{y}-{m}-{d}') }}</span>
         </template>
