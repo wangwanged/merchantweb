@@ -7,6 +7,14 @@
   </template>
 </avue-form>
   </div>
+  <!-- <div>
+    <el-cascader
+    v-model="form"
+    :options="option"
+    :props="{ expandTrigger: 'hover' }"
+   >
+    </el-cascader>
+  </div> -->
 </template>
 <script>
 import {getProvince,getCity,getDistrict} from '@/api/system/customer'
@@ -65,8 +73,4 @@ export default {
 </script>
 
 <style lang='less' scoped>
-  /deep/ .el-input--suffix{
-      width: 200px;
-  }
-  
 </style>

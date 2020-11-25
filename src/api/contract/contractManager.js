@@ -76,8 +76,8 @@ export function contractFee(num) {
   })
 }
 
-// 附件合同信息
-export function contractAttachment(num) {
+// 开店信息
+export function contractOpenshop(num) {
   return request({
     url: '/dianmian/dianmianManager/listOfContractNum/'+ num,
     method: 'get',
@@ -90,6 +90,13 @@ export function contractCheck(params) {
     url: '/contract/contractManager/check/',
     method: 'post',
     params
+  })
+}
+// 反审核按钮
+export function contractunCheck(id) {
+  return request({
+    url: '/contract/contractManager/uncheck/'+id,
+    method: 'get',
   })
 }
 

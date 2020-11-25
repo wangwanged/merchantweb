@@ -458,45 +458,9 @@ import {
 import { getContractInfo } from "@/api/contract/contractManager";
 export default {
   data() {
-    return {
+    return {   
       //   新签合同信息
-      newsigninfo: {
-        num: "", //合同编号，手动录入
-        customerName: "", //客户username
-        customerId: this.$route.query.id, //客户id
-        customerPhone: "", //客户手机号
-        type: "0", //合同类型
-        produce: "", //产品类型
-        dianmianName: "", // 店面名称
-        dianmianNum: 0, // 店面数量
-        guarantee: 0, // 保证金
-        fee: {
-          lvyue: null,
-          yunyingManage: null,
-          systemUse: null,
-          systemGuard: null,
-          guohu: null,
-          daiban: null,
-          jingyingManage: {}
-        }, // 费用
-        operation: "",
-        status: "", //合同状态
-        managerId: 0, //负责人id
-        manager: "", // 负责人username
-        signDate: new Date(), //签约日期
-        checkDate: "", //审核日期
-        beginDate: new Date(),
-        endDate: "",
-        remark: "",
-        dianmianAddress: "小破庄",
-        dianmianCity: "石家庄市",
-        dianmianDistrict: "裕华区",
-        dianmianLatitude: "90.375",
-        dianmianLongitude: "21.225",
-        dianmianName: "ddddd",
-        dianmianNum: null,
-        dianmianProvince: "河北省"
-      },
+      newsigninfo:[],
       //   编辑按钮
       editinfo: {
         pageNum: 1,
@@ -634,8 +598,43 @@ export default {
     },
     // 新签合同按钮操作
     handlecontrast() {
-      this.newsigninfo.fee = JSON.stringify(this.newsigninfo.fee);
-      newSignContrast(this.newsigninfo)
+        const data= {
+            num: this.newsigninfo.num, //合同编号，手动录入
+            customerName: this.newsigninfo.customerName, //客户username
+            customerId: this.$route.query.id, //客户id
+            customerPhone: this.newsigninfo.customerPhone, //客户手机号
+            type: this.newsigninfo.type, //合同类型
+            produce: this.newsigninfo.produce, //产品类型
+            dianmianName: this.newsigninfo.dianmianName, // 店面名称
+            dianmianNum: this.newsigninfo.dianmianNum, // 店面数量
+            guarantee: this.newsigninfo.guarantee, // 保证金
+            fee: {
+            lvyue: this.newsigninfo.lvyue,
+            yunyingManage: this.newsigninfo.yunyingManage,
+            systemUse: this.newsigninfo.systemUse,
+            systemGuard: this.newsigninfo.systemGuard,
+            guohu: this.newsigninfo.guohu,
+            daiban: this.newsigninfo.daiban,
+            jingyingManage: {},
+            }, // 费用
+            operation: this.newsigninfo.operation,
+            status: this.newsigninfo.status, //合同状态
+            managerId: this.newsigninfo.managerId, //负责人id
+            manager: this.newsigninfo.manager, // 负责人username
+            signDate: this.newsigninfo.signDate, //签约日期
+            checkDate: this.newsigninfo.checkDate, //审核日期
+            beginDate: this.newsigninfo.beginDate,
+            endDate: this.newsigninfo.endDate,
+            remark: this.newsigninfo.remark,
+            dianmianAddress: this.newsigninfo.dianmianAddress,
+            dianmianCity: this.newsigninfo.dianmianCity,
+            dianmianDistrict: this.newsigninfo.dianmianDistrict,
+            dianmianLatitude: this.newsigninfo. dianmianLatitude,
+            dianmianLongitude: this.newsigninfo.dianmianLongitude,
+            dianmianProvince: this.newsigninfo.dianmianProvince
+      },
+    //   this.newsigninfo.fee = JSON.stringify(this.newsigninfo.fee);
+      newSignContrast(data)
         .then(response => {
           this.$message.success("操作成功");
         })

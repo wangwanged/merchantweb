@@ -139,28 +139,6 @@
       <el-col :span="1.5">
         <el-button
           type="primary"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['system:customer:edit']"
-          >修改</el-button
-        >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['system:customer:remove']"
-          >删除</el-button
-        >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
@@ -168,10 +146,30 @@
           >导出</el-button
         >
       </el-col>
-      <right-toolbar
+       <el-col :span="1.5">
+        <el-button
+          type="primary"
+          size="mini"
+          :disabled="multiple"
+          @click="dialogTransfor=true"
+          v-hasPermi="['system:customer:remove']"
+          >转移</el-button
+        >
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          size="mini"
+          :disabled="multiple"
+          @click="dialogeInvalid=true"
+          v-hasPermi="['system:customer:remove']"
+          >失效</el-button
+        >
+      </el-col>
+      <!-- <right-toolbar
         :showSearch.sync="showSearch"
         @queryTable="getList"
-      ></right-toolbar>
+      ></right-toolbar> -->
     </el-row>
 
     <el-table
@@ -235,30 +233,6 @@
           <span>{{ parseTime(scope.row.inputDate, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column
-        label="操作"
-        align="center"
-        class-name="small-padding fixed-width"
-      >
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:customer:edit']"
-            >编辑</el-button
-          >
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['system:customer:remove']"
-            >删除</el-button
-          >
-        </template>
-      </el-table-column> -->
     </el-table>
     <pagination
       v-show="total > 0"
@@ -351,7 +325,37 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
-    
+    <!-- 失效弹框 -->
+     <el-dialog title="失效" :visible.sync="dialogeInvalid" width="500px">
+      <tr>
+        <td><i class="el-icon-message-solid" style="font-size:70px"></i></td>
+        <td>
+          <strong>是否确定把所选客户失效？</strong>
+          <p>
+            客户失效后，此客户将转移至线索池，原负责人不能再维护跟进和更新此客户数据。
+          </p>
+        </td>
+      </tr>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleinvlid">确 定</el-button>
+        <el-button @click="dialogeInvalid = false">取 消</el-button>
+      </div>
+    </el-dialog>
+    <!-- 转移弹框 -->
+    <el-dialog title="转移" :visible.sync="dialogTransfor" width="500px">
+        <el-autocomplete
+            class="inline-input"
+            v-model="transforKeywords"
+            :fetch-suggestions="querySearch"
+            placeholder="请输入内容"
+            :trigger-on-focus="false"
+            @select="handleSelect"
+    ></el-autocomplete>
+    <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click='handleTransfor'>确 定</el-button>
+        <el-button @click="dialogeInvalid = false">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -362,7 +366,10 @@ import {
   delCustomer,
   addCustomer,
   updateCustomer,
-  exportCustomer
+  exportCustomer,
+  invalidCustomer,
+  transforCustomer,
+  transforcustomer
 } from "@/api/system/customer";
 import { listUser } from "@/api/system/user";
 import Liandong from "@/components/Liandong/liandong.vue";
@@ -376,6 +383,14 @@ export default {
   },
   data() {
     return {
+        // 要转移的电话号码
+      transforphone:'',
+        // 转移关键词
+      transforKeywords:'',
+       // 转移弹框
+      dialogTransfor: false,
+      // 失效弹框
+      dialogeInvalid:false,
       // 用户信息
       user:[],
       // 遮罩层
@@ -468,6 +483,61 @@ export default {
     });
   },
   methods: {
+    handleSelect(item) {
+        var item = item.value
+        item=item.substring(0,11);
+        this.transforphone=item
+      },
+     querySearch(queryString, callback) {
+            const keywords=this.transforKeywords
+            var params={
+                keywords:keywords
+            }
+        transforCustomer(params).then(response => {
+           var restaurants = response.rows;
+           const list = []
+             //封装要显示的数据
+           for (let v of restaurants) {
+            list.push({ value: v.phonenumber + " " + v.userName})
+            }
+                 // 调用 callback 返回建议列表的数据,是一个数组类型
+            callback(list)
+      });      
+      },
+    //   转移确定按钮
+    handleTransfor(row) {
+       const ids = row.id || this.ids;
+       var data ={
+           ids:ids,
+           phone:this.transforphone
+       }
+      transforcustomer(data).then(response => {
+           this.$message.success("操作成功");
+           this.getList();
+           this. dialogTransfor = false;
+      }).catch(error=>{
+           this.$message.error("操作失败");
+      });
+    },
+    //   失效按钮
+    handleinvlid(row) {
+      const ids = row.id || this.ids;
+      const status= '0'
+      const params = {
+          ids:ids,
+          status:status
+      }
+      invalidCustomer(params)
+        .then(response => { 
+          this.$message.success("操作成功");
+          this.$router.push("/customer/customer");
+          this.getList();
+          this.dialogeInvalid = false;
+        })
+        .catch(error => {
+          this.$message.error("操作失败");
+        });
+    },
     //   getUserId(i){
     //      console.log(i)
     //   },
@@ -593,16 +663,6 @@ export default {
       this.open = true;
       this.title = "添加我的客户";
     },
-    /** 修改按钮操作 */
-    handleUpdate(row) {
-      this.reset();
-      const id = row.id || this.ids;
-      getCustomer(id).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改我的客户";
-      });
-    },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
@@ -622,26 +682,6 @@ export default {
           }
         }
       });
-    },
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      const ids = row.id || this.ids;
-      this.$confirm(
-        '是否确认删除我的客户编号为"' + ids + '"的数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }
-      )
-        .then(function() {
-          return delCustomer(ids);
-        })
-        .then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        });
     },
     /** 导出按钮操作 */
     handleExport() {
@@ -673,10 +713,4 @@ export default {
   /deep/ .avue-form__menu{
       display:none
   }
-//   /deep/ .avue-form__row{
-//       display:inline-block
-//   }
-//   /deep/ .el-row{
-//       display: none;
-//   }
 </style>
