@@ -68,12 +68,21 @@ export function addGenjin(data) {
   })
 }
 
-// 转移的模糊搜索
+// 转移的搜索
 export function transforCustomer(params) {
   return request({
     url: 'system/user/list/keywords',
     method: 'get',
     params:params
+  })
+}
+
+// 转移我的客户
+export function transforcustomer(data) {
+  return request({
+    url: 'system/customer/transfer',
+    method: 'post',
+    data: data
   })
 }
 

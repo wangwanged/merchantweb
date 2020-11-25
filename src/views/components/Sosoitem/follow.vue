@@ -175,5 +175,6 @@ export default {
     height: 100px;
     background-color: #fff;
     text-align: center;
+    padding-top:20px;
 }
 </style>
