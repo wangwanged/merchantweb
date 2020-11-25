@@ -68,4 +68,5 @@ export default {
   /deep/ .el-input--suffix{
       width: 200px;
   }
+  
 </style>
