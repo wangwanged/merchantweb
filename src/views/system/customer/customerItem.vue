@@ -458,7 +458,7 @@ import {
 import { getContractInfo } from "@/api/contract/contractManager";
 export default {
   data() {
-    return {   
+    return {
       //   新签合同信息
       newsigninfo:[],
       //   编辑按钮
@@ -498,8 +498,7 @@ export default {
       dialogTransfor: false,
       //  失效弹框
       dialogeInvalid: false,
-      // 新签合同弹框
-      dialogNewsign: false,
+
       // 当前详情页id
       id: this.$route.query.id,
       // 总条数
@@ -632,8 +631,8 @@ export default {
             dianmianLatitude: this.newsigninfo. dianmianLatitude,
             dianmianLongitude: this.newsigninfo.dianmianLongitude,
             dianmianProvince: this.newsigninfo.dianmianProvince
-      },
-    //   this.newsigninfo.fee = JSON.stringify(this.newsigninfo.fee);
+      };
+      // this.newsigninfo.fee = JSON.stringify(this.newsigninfo.fee);
       newSignContrast(data)
         .then(response => {
           this.$message.success("操作成功");
