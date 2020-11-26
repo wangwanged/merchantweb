@@ -129,36 +129,36 @@
     </div>
     <!-- 新签合同弹框 -->
     <el-dialog title="新签合同" :visible.sync="dialogNewsign" width="40%">
-      <el-form label-position="left" label-width="80px">
+      <el-form label-position="left" label-width="100px">
         <div style="font-size:20px;font-weight:700;margin-bottom:20px">
           客户信息
         </div>
-        <el-form-item label="客户姓名">
-          <el-input v-model="customerList.name"></el-input>
+        <el-form-item required label="客户姓名">
+          <el-input v-model="newsigninfo.name"></el-input>
         </el-form-item>
-        <el-form-item label="客户电话">
-          <el-input v-model="customerList.phone"></el-input>
+        <el-form-item required label="客户电话">
+          <el-input v-model="newsigninfo.phone"></el-input>
         </el-form-item>
         <div style="font-size:20px;font-weight:700;margin-bottom:20px">
           签约信息
         </div>
-        <el-form-item label="合同类型">
+        <el-form-item required label="合同类型">
           <el-button size="small" type="primary" plain>新签</el-button>
         </el-form-item>
-        <el-form-item label="签约产品">
-          <el-select v-model="newsigninfo.produce" @change="showdianmian">
+        <el-form-item required label="签约产品">
+          <!-- <el-select v-model="newsigninfo.produce" @change="showdianmian">
             <el-option
               v-for="dict in customerNeedsOptions"
               :key="dict.dictValue"
               :label="dict.dictLabel"
               :value="dict.dictValue"
             />
-          </el-select>
+          </el-select> -->
         </el-form-item>
-        <el-form-item label="合同编号">
+        <el-form-item required label="合同编号">
           <el-input placeholder="请输入" v-model="newsigninfo.num"></el-input>
         </el-form-item>
-        <el-form-item label="签约日期">
+        <el-form-item required label="签约日期">
           <el-date-picker
             v-model="newsigninfo.signDate"
             type="date"
@@ -167,7 +167,7 @@
           >
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="合同开始时间">
+        <el-form-item required label="合同开始时间">
           <el-date-picker
             v-model="newsigninfo.beginDate"
             type="date"
@@ -176,7 +176,7 @@
           >
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="合同结束时间">
+        <el-form-item required label="合同结束时间">
           <el-date-picker
             v-model="newsigninfo.endDate"
             type="date"
@@ -189,25 +189,25 @@
           店面/区域信息
         </div>
         <div v-if="showDianmian">
-          <el-form-item label="店面名称">
+          <el-form-item required label="店面名称">
             <el-input
               v-model="newsigninfo.dianmianName"
               placeholder="请输入"
             ></el-input>
           </el-form-item>
-          <el-form-item label="所属省">
+          <el-form-item required label="所属省">
             <el-input
               v-model="newsigninfo.dianmianProvince"
               placeholder="请输入"
             ></el-input>
           </el-form-item>
-          <el-form-item label="所属市">
+          <el-form-item required label="所属市">
             <el-input
               v-model="newsigninfo.dianmianCity"
               placeholder="请输入"
             ></el-input>
           </el-form-item>
-          <el-form-item label="所属区">
+          <el-form-item required label="所属区">
             <el-input
               v-model="newsigninfo.dianmianDistrict"
               placeholder="请输入"
@@ -215,44 +215,44 @@
           </el-form-item>
         </div>
         <div v-else>
-          <el-form-item label="店面名称">
+          <el-form-item required label="店面名称">
             <el-input
               v-model="newsigninfo.dianmianName"
               placeholder="请输入"
             ></el-input>
           </el-form-item>
-          <el-form-item label="所属省">
+          <el-form-item required label="所属省">
             <el-input
               v-model="newsigninfo.dianmianProvince"
               placeholder="请输入"
             ></el-input>
           </el-form-item>
-          <el-form-item label="所属市">
+          <el-form-item required label="所属市">
             <el-input
               v-model="newsigninfo.dianmianCity"
               placeholder="请输入"
             ></el-input>
           </el-form-item>
-          <el-form-item label="所属区">
+          <el-form-item required label="所属区">
             <el-input
               v-model="newsigninfo.dianmianDistrict"
               placeholder="请输入"
             ></el-input>
           </el-form-item>
         </div>
-        <el-form-item label="详细地址">
+        <el-form-item required label="详细地址">
           <el-input
             v-model="newsigninfo.dianmianAddress"
             placeholder="请输入"
           ></el-input>
         </el-form-item>
-        <el-form-item label="店面经度">
+        <el-form-item required  label="店面经度">
           <el-input
             placeholder="请输入"
             v-model="newsigninfo.dianmianLongitude"
           ></el-input>
         </el-form-item>
-        <el-form-item label="店面纬度">
+        <el-form-item required label="店面纬度">
           <el-input
             v-model="newsigninfo.dianmianLatitide"
             placeholder="请输入"
@@ -261,42 +261,42 @@
         <div style="font-size:20px;font-weight:700;margin-bottom:20px">
           费用信息
         </div>
-        <el-form-item label="履约保证金">
+         <el-form-item required label="履约保证金"> 
           <el-input
             placeholder="请输入"
-            v-model="newsigninfo.fee.lvyue"
+            v-model="fee.lvyue"
           ></el-input>
         </el-form-item>
-        <el-form-item label="运营管理费">
+        <el-form-item required label="运营管理费">
           <el-input
             placeholder="请输入"
-            v-model="newsigninfo.fee.yunyingManage"
+            v-model="fee.yunyingManage"
           ></el-input>
         </el-form-item>
-        <el-form-item label="系统使用费">
+        <el-form-item required label="系统使用费">
           <el-input
             placeholder="请输入"
-            v-model="newsigninfo.fee.systemUse"
+            v-model="fee.systemUse"
           ></el-input>
         </el-form-item>
-        <el-form-item label="系统维护费">
+        <el-form-item required label="系统维护费">
           <el-input
             placeholder="请输入"
-            v-model="newsigninfo.fee.systemGuard"
+            v-model="fee.systemGuard"
           ></el-input>
         </el-form-item>
-        <el-form-item label="过户费">
+        <el-form-item required label="过户费">
           <el-input
             placeholder="请输入"
-            v-model="newsigninfo.fee.guohu"
+            v-model="fee.guohu"
           ></el-input>
         </el-form-item>
-        <el-form-item label="代办费">
+        <el-form-item required label="代办费">
           <el-input
             placeholder="请输入"
-            v-model="newsigninfo.fee.daiban"
+            v-model="fee.daiban"
           ></el-input>
-        </el-form-item>
+        </el-form-item> 
         <el-form-item></el-form-item>
         <div style="font-size:20px;font-weight:700;margin-bottom:20px">
           备注信息
@@ -306,13 +306,13 @@
           type="textarea"
           v-model="newsigninfo.remark"
         ></el-input>
-        <el-form-item label="签约人员">
+        <el-form-item required label="签约人员">
           <el-input
             placeholder="请输入"
             v-model="newsigninfo.manager"
           ></el-input>
         </el-form-item>
-        <el-form-item label="所属部门">
+        <el-form-item required label="所属部门">
           <el-input placeholder="请输入" v-model="newsigninfo.fee"></el-input>
         </el-form-item>
       </el-form>
@@ -356,14 +356,14 @@
           </el-select>
         </el-form-item>
         <el-form-item required label="客户地区">
-          <avue-form v-model="location" :option="option">
+          <!-- <avue-form v-model="location" :option="option">
             <template slot="cascader3Type" slot-scope="{ node, data }">
               <span>{{ (data || {}).label }}</span>
               <span v-if="!node.isLeaf">
                 ({{ ((data || {}).children || []).length }})
               </span>
             </template>
-          </avue-form>
+          </avue-form> -->
         </el-form-item>
         <el-form-item required label="客户公司">
           <el-input v-model="form.companyName" placeholder="请输入公司和部门" />
@@ -398,22 +398,6 @@
     </el-dialog>
     <!-- 客户转移弹框 -->
     <el-dialog title="客户转移" :visible.sync="dialogTransfor" width="500px">
-      <!-- <el-select
-        v-model="this.transforinfo.keywords"
-        multiple
-        filterable
-        remote
-        reserve-keyword
-        placeholder="请输入关键词"
-      >
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        >
-        </el-option>
-      </el-select> -->
       <div class="searchinfo"></div>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogTransfor = false"
@@ -460,7 +444,17 @@ export default {
   data() {
     return {   
       //   新签合同信息
-      newsigninfo:[],
+      newsigninfo:{
+      },
+      fee:{
+                lvyue:'',
+                yunyingManage: '',
+                systemUse: '',
+                systemGuard: '',
+                guohu: '',
+                daiban: '',
+                // jingyingManage: {},
+          },
       //   编辑按钮
       editinfo: {
         pageNum: 1,
@@ -490,8 +484,6 @@ export default {
         transforlist: [], //   转移获取信息
         keywords: "" //   关键字
       },
-      //  详情新签合同弹框
-      dialogNewsign: false,
       // 详情编辑弹框
       dialogedit: false,
       // 详情转移弹框
@@ -539,18 +531,6 @@ export default {
   },
   created() {
     this.getList();
-    // 客户需求字典
-    this.getDicts("sys_user_need").then(response => {
-      this.dict.customerNeedsOptions = response.data;
-    });
-    // 客户等级字典
-    this.getDicts("customer_level").then(response => {
-      this.dict.levelOptions = response.data;
-    });
-    // 客户来源
-    this.getDicts("sys_customer_resource").then(response => {
-      this.dict.resourceOptions = response.data;
-    });
   },
   methods: {
     //   新签合同按钮店面或区域显示控制
@@ -598,7 +578,15 @@ export default {
     },
     // 新签合同按钮操作
     handlecontrast() {
-        const data= {
+        var fee = {}
+        fee.lvyue=this.fee.lvyue
+        fee.yunyingManage=this.fee.yunyingManage
+        fee.systemUse=this.fee.systemUse
+        fee.systemGuard=this.fee.systemGuard
+        fee.guohu=this.fee.guohu
+        fee.daiban=this.fee.daiban
+        var data= {
+            fee:fee,
             num: this.newsigninfo.num, //合同编号，手动录入
             customerName: this.newsigninfo.customerName, //客户username
             customerId: this.$route.query.id, //客户id
@@ -608,15 +596,15 @@ export default {
             dianmianName: this.newsigninfo.dianmianName, // 店面名称
             dianmianNum: this.newsigninfo.dianmianNum, // 店面数量
             guarantee: this.newsigninfo.guarantee, // 保证金
-            fee: {
-            lvyue: this.newsigninfo.lvyue,
-            yunyingManage: this.newsigninfo.yunyingManage,
-            systemUse: this.newsigninfo.systemUse,
-            systemGuard: this.newsigninfo.systemGuard,
-            guohu: this.newsigninfo.guohu,
-            daiban: this.newsigninfo.daiban,
-            jingyingManage: {},
-            }, // 费用
+            // fee: {
+            //     lvyue: this.newsigninfo.lvyue,
+            //     yunyingManage: this.newsigninfo.yunyingManage,
+            //     systemUse: this.newsigninfo.systemUse,
+            //     systemGuard: this.newsigninfo.systemGuard,
+            //     guohu: this.newsigninfo.guohu,
+            //     daiban: this.newsigninfo.daiban,
+            //     jingyingManage: {},
+            // }, // 费用
             operation: this.newsigninfo.operation,
             status: this.newsigninfo.status, //合同状态
             managerId: this.newsigninfo.managerId, //负责人id
@@ -632,13 +620,11 @@ export default {
             dianmianLatitude: this.newsigninfo. dianmianLatitude,
             dianmianLongitude: this.newsigninfo.dianmianLongitude,
             dianmianProvince: this.newsigninfo.dianmianProvince
-      },
+      };
     //   this.newsigninfo.fee = JSON.stringify(this.newsigninfo.fee);
-      newSignContrast(data)
-        .then(response => {
+      newSignContrast(data).then(response => {
           this.$message.success("操作成功");
-        })
-        .catch(error => {
+        }).catch(error => {
           this.$message.error("操作失败");
         });
     },
