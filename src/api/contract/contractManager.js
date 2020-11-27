@@ -143,3 +143,12 @@ export function contractOperlog(params) {
     params:params
   })
 }
+
+// 请求合同附件
+export function getAttachmentinfo(params) {
+  return request({
+    url: '/system/file/list',
+    method: 'get',
+    params:params
+  })
+}

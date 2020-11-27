@@ -299,25 +299,18 @@
             <el-input v-model='scope.row.username'></el-input>
         </template>
         </el-form-item> -->
-        <el-form-item label="负责人" prop="username">
-          <el-select
-            filterable
-            v-model="form.username"
-            placeholder="选择人员"
-            clearable
-            size="small"
-          >
-            <el-option
-              v-for="(item, index) in user"
-              :key="index"
-              :label="item.userName"
-              :value="item.userName"
-            />
-          </el-select>
+         <el-form-item label="负责人">
+            <el-autocomplete
+            class="inline-input"
+            v-model="transforKeywords"
+            :fetch-suggestions="querySearch"
+            placeholder="请输入内容"
+            :trigger-on-focus="false"
+            @select="handleSelect"
+    ></el-autocomplete>
         </el-form-item>
-        <el-form-item label="所属部门">
-          <el-input placeholder="人员部门">{{}}</el-input>
-          <!-- <el-input v-model="user.dept.deptName[form.userName]" placeholder="人员部门" disabled /> -->
+        <el-form-item label="所属部门" prop="phone">
+          <el-input disabled v-model='deptName'  placeholder="所属部门" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -358,7 +351,6 @@
     </el-dialog>
   </div>
 </template>
-
 <script>
 import {
   listCustomer,
@@ -383,6 +375,8 @@ export default {
   },
   data() {
     return {
+      //   所属部门
+      deptName:'',
         // 要转移的电话号码
       transforphone:'',
         // 转移关键词
@@ -483,27 +477,6 @@ export default {
     });
   },
   methods: {
-    handleSelect(item) {
-        var item = item.value
-        item=item.substring(0,11);
-        this.transforphone=item
-      },
-     querySearch(queryString, callback) {
-            const keywords=this.transforKeywords
-            var params={
-                keywords:keywords
-            }
-        transforCustomer(params).then(response => {
-           var restaurants = response.rows;
-           const list = []
-             //封装要显示的数据
-           for (let v of restaurants) {
-            list.push({ value: v.phonenumber + " " + v.userName})
-            }
-                 // 调用 callback 返回建议列表的数据,是一个数组类型
-            callback(list)
-      });      
-      },
     //   转移确定按钮
     handleTransfor(row) {
        const ids = row.id || this.ids;
@@ -697,7 +670,50 @@ export default {
         .then(response => {
           this.download(response.msg);
         });
-    }
+    },
+     // 负责人查询
+    handleSelect(item) {
+        console.log(item)
+        var item = item.value
+        item=item.substring(0,11);
+        this.transforphone=item
+        this.userInfo()
+      },
+      // 负责人查询
+    querySearch(queryString, callback) {
+            const keywords=this.transforKeywords
+            var params={
+                keywords:keywords
+            }
+        transforCustomer(params).then(response => {
+           var restaurants = response.rows;
+           console.log('eeeeeeeeeeeeeeee',restaurants)
+           const list = []
+             //封装要显示的数据
+           for (let v of restaurants) {
+            list.push({ value: v.phonenumber + " " + v.userName})
+            }
+                 // 调用 callback 返回建议列表的数据,是一个数组类型
+            callback(list)
+      });      
+      },
+      // 获取user用户信息
+    userInfo() {
+      listUser({}).then(response => {
+          this.user=response.rows
+          var a  = this.user.filter(item=>{
+              if(this.transforphone===item.phonenumber){
+                  return item
+              }
+          })
+          var b = []
+          for(var i = 0; i<a.length;i++){
+              var c = a[i].dept
+              b.push(c.deptName)
+              }
+          this.deptName = b[0]
+      });
+    },
   }
 };
 </script>

@@ -42,7 +42,7 @@
             <span>{{ dianmianList.remark }}</span>
           </p>
           <div class="main_title">营业状态</div>
-          <el-button size='small' type='primary'>修改营业状态</el-button>
+          <el-button size='small' type='primary' @click='dialog.dialogyingyeStatus=true'>修改营业状态</el-button>
           <p class="yingye_status">
             <span>{{ dianmianList.diandongPhone }}</span>
             <span>{{ dianmianList.diandongPhone }}</span>
@@ -96,6 +96,7 @@
               class="fr"
               type="primary"
               style="margin-top:10px;margin-left:430px"
+              @click='dialog.dialogcheck=true'
               >验收</el-button
             >
           </div>
@@ -183,6 +184,7 @@
         <el-button type="primary" @click="dianmianInfoUpdate">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 营业状态弹框 -->
     <el-dialog title="营业状态" width="40%" :visible.sync="dialog.dialogyingyeStatus">
       <el-radio-group v-model="radio">
         <el-radio label="1">营业中</el-radio>
@@ -198,9 +200,18 @@
       <el-form-item label='闭店/停业搜时间'>
           <el-input place='请选择时间'></el-input>
       </el-form-item>
-      
+       <span slot="footer" class="dialog-footer">
+        <el-button>取 消</el-button>
+        <el-button type="primary" @click="dianmianInfoUpdate">确 定</el-button>
+      </span>
+    </el-dialog>   
+    <!-- 验收按钮 -->
+    <el-dialog title="验收" width="40%" :visible.sync="dialog.dialogcheck">
+       <span slot="footer" class="dialog-footer">
+        <el-button>取 消</el-button>
+        <el-button type="primary" @click="dianmianInfoUpdate">确 定</el-button>
+      </span>
     </el-dialog>
-    
   </div>
 </template>
 <script>
@@ -220,7 +231,8 @@ export default {
       form: {},
       dialog: {
         dialogupdate: false,
-        dialogyingyeStatus:false
+        dialogyingyeStatus:false,
+        dialogcheck:false
       }
     };
   },
@@ -247,6 +259,7 @@ export default {
         .then(res => {
           this.$message.success("操作成功");
           this.dialog.dialogupdate = false;
+          this.getdianmianList()
         })
         .catch(error => {
           this.$message.error("操作失败");
@@ -272,5 +285,9 @@ export default {
 }
 .yingye_status span:first-child {
   margin-left: 0px;
+}
+.main_right_top {
+  background-color: #fff;
+  padding: 20px 20px;
 }
 </style>

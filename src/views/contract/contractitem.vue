@@ -363,16 +363,21 @@
                     @click="dialog.dialogAddattachement = true"
                     >新增附件</el-button
                   >
-                  <el-table :data="feeList" border style="width: 100%">
-                    <el-table-column prop="date" label="附件名称" width="180">
+                  <el-table :data="attachmentList" border style="width: 100%">
+                    <el-table-column prop="file" label="附件名称" width="180">
                     </el-table-column>
-                    <el-table-column prop="name" label="附件说明" width="180">
+                    <el-table-column prop="description" label="附件说明" width="180">
                     </el-table-column>
-                    <el-table-column prop="address" label="上传人">
+                    <el-table-column prop="createBy" label="上传人">
                     </el-table-column>
-                    <el-table-column prop="date" label="上传时间" width="180">
+                    <el-table-column prop="inputDate" label="上传时间" width="180">
                     </el-table-column>
-                    <el-table-column prop="name" label="操作" width="180">
+                    <el-table-column prop="name" label="操作" width="250">
+                        <template slot-scope="obj">
+                            <el-button type="text">下载</el-button>
+                            <el-button type="text">编辑</el-button>
+                            <el-button type="text">删除</el-button>
+                        </template>
                     </el-table-column>
                   </el-table>
                 </div>
@@ -860,7 +865,8 @@ import {
   contractRenew,
   contractBreakoff,
   contractAbandon,
-  contractOperlog
+  contractOperlog,
+  getAttachmentinfo
 } from "@/api/contract/contractManager";
 import {
   updateDianmianManager,
@@ -888,6 +894,7 @@ export default {
       relatedList: [], //关联合同列表
       feeList: [], //费用列表
       openshopList: [], //开店信息
+      attachmentList: [], //附件信息
       showTabs: "first", //tab栏显示
       form: {}, //表单数据，
       addshop:{},  //开店信息数据
@@ -957,18 +964,13 @@ export default {
         this.contractList = newName;
       }
     },
-    dict: {
-      handler(newName, oldName) {
-        //   this.contractList=newName
-        console.log("99999999", newName);
-      }
-    }
   },
   created() {
     this.getList(
       this.getRelatedcontract,
       this.getcontractFee,
-      this.getcontractOpenshop
+      this.getcontractOpenshop,
+      this.getAttachment
     );
     this.getcontractOperlog();
     this.getDicts("check_status").then(response => {
@@ -1014,7 +1016,7 @@ export default {
       };
     },
     //   获取合同列表
-    getList(aa = () => {}, bb = () => {}, cc = () => {}) {
+    getList(aa = () => {}, bb = () => {}, cc = () => {}, dd = () => {}) {
       getContractManager(this.id).then(response => {
         this.contractList = response.data;
         this.rootNum = response.data.rootNum;
@@ -1022,6 +1024,7 @@ export default {
         aa();
         bb();
         cc();
+        dd();
       });
     },
     // 获取关联合同
@@ -1034,7 +1037,6 @@ export default {
     getcontractFee() {
       contractFee(this.rootNum).then(res => {
         this.feeList = res.data;
-        console.log("2222222222222", this.feeList);
       });
     },
     //获取开店信息
@@ -1093,13 +1095,11 @@ export default {
              
         //  })
     },
-    
     // 获取合同日志跟进
     getcontractOperlog() {
       contractOperlog()
         .then(res => {
           this.OperlogList = res.rows;
-          console.log("qqqqqqqq", this.OperlogList);
         })
         .catch(error => {});
     },
@@ -1194,22 +1194,15 @@ export default {
           this.$message.error("操作失败");
         });
     },
-    importTemplate: function() {
-      table.set();
-      $.get(table.options.importTemplateUrl, function(result) {
-        if (result.code == web_status.SUCCESS) {
-          window.location.href =
-            ctx +
-            "common/download?fileName=" +
-            encodeURI(result.msg) +
-            "&delete=" +
-            true;
-        } else if (result.code == web_status.WARNING) {
-          $.modal.alertWarning(result.msg);
-        } else {
-          $.modal.alertError(result.msg);
+    // 获取附件信息
+    getAttachment(){
+        var params = {
+           contractNum:this.contractList.num
         }
-      });
+        getAttachmentinfo(params).then(res=>{
+           this.attachmentList=res.rows
+        })
+        
     }
   }
 };

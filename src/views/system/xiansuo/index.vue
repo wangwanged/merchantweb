@@ -50,52 +50,41 @@
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
       </el-form-item>
     </el-form>
-
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+        <el-col :span="1.5">
         <el-button
           type="primary"
-          icon="el-icon-plus"
+          size="mini"
+          :disabled="single"
+          @click=" handletocustomer"
+          v-hasPermi="['system:xiansuo:export']"
+        >转成客户</el-button>
+      </el-col>
+      <div class='fr'>
+        <el-col :span="1.5">
+        <el-button
+          type="primary"
           size="mini"
           @click="handleAdd"
           v-hasPermi="['system:xiansuo:add']"
-        >新增</el-button>
+        >新增线索</el-button>
       </el-col>
-      <el-col :span="1.5">
+      <!-- 导入线索 -->
+       <el-col :span="1.5">
+        <input-excel @getResult="getMyExcelData"></input-excel>
+      </el-col>
+       <el-col :span="1.5">
         <el-button
           type="primary"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['system:xiansuo:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['system:xiansuo:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-download"
           size="mini"
           @click="handleExport"
           v-hasPermi="['system:xiansuo:export']"
         >导出</el-button>
       </el-col>
-	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      </div>   
     </el-row>
-
     <el-table v-loading="loading" :data="xiansuoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="最新跟进时间" align="center" prop="id" />
       <el-table-column label="客户姓名" align="center" prop="name">
            <template slot-scope="obj">
           <el-button
@@ -111,42 +100,26 @@
           >
         </template>
       </el-table-column>
-      <el-table-column label="电话" align="center" prop="phone" />
-      <el-table-column label="城市" align="center" prop="companyId" :formatter="companyIdFormat" />
-      <el-table-column label="省" align="center" prop="province" :formatter="provinceFormat" />
-      <el-table-column label="城市" align="center" prop="city" :formatter="cityFormat" />
+      <el-table-column label="客户电话" align="center" prop="phone" />
+      <el-table-column label="客户公司" align="center" prop="companyName" />
+      <el-table-column label="客户地区" align="center">
+          <template slot-scope="obj">
+              {{obj.row.province}}-{{obj.row.city}}
+          </template>
+      </el-table-column>
+       <el-table-column label="跟进状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="线索来源" align="center" prop="resource" :formatter="resourceFormat" />
-      <el-table-column label="负责人" align="center" prop="sysUserId" />
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.inputDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="最新跟进时间" align="center" prop="updateTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.genjinDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:xiansuo:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['system:xiansuo:remove']"
-          >删除</el-button>
-        </template>
-      </el-table-column> -->
     </el-table>
-
     <pagination
       v-show="total>0"
       :total="total"
@@ -154,7 +127,6 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-
     <!-- 添加或修改客户线索对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
@@ -214,16 +186,77 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+    <!-- 转成客户弹框 -->
+    <el-dialog title="转成客户" :visible.sync="dialog.dialogtocustomer" width="500px">
+       <el-form label-width="80px">
+            <el-form-item label="客户姓名" prop="name">
+          <el-input v-model="tocustomerInfo.name" placeholder="请输入客户姓名" />
+        </el-form-item>
+        <el-form-item label="客户电话" prop="phone">
+          <el-input v-model="tocustomerInfo.phone" placeholder="请输入电话" />
+        </el-form-item>
+          <el-form-item label="客户等级" prop="name">
+          <el-input v-model="tocustomerInfo.level" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="客户需求" prop="phone">
+          <el-input v-model="tocustomerInfo.customerNeeds" placeholder="请输入" />
+        </el-form-item>
+          <el-form-item label="客户地区" prop="name">
+          <el-input v-model="form.name" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="客户公司" prop="phone">
+          <el-input v-model="tocustomerInfo.companyName" placeholder="请输入" />
+        </el-form-item>
+          <el-form-item label="店面地址" prop="name">
+          <el-input v-model="tocustomerInfo.dianmianAddress" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="中介经验" prop="phone">
+          <el-input v-model="tocustomerInfo.experience" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="负责人">
+            <el-autocomplete
+            class="inline-input"
+            v-model="transforKeywords"
+            :fetch-suggestions="querySearch"
+            placeholder="请输入内容"
+            :trigger-on-focus="false"
+            @select="handleSelect"
+    ></el-autocomplete>
+        </el-form-item>
+        <el-form-item label="所属部门" prop="phone">
+          <el-input disabled v-model='deptName'  placeholder="请输入电话" />
+        </el-form-item>
+       </el-form>
+        <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitTocustomer">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { listXiansuo, getXiansuo, delXiansuo, addXiansuo, updateXiansuo, exportXiansuo } from "@/api/system/xiansuo";
+import { listXiansuo, getXiansuo, delXiansuo, addXiansuo, updateXiansuo, exportXiansuo, transfortoCustomer,importXiansuo} from "@/api/system/xiansuo";
 import Liandong from "@/components/Liandong/liandong.vue";
+import {transforCustomer} from "@/api/system/customer";
+import { listUser } from "@/api/system/user";
+import inputExcel from '@/views/components/importexcel'
+import { arrAll } from '../../../components/Liandong/cities';
 export default {
   name: "Xiansuo",
   data() {
     return {
+    //   所属部门
+      deptName:'',
+     // 要转移的电话号码
+      transforphone:'',
+        // 转移关键词
+      transforKeywords:'',
+    //   转成客户字段
+      tocustomerInfo:[],
+      dialog:{
+        dialogtocustomer:false,
+      },
       // 遮罩层
       loading: true,
       // 选中数组
@@ -250,7 +283,9 @@ export default {
       cityOptions: [],
       // 线索来源字典
       resourceOptions: [],
-      // 查询参数
+      //  跟进状态字典
+      statusOptions:[],
+      // 查询参数s
       queryParams: {
         pageNum: 1,
         pageSize: 10,
@@ -302,7 +337,8 @@ export default {
     };
   },
    components: {
-    Liandong
+    Liandong,
+    'input-excel':inputExcel
   },
   created() {
     this.getList();
@@ -317,6 +353,9 @@ export default {
     });
     this.getDicts("sys_customer_resource").then(response => {
       this.resourceOptions = response.data;
+    });
+    this.getDicts("customer_genjin").then(response => {
+      this.statusOptions = response.data
     });
   },
   methods: {
@@ -353,6 +392,10 @@ export default {
     // 线索来源字典翻译
     resourceFormat(row, column) {
       return this.selectDictLabel(this.resourceOptions, row.resource);
+    },
+    // 跟进状态字典
+    statusFormat(row, column) {
+      return this.selectDictLabel(this.statusOptions, row.status);
     },
     // 取消按钮
     cancel() {
@@ -393,16 +436,6 @@ export default {
       this.open = true;
       this.title = "添加客户线索";
     },
-    /** 修改按钮操作 */
-    handleUpdate(row) {
-      this.reset();
-      const id = row.id || this.ids
-      getXiansuo(id).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改客户线索";
-      });
-    },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
@@ -423,20 +456,6 @@ export default {
         }
       });
     },
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      const ids = row.id || this.ids;
-      this.$confirm('是否确认删除客户线索编号为"' + ids + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return delXiansuo(ids);
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        })
-    },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
@@ -449,7 +468,89 @@ export default {
         }).then(response => {
           this.download(response.msg);
         })
-    }
+    },
+    // 转成客户按钮
+    handletocustomer(){
+        this.dialog.dialogtocustomer=true
+        var aaa =this.xiansuoList.filter(item=>{
+           return item.id===this.ids[0]
+        })
+        this.tocustomerInfo = aaa[0]
+        this.userInfo()
+    },
+    // 转成客户提交
+    submitTocustomer(){   
+        var params ={
+            ids:this.ids,
+            name:this.tocustomerInfo.name,
+            phone: this.tocustomerInfo.phone,
+            level: this.tocustomerInfo.level,
+            resource: this.tocustomerInfo.resource,
+            city: this.tocustomerInfo.city,
+            companyName: this.tocustomerInfo.companyName,
+            customerNeeds:this.tocustomerInfo.customerNeeds,
+            dianmianAddress: this.tocustomerInfo.dianmianAddress,
+            district: this.tocustomerInfo.district,
+            province: this.tocustomerInfo.level,
+            status: this.tocustomerInfo.level,
+            experience:this.tocustomerInfo.experience,
+            username:this.tocustomerInfo.username,
+        }
+        transfortoCustomer(params).then(res=>{
+             
+        })
+    },
+    // 负责人查询
+    handleSelect(item) {
+        console.log(item)
+        var item = item.value
+        item=item.substring(0,11);
+        this.transforphone=item
+        this. userInfo()
+      },
+      // 负责人查询
+    querySearch(queryString, callback) {
+            const keywords=this.transforKeywords
+            var params={
+                keywords:keywords
+            }
+        transforCustomer(params).then(response => {
+           var restaurants = response.rows;
+           console.log('eeeeeeeeeeeeeeee',restaurants)
+           const list = []
+             //封装要显示的数据
+           for (let v of restaurants) {
+            list.push({ value: v.phonenumber + " " + v.userName})
+            }
+                 // 调用 callback 返回建议列表的数据,是一个数组类型
+            callback(list)
+      });      
+      },
+      // 获取user用户信息
+    userInfo() {
+      listUser({}).then(response => {
+          this.user=response.rows
+          var a  = this.user.filter(item=>{
+              if(this.transforphone===item.phonenumber){
+                  return item
+              }
+          })
+          var b = []
+          for(var i = 0; i<a.length;i++){
+              var c = a[i].dept
+              b.push(c.deptName)
+              }
+          this.deptName = b[0]
+      });
+    },
+    // 导入数据
+    getMyExcelData(data){
+        console.log('import',data)
+        var data = data
+        importXiansuo(data).then(res=>{
+           console.log(res)
+        })
+      }
   }
 };
 </script>

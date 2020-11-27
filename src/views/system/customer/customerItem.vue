@@ -117,14 +117,11 @@
           <div class="tab_style fl">
             客户跟进
           </div>
-          <el-button
-            type="primary"
-            class="fr"
-            @click="$store.state.sosoitem.customer.dialogfollow = true"
+          <el-button type="primary" class="fr" @click="goSecond"
             >写跟进</el-button
           >
         </div>
-        <Follow></Follow>
+        <Follow ref="follow" :tofollow='customerList'></Follow>
       </div>
     </div>
     <!-- 新签合同弹框 -->
@@ -246,7 +243,7 @@
             placeholder="请输入"
           ></el-input>
         </el-form-item>
-        <el-form-item required  label="店面经度">
+        <el-form-item required label="店面经度">
           <el-input
             placeholder="请输入"
             v-model="newsigninfo.dianmianLongitude"
@@ -261,42 +258,24 @@
         <div style="font-size:20px;font-weight:700;margin-bottom:20px">
           费用信息
         </div>
-         <el-form-item required label="履约保证金"> 
-          <el-input
-            placeholder="请输入"
-            v-model="fee.lvyue"
-          ></el-input>
+        <el-form-item required label="履约保证金">
+          <el-input placeholder="请输入" v-model="fee.lvyue"></el-input>
         </el-form-item>
         <el-form-item required label="运营管理费">
-          <el-input
-            placeholder="请输入"
-            v-model="fee.yunyingManage"
-          ></el-input>
+          <el-input placeholder="请输入" v-model="fee.yunyingManage"></el-input>
         </el-form-item>
         <el-form-item required label="系统使用费">
-          <el-input
-            placeholder="请输入"
-            v-model="fee.systemUse"
-          ></el-input>
+          <el-input placeholder="请输入" v-model="fee.systemUse"></el-input>
         </el-form-item>
         <el-form-item required label="系统维护费">
-          <el-input
-            placeholder="请输入"
-            v-model="fee.systemGuard"
-          ></el-input>
+          <el-input placeholder="请输入" v-model="fee.systemGuard"></el-input>
         </el-form-item>
         <el-form-item required label="过户费">
-          <el-input
-            placeholder="请输入"
-            v-model="fee.guohu"
-          ></el-input>
+          <el-input placeholder="请输入" v-model="fee.guohu"></el-input>
         </el-form-item>
         <el-form-item required label="代办费">
-          <el-input
-            placeholder="请输入"
-            v-model="fee.daiban"
-          ></el-input>
-        </el-form-item> 
+          <el-input placeholder="请输入" v-model="fee.daiban"></el-input>
+        </el-form-item>
         <el-form-item></el-form-item>
         <div style="font-size:20px;font-weight:700;margin-bottom:20px">
           备注信息
@@ -442,19 +421,18 @@ import {
 import { getContractInfo } from "@/api/contract/contractManager";
 export default {
   data() {
-    return {   
+    return {
       //   新签合同信息
-      newsigninfo:{
+      newsigninfo: {},
+      fee: {
+        lvyue: "",
+        yunyingManage: "",
+        systemUse: "",
+        systemGuard: "",
+        guohu: "",
+        daiban: ""
+        // jingyingManage: {},
       },
-      fee:{
-                lvyue:'',
-                yunyingManage: '',
-                systemUse: '',
-                systemGuard: '',
-                guohu: '',
-                daiban: '',
-                // jingyingManage: {},
-          },
       //   编辑按钮
       editinfo: {
         pageNum: 1,
@@ -513,7 +491,7 @@ export default {
       showDianmian: false, //新签合同按钮中显示店面或区域信息
       location: {
         //地址
-        "cascader4": ["110000", "110100", "110101"]
+        cascader4: ["110000", "110100", "110101"]
       }
     };
   },
@@ -533,6 +511,11 @@ export default {
     this.getList();
   },
   methods: {
+    //   写跟进按钮
+    goSecond() {
+      //这是操作子组件的方法
+      this.$refs.follow.dialogfollow = true;
+    },
     //   新签合同按钮店面或区域显示控制
     showdianmian(i) {
       if (i === "0") {
@@ -578,53 +561,46 @@ export default {
     },
     // 新签合同按钮操作
     handlecontrast() {
-        var fee = {}
-        fee.lvyue=this.fee.lvyue
-        fee.yunyingManage=this.fee.yunyingManage
-        fee.systemUse=this.fee.systemUse
-        fee.systemGuard=this.fee.systemGuard
-        fee.guohu=this.fee.guohu
-        fee.daiban=this.fee.daiban
-        var data= {
-            fee:fee,
-            num: this.newsigninfo.num, //合同编号，手动录入
-            customerName: this.newsigninfo.customerName, //客户username
-            customerId: this.$route.query.id, //客户id
-            customerPhone: this.newsigninfo.customerPhone, //客户手机号
-            type: this.newsigninfo.type, //合同类型
-            produce: this.newsigninfo.produce, //产品类型
-            dianmianName: this.newsigninfo.dianmianName, // 店面名称
-            dianmianNum: this.newsigninfo.dianmianNum, // 店面数量
-            guarantee: this.newsigninfo.guarantee, // 保证金
-            // fee: {
-            //     lvyue: this.newsigninfo.lvyue,
-            //     yunyingManage: this.newsigninfo.yunyingManage,
-            //     systemUse: this.newsigninfo.systemUse,
-            //     systemGuard: this.newsigninfo.systemGuard,
-            //     guohu: this.newsigninfo.guohu,
-            //     daiban: this.newsigninfo.daiban,
-            //     jingyingManage: {},
-            // }, // 费用
-            operation: this.newsigninfo.operation,
-            status: this.newsigninfo.status, //合同状态
-            managerId: this.newsigninfo.managerId, //负责人id
-            manager: this.newsigninfo.manager, // 负责人username
-            signDate: this.newsigninfo.signDate, //签约日期
-            checkDate: this.newsigninfo.checkDate, //审核日期
-            beginDate: this.newsigninfo.beginDate,
-            endDate: this.newsigninfo.endDate,
-            remark: this.newsigninfo.remark,
-            dianmianAddress: this.newsigninfo.dianmianAddress,
-            dianmianCity: this.newsigninfo.dianmianCity,
-            dianmianDistrict: this.newsigninfo.dianmianDistrict,
-            dianmianLatitude: this.newsigninfo. dianmianLatitude,
-            dianmianLongitude: this.newsigninfo.dianmianLongitude,
-            dianmianProvince: this.newsigninfo.dianmianProvince
+      var fee = {};
+      fee.lvyue = this.fee.lvyue;
+      fee.yunyingManage = this.fee.yunyingManage;
+      fee.systemUse = this.fee.systemUse;
+      fee.systemGuard = this.fee.systemGuard;
+      fee.guohu = this.fee.guohu;
+      fee.daiban = this.fee.daiban;
+      var data = {
+        fee: fee,
+        num: this.newsigninfo.num, //合同编号，手动录入
+        customerName: this.newsigninfo.customerName, //客户username
+        customerId: this.$route.query.id, //客户id
+        customerPhone: this.newsigninfo.customerPhone, //客户手机号
+        type: this.newsigninfo.type, //合同类型
+        produce: this.newsigninfo.produce, //产品类型
+        dianmianName: this.newsigninfo.dianmianName, // 店面名称
+        dianmianNum: this.newsigninfo.dianmianNum, // 店面数量
+        guarantee: this.newsigninfo.guarantee, // 保证金
+        operation: this.newsigninfo.operation,
+        status: this.newsigninfo.status, //合同状态
+        managerId: this.newsigninfo.managerId, //负责人id
+        manager: this.newsigninfo.manager, // 负责人username
+        signDate: this.newsigninfo.signDate, //签约日期
+        checkDate: this.newsigninfo.checkDate, //审核日期
+        beginDate: this.newsigninfo.beginDate,
+        endDate: this.newsigninfo.endDate,
+        remark: this.newsigninfo.remark,
+        dianmianAddress: this.newsigninfo.dianmianAddress,
+        dianmianCity: this.newsigninfo.dianmianCity,
+        dianmianDistrict: this.newsigninfo.dianmianDistrict,
+        dianmianLatitude: this.newsigninfo.dianmianLatitude,
+        dianmianLongitude: this.newsigninfo.dianmianLongitude,
+        dianmianProvince: this.newsigninfo.dianmianProvince
       };
-    //   this.newsigninfo.fee = JSON.stringify(this.newsigninfo.fee);
-      newSignContrast(data).then(response => {
+      //   this.newsigninfo.fee = JSON.stringify(this.newsigninfo.fee);
+      newSignContrast(data)
+        .then(response => {
           this.$message.success("操作成功");
-        }).catch(error => {
+        })
+        .catch(error => {
           this.$message.error("操作失败");
         });
     },
@@ -680,6 +656,7 @@ export default {
       // 获取当前页客户信息
       getCustomer(this.id).then(response => {
         this.customerList = response.data;
+        console.log(this.customerList)
       });
       //   获取当前页合同信息
       getContractInfo(this.id).then(response => {
