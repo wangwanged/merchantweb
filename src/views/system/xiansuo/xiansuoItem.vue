@@ -3,13 +3,11 @@
     <div class="header">
       <div class="header_top">
         <span class="title_name">{{xiansuoList.name}}</span>
-          <el-button type="primary">{{xiansuoList.status  }}</el-button>
-        <el-button @click="dialogrollout = true">转成客户</el-button>
+          <el-button type="primary"  plain>{{xiansuoList.status  }}</el-button>
+        <el-button @click="dialogrollout = true" type='primary' >转成客户</el-button>
       </div>
       <div class="header_bottom">
-        <el-button size="small">单店加盟</el-button>
-        <el-button size="small">待审核</el-button>
-        <span>负责人:xxx</span>
+        <div class="title_name" style='font-size:20px'>{{xiansuoList.phone}}</div>
       </div>
     </div>
     <div class="main">
@@ -80,12 +78,11 @@
           <el-button
             type="primary"
             class="fr"
-            @click="$store.state.sosoitem.dialogfollow = true"
+            @click="goSecond"
             >写跟进</el-button
           >
         </div>
-        <Follow></Follow>
-        <Follow></Follow>
+        <Follow ref="follow"></Follow>
       </div>
     </div>
     <!-- 转成客户dialog弹出 -->
@@ -124,17 +121,18 @@
             <el-option label="区域二"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="负责人">
-          <el-select v-model='xiansuoList.username' placeholder="请选择活动区域">
-            <el-option label="区域一"></el-option>
-            <el-option label="区域二"></el-option>
-          </el-select>
+         <el-form-item label="负责人">
+            <el-autocomplete
+            class="inline-input"
+            v-model="transforKeywords"
+            :fetch-suggestions="querySearch"
+            placeholder="请输入内容"
+            :trigger-on-focus="false"
+            @select="handleSelect"
+    ></el-autocomplete>
         </el-form-item>
-        <el-form-item label="所属部门">
-          <el-select placeholder="请选择活动区域">
-            <el-option label="区域一"></el-option>
-            <el-option label="区域二"></el-option>
-          </el-select>
+        <el-form-item label="所属部门" prop="phone">
+          <el-input disabled v-model='deptName'  placeholder="请输入电话" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -151,9 +149,17 @@
 import { getXiansuo,listXiansuo} from "@/api/system/xiansuo";
 import { updateCustomer} from "@/api/system/customer";
 import Follow from "@/views/components/Sosoitem/follow.vue";
+import {transforcustomer,transforCustomer,} from "@/api/system/customer";
+import { listUser } from "@/api/system/user";
 export default {
   data() {
     return {   
+      //   所属部门
+      deptName:'',
+     // 要转移的电话号码
+      transforphone:'',
+        // 转移关键词
+      transforKeywords:'',
       id: this.$route.query.id,  // 当前id
       xiansuoList:[],  // 当前线索列表
       systemuser:[],   //系统信息
@@ -179,6 +185,9 @@ export default {
   },
   computed: {},
   methods: {
+   goSecond(){  //这是操作子组件的方法
+     this.$refs.follow.dialogfollow = true
+    },
      /** 查询当前客户线索列表 */
     getList() {
       getXiansuo(this.id).then(response => {
@@ -198,7 +207,50 @@ export default {
         }).catch(error=>{
             this.$message.error('转移失败')
         })
-    }
+    },
+     // 负责人查询
+    handleSelect(item) {
+        console.log(item)
+        var item = item.value
+        item=item.substring(0,11);
+        this.transforphone=item
+        this. userInfo()
+      },
+      // 负责人查询
+    querySearch(queryString, callback) {
+            const keywords=this.transforKeywords
+            var params={
+                keywords:keywords
+            }
+        transforCustomer(params).then(response => {
+           var restaurants = response.rows;
+           console.log('eeeeeeeeeeeeeeee',restaurants)
+           const list = []
+             //封装要显示的数据
+           for (let v of restaurants) {
+            list.push({ value: v.phonenumber + " " + v.userName})
+            }
+                 // 调用 callback 返回建议列表的数据,是一个数组类型
+            callback(list)
+      });      
+      },
+      // 获取user用户信息
+    userInfo() {
+      listUser({}).then(response => {
+          this.user=response.rows
+          var a  = this.user.filter(item=>{
+              if(this.transforphone===item.phonenumber){
+                  return item
+              }
+          })
+          var b = []
+          for(var i = 0; i<a.length;i++){
+              var c = a[i].dept
+              b.push(c.deptName)
+              }
+          this.deptName = b[0]
+      });
+    },
   },
   components: {
     Follow

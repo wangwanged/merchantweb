@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class='noinfo'  v-if="genjinList.length === 0">当前没有跟进信息</div>
+    <div class="noinfo" v-if="genjinList.length === 0">当前没有跟进信息</div>
     <div
       v-for="item in genjinList"
       :key="item.customerId"
@@ -25,7 +25,6 @@
       </p>
       <div class="line_between"></div>
     </div>
-    <el-button @click="dialogfollow = true">aaa</el-button>
     <el-dialog title="写跟进" :visible.sync="dialogfollow" width="40%">
       <el-form>
         <el-form-item>
@@ -50,6 +49,8 @@
               type="info"
               v-for="(item, index) in genjinStatus"
               :key="index"
+              :class="index === addInfo.status ? 'genjinbutton' : ''"
+               @click="changestatus(index)"
               >{{ item }}</el-button
             >
           </div>
@@ -77,6 +78,7 @@ export default {
   components: {
     UpImg
   },
+  props: ["tofollow"],
   data() {
     return {
       value: [],
@@ -91,15 +93,7 @@ export default {
       id: this.$route.query.id, //   当前客户数据id
       genjinList: [], //   跟进列表
       genjinStatus: [], //跟进状态字典
-      addInfo: {
-        imgs: [],
-        content: null,
-        customerId: Number(this.$route.query.id),
-        image: "",
-        method: "",
-        status: "",
-        sysUserId: null
-      } // 跟进数据添加
+      addInfo: {} // 跟进数据添加
     };
   },
   created() {
@@ -112,6 +106,10 @@ export default {
     });
   },
   methods: {
+    // 改变跟进状态
+    changestatus(i) {
+      this.addInfo.status = i;
+    },
     update() {
       console.log(this.value);
       let imagesArr = [];
@@ -143,7 +141,16 @@ export default {
     },
     // 添加跟进信息
     handleAdd() {
-      addGenjin(this.addInfo)
+      var params = {
+        imgs: this.addInfo.imgs,
+        content: this.addInfo.content,
+        customerId: Number(this.$route.query.id),
+        image: this.addInfo.image,
+        method: this.addInfo.method,
+        status: this.addInfo.status,
+        sysUserId: this.tofollow.userId
+      };
+      addGenjin(params)
         .then(response => {
           this.$message.success("操作成功");
           this.dialogfollow = false;
@@ -170,11 +177,16 @@ export default {
     width: 250px;
   }
 }
-.noinfo{
-    width: 100%;
-    height: 100px;
-    background-color: #fff;
-    text-align: center;
-    padding-top:20px;
+.noinfo {
+  width: 100%;
+  height: 100px;
+  background-color: #fff;
+  text-align: center;
+  padding-top: 20px;
+}
+.genjinbutton {
+    // #606266
+  background-color: pink;
+  color: #fff;
 }
 </style>

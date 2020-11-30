@@ -77,7 +77,7 @@
     </div>
     <div class="main">
       <div class="main_left">
-        <el-tabs v-model="showTabs" class="tabs">
+        <el-tabs v-loading='loading' v-model="showTabs" class="tabs">
           <el-tab-pane label="合同信息" name="first" class="is-top">
             <div class="main">
               <div class="main_left" style="width:100%">
@@ -227,11 +227,12 @@
                     justify="space-around"
                     style="margin-top:30px"
                   >
-                    <el-button size="small">收费汇总</el-button>
+                    <el-button type="primary" size="small">收费汇总</el-button>
                     <el-button
-                      v-if="checkStatus !== '2'"
+                      type="primary"
                       size="small"
-                      @click="dialog.dialogaddFee = true"
+                      @click="handleAddfee"
+                      v-if="contractList.checkStatus !== '2'"
                       >新增费用</el-button
                     >
                   </el-row>
@@ -301,37 +302,76 @@
                   <!-- 新增费用弹框 -->
                   <el-dialog
                     title="新增费用"
-                    width="40%"
+                    width="25%"
                     :visible.sync="dialog.dialogaddFee"
                   >
-                    <el-form label-width="80px">
-                      <el-form-item label="收费时间">
-                        <el-input placeholder="aaa"></el-input>
+                    <el-form label-width="80px" label-position="left">
+                    <el-form-item label="收费时间" prop="shoukuanDate">
+                        <el-date-picker
+                          clearable
+                          size="small"
+                          style="width: 200px"
+                          v-model="addfeeInfo.shoukuanDate"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="选择收款时间"
+                        >
+                        </el-date-picker>
                       </el-form-item>
-                      <el-form-item label="费用编号">
-                        <el-input placeholder="aaa"></el-input>
-                      </el-form-item>
-                      <el-form-item label="费用类型">
-                        <el-input placeholder="aaa"></el-input>
-                      </el-form-item>
-                      <el-form-item label="费用金额">
-                        <el-input placeholder="aaa"></el-input>
-                      </el-form-item>
-                      <el-form-item label="付款方式">
-                        <el-input placeholder="aaa"></el-input>
-                      </el-form-item>
-                      <el-form-item label="费用类型">
-                        <el-input placeholder="aaa"></el-input>
-                      </el-form-item>
-                      <el-form-item label="收款人">
-                        <el-input placeholder="aaa"></el-input>
-                      </el-form-item>
-                      <el-form-item label="备注">
+                      <el-form-item label="费用编号" prop="num">
                         <el-input
-                          type="textarea"
-                          :rows="4"
-                          placeholder="请输入内容"
-                        ></el-input>
+                          v-model="addfeeInfo.num"
+                          placeholder="请输入费用编号"
+                        />
+                      </el-form-item>
+                      
+                      <el-form-item label="费用金额" prop="constractNum">
+                        <el-input
+                          v-model="addfeeInfo.amount"
+                          placeholder="请输入合同编号"
+                        />
+                      </el-form-item> 
+                      <el-form-item label="付款方式" prop="payMethod">
+                        <el-input
+                          v-model="addfeeInfo.payMethod"
+                          placeholder="请输入付款方式"
+                        />
+                      </el-form-item>
+                       <el-form-item label="费用类型" prop="type">
+                        <el-input
+                          v-model="addfeeInfo.type"
+                          placeholder="请输入费用类型"
+                        />
+                      </el-form-item>
+                      <!-- <el-form-item label="付款人" prop="payer">
+                        <el-input
+                          v-model="addfeeInfo.payer"
+                          placeholder="请输入付款人"
+                        />
+                      </el-form-item> -->
+                      <el-form-item label="收款人" prop="reciever">
+                        <el-input
+                          v-model="addfeeInfo.reciever"
+                          placeholder="请输入收款人"
+                        />
+                      </el-form-item>
+                      <el-form-item label="备注" prop="updateDate">
+                           <el-input
+                            type="textarea"
+                            :rows="3"
+                            placeholder="请输入内容"
+                            v-model='addfeeInfo.remark'
+                            ></el-input>
+                        <!-- <el-date-picker
+                          clearable
+                          size="small"
+                          style="width: 200px"
+                          v-model="addfeeInfo.remark"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="选择更新时间"
+                        >
+                        </el-date-picker> -->
                       </el-form-item>
                     </el-form>
                     <div slot="footer" class="dialog-footer">
@@ -340,7 +380,7 @@
                       >
                       <el-button
                         type="primary"
-                        @click="dialog.dialogaddFee = false"
+                        @click="submitAddfee"
                         >确 定</el-button
                       >
                     </div>
@@ -363,16 +403,29 @@
                     @click="dialog.dialogAddattachement = true"
                     >新增附件</el-button
                   >
-                  <el-table :data="feeList" border style="width: 100%">
-                    <el-table-column prop="date" label="附件名称" width="180">
+                  <el-table :data="attachmentList" border style="width: 100%">
+                    <el-table-column prop="name" label="附件名称" width="180">
                     </el-table-column>
-                    <el-table-column prop="name" label="附件说明" width="180">
+                    <el-table-column
+                      prop="description"
+                      label="附件说明"
+                      width="180"
+                    >
                     </el-table-column>
-                    <el-table-column prop="address" label="上传人">
+                    <el-table-column prop="createBy" label="上传人">
                     </el-table-column>
-                    <el-table-column prop="date" label="上传时间" width="180">
+                    <el-table-column
+                      prop="inputDate"
+                      label="上传时间"
+                      width="180"
+                    >
                     </el-table-column>
-                    <el-table-column prop="name" label="操作" width="180">
+                    <el-table-column prop="name" label="操作" width="250">
+                      <template slot-scope="obj">
+                        <el-button type="text">下载</el-button>
+                        <el-button type="text">编辑</el-button>
+                        <el-button type="text">删除</el-button>
+                      </template>
                     </el-table-column>
                   </el-table>
                 </div>
@@ -421,85 +474,141 @@
                     type="primary"
                     class="fr"
                     style="margin:25px 0"
-                    @click='dialog.dialogopenshop=true'
+                    @click="dialog.dialogopenshop = true"
                     >开店</el-button
                   >
-                   <el-table :data="openshopList" border style="width: 100%">
+                  <el-table :data="openshopList" border style="width: 100%">
                     <el-table-column prop="name" label="店面名称" width="180">
                     </el-table-column>
-                    <el-table-column  label="所属地区" width="180">
-                         <template slot-scope="scope">
-                           {{scope.row.province}}     {{scope.row.city}}
-                        </template>
+                    <el-table-column label="所属地区" width="180">
+                      <template slot-scope="scope">
+                        {{ scope.row.province }} {{ scope.row.city }}
+                      </template>
                     </el-table-column>
                     <el-table-column prop="address" label="店面地址">
                     </el-table-column>
-                    <el-table-column  label="店东信息" width="180">
-                         <template slot-scope="scope">
-                           {{scope.row.diandongName}} {{scope.row.diandongPhone}}
-                        </template>
+                    <el-table-column label="店东信息" width="180">
+                      <template slot-scope="scope">
+                        {{ scope.row.diandongName }}
+                        {{ scope.row.diandongPhone }}
+                      </template>
                     </el-table-column>
                     <el-table-column prop="status" label="营业状态" width="180">
                     </el-table-column>
                     <el-table-column prop="name" label="操作" width="180">
-                         <template slot-scope="scope">
-                             <el-button type="text" @click='handleoOpenshop(scope.row.id)'>编辑</el-button>
-                           <!-- {{scope.row.diandongName}} -->
-                        </template>
+                      <template slot-scope="scope">
+                        <el-button
+                          type="text"
+                          @click="handleoOpenshop(scope.row.id)"
+                          >编辑</el-button
+                        >
+                        <!-- {{scope.row.diandongName}} -->
+                      </template>
                     </el-table-column>
                   </el-table>
                 </div>
               </div>
             </div>
             <!-- 开店编辑按钮 -->
-            <el-dialog title="编辑店铺" width="40%" :visible.sync="dialog.dialoghandleopen">
-                <el-form>
-                    <el-form-item label="店面名称">
-                        <el-input v-model='openshopform.name'></el-input>
-                    </el-form-item>
-                    <el-form-item label="所属地区"></el-form-item>
-                    <el-form-item label="店面地址">
-                        <el-input v-model='openshopform.address'></el-input>
-                    </el-form-item>
-                    <el-form-item label="店东姓名" v-model='openshopform.diandongName'></el-form-item>
-                    <el-form-item label="店东电话" v-model='openshopform.diandongPhone'></el-form-item>
-                    <el-form-item label="营业状态" v-model='openshopform.status'></el-form-item>
-                </el-form>
+            <el-dialog
+              title="编辑店铺"
+              width="40%"
+              :visible.sync="dialog.dialoghandleopen"
+            >
+              <el-form>
+                <el-form-item label="店面名称">
+                  <el-input v-model="openshopform.name"></el-input>
+                </el-form-item>
+                <el-form-item label="所属地区"></el-form-item>
+                <el-form-item label="店面地址">
+                  <el-input v-model="openshopform.address"></el-input>
+                </el-form-item>
+                <el-form-item
+                  label="店东姓名"
+                  v-model="openshopform.diandongName"
+                ></el-form-item>
+                <el-form-item
+                  label="店东电话"
+                  v-model="openshopform.diandongPhone"
+                ></el-form-item>
+                <el-form-item
+                  label="营业状态"
+                  v-model="openshopform.status"
+                ></el-form-item>
+              </el-form>
             </el-dialog>
             <!-- 开店按钮 -->
-            <el-dialog title="开店" width="40%" :visible.sync="dialog.dialogopenshop">
-                <el-form label-width="80px">
-                    <el-form-item required label="店面名称">
-                        <el-input placeholder="请输入"  v-model='addshop.name'></el-input>
-                    </el-form-item>
-                    <el-form-item  required label="所属区域">
-                        <el-input placeholder="请输入"  v-model='addshop.name'></el-input>
-                    </el-form-item>
-                    <el-form-item required label="详细地址">
-                        <el-input placeholder="请输入"  v-model='addshop.province'></el-input>
-                        <el-input placeholder="请输入"  v-model='addshop.city'></el-input>
-                        <el-input placeholder="请输入" v-model='addshop.district'></el-input>
-                    </el-form-item>
-                    <el-form-item required label="地图坐标">
-                        <el-input placeholder="请输入"  v-model='addshop.latitude'></el-input>
-                        <el-input placeholder="请输入"  v-model='addshop.longitude'></el-input>
-                    </el-form-item>
-                    <el-form-item  required label="店东姓名">
-                        <el-input placeholder="请输入"  v-model='addshop.diandongName'></el-input>
-                    </el-form-item>
-                    <el-form-item  required label="店东电话">
-                        <el-input placeholder="请输入"  v-model='addshop.diandongPhone'></el-input>
-                    </el-form-item>
-                    <el-form-item  required label="备注信息">
-                        <el-input placeholder="请输入"  v-model='addshop.remark'></el-input></el-form-item>  
-                </el-form>
-                 <span slot="footer" class="dialog-footer">
-                        <el-button @click="dialog.dialogopenshop = false">取 消</el-button>
-                        <el-button type="primary" @click="openshopeSubmit">确 定</el-button>
-                    </span>
+            <el-dialog
+              title="开店"
+              width="40%"
+              :visible.sync="dialog.dialogopenshop"
+            >
+              <el-form label-width="80px">
+                <el-form-item required label="店面名称">
+                  <el-input
+                    placeholder="请输入"
+                    v-model="addshop.name"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item required label="所属区域">
+                  <el-input
+                    placeholder="请输入"
+                    v-model="addshop.name"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item required label="详细地址">
+                  <el-input
+                    placeholder="请输入"
+                    v-model="addshop.province"
+                  ></el-input>
+                  <el-input
+                    placeholder="请输入"
+                    v-model="addshop.city"
+                  ></el-input>
+                  <el-input
+                    placeholder="请输入"
+                    v-model="addshop.district"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item required label="地图坐标">
+                  <el-input
+                    placeholder="请输入"
+                    v-model="addshop.latitude"
+                  ></el-input>
+                  <el-input
+                    placeholder="请输入"
+                    v-model="addshop.longitude"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item required label="店东姓名">
+                  <el-input
+                    placeholder="请输入"
+                    v-model="addshop.diandongName"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item required label="店东电话">
+                  <el-input
+                    placeholder="请输入"
+                    v-model="addshop.diandongPhone"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item required label="备注信息">
+                  <el-input
+                    placeholder="请输入"
+                    v-model="addshop.remark"
+                  ></el-input
+                ></el-form-item>
+              </el-form>
+              <span slot="footer" class="dialog-footer">
+                <el-button @click="dialog.dialogopenshop = false"
+                  >取 消</el-button
+                >
+                <el-button type="primary" @click="openshopeSubmit"
+                  >确 定</el-button
+                >
+              </span>
             </el-dialog>
-            </el-tab-pane
-          >
+          </el-tab-pane>
         </el-tabs>
       </div>
       <!-- 审核弹框 -->
@@ -860,12 +969,15 @@ import {
   contractRenew,
   contractBreakoff,
   contractAbandon,
-  contractOperlog
+  contractOperlog,
+  getAttachmentinfo
 } from "@/api/contract/contractManager";
 import {
   updateDianmianManager,
   addDianmianManager
 } from "@/api/dianmian/dianmianManager";
+import { addFeeManager } from "@/api/fee/feeManager";
+import { getInfo } from "@/api/login.js";
 export default {
   data() {
     return {
@@ -882,25 +994,28 @@ export default {
         dialoginvalid: false, //合同失效弹框
         dialogaddFee: false, //费用信息中  新增费用弹框
         dialogAddattachement: false, //合同附件中   新增附件弹框
-        dialoghandleopen:false,  //开店编辑按钮
-        dialogopenshop:false   //开店按钮
+        dialoghandleopen: false, //开店编辑按钮
+        dialogopenshop: false //开店按钮
       },
       relatedList: [], //关联合同列表
       feeList: [], //费用列表
+      addfeeInfo: [], //新增费用信息
       openshopList: [], //开店信息
+      attachmentList: [], //附件信息
       showTabs: "first", //tab栏显示
       form: {}, //表单数据，
-      addshop:{},  //开店信息数据
-      openshopform:{},  //开店编辑数据
+      addshop: {}, //开店信息数据
+      openshopform: {}, //开店编辑数据
       contentBreakoff: {
         id: this.id
       },
       checkStatus: "",
-      OperlogList: [],  //日志列表 
+      OperlogList: [], //日志列表
       dict: {
         checkOptions: [],
         produceOptions: []
-      },   
+      },
+      loading:true
     };
   },
   mounted() {
@@ -956,31 +1071,16 @@ export default {
       handler(newName, oldName) {
         this.contractList = newName;
       }
-    },
-    dict: {
-      handler(newName, oldName) {
-        //   this.contractList=newName
-        console.log("99999999", newName);
-      }
     }
   },
   created() {
     this.getList(
       this.getRelatedcontract,
       this.getcontractFee,
-      this.getcontractOpenshop
+      this.getcontractOpenshop,
+      this.getAttachment
     );
     this.getcontractOperlog();
-    this.getDicts("check_status").then(response => {
-      this.dict.checkOptions = response.data;
-      // var aaa = response.data.filter(item=>{
-      //     if(item.dictValue===this.contractList.status){
-      //         return  item.dictLabel
-      //     }
-      //     return  item.dictLabel
-      // })
-      // console.log('fffffffff',aaa)
-    });
     this.getDicts("sys_user_need").then(response => {
       this.dict.produceOptions = response.data;
     });
@@ -1014,7 +1114,8 @@ export default {
       };
     },
     //   获取合同列表
-    getList(aa = () => {}, bb = () => {}, cc = () => {}) {
+    getList(aa = () => {}, bb = () => {}, cc = () => {}, dd = () => {}) {
+        this.loading=true,
       getContractManager(this.id).then(response => {
         this.contractList = response.data;
         this.rootNum = response.data.rootNum;
@@ -1022,6 +1123,8 @@ export default {
         aa();
         bb();
         cc();
+        dd();
+        this.loading=false
       });
     },
     // 获取关联合同
@@ -1034,7 +1137,6 @@ export default {
     getcontractFee() {
       contractFee(this.rootNum).then(res => {
         this.feeList = res.data;
-        console.log("2222222222222", this.feeList);
       });
     },
     //获取开店信息
@@ -1044,62 +1146,58 @@ export default {
       });
     },
     // 开店按钮
-    openshopeSubmit(){
-        var params={
-                address:this.addshop.address,
-                area:this.addshop.address,
-                checkInfo:"",
-                checkResult: "",
-                city: this.addshop.city,
-                closeDate: "",
-                closeDays: null,
-                closeReason: "",
-                companyId: null,
-                contractNum: "",
-                createBy: "",
-                createTime: "",
-                deptId: null,
-                diandongId: null,
-                diandongName: this.addshop.diandongName,
-                diandongName: this.addshop.diandongName,
-                district: this.addshop.district,
-                id: null,
-                keywords: "",
-                latitude: this.addshop.latitude,
-                longitude: this.addshop.longitude,
-                name: this.addshop.name,
-                openDate: "",
-                params: {},
-                province: this.addshop.province,
-                remark: this.addshop.remark,
-                searchValue: "",
-                status: this.addshop.status,
-                sysUserId: null,
-                type: "",
-                updateBy: "",
-                updateTime: ""
-        }
-       addDianmianManager(params).then(res=>{
-     
-       })
+    openshopeSubmit() {
+      var params = {
+        address: this.addshop.address,
+        area: this.addshop.address,
+        checkInfo: "",
+        checkResult: "",
+        city: this.addshop.city,
+        closeDate: "",
+        closeDays: null,
+        closeReason: "",
+        companyId: null,
+        contractNum: "",
+        createBy: "",
+        createTime: "",
+        deptId: null,
+        diandongId: null,
+        diandongName: this.addshop.diandongName,
+        diandongName: this.addshop.diandongName,
+        district: this.addshop.district,
+        id: null,
+        keywords: "",
+        latitude: this.addshop.latitude,
+        longitude: this.addshop.longitude,
+        name: this.addshop.name,
+        openDate: "",
+        params: {},
+        province: this.addshop.province,
+        remark: this.addshop.remark,
+        searchValue: "",
+        status: this.addshop.status,
+        sysUserId: null,
+        type: "",
+        updateBy: "",
+        updateTime: ""
+      };
+      addDianmianManager(params).then(res => {});
     },
     // 开店编辑按钮
-    handleoOpenshop(i){
-         contractOpenshop(this.rootNum).then(res => {
-            this.openshopform = res.rows;
-            this.dialog.dialoghandleopen=true
-         });
-        //  updateDianmianManager(i).then(res=>{
-             
-        //  })
+    handleoOpenshop(i) {
+      contractOpenshop(this.rootNum).then(res => {
+        this.openshopform = res.rows;
+        this.dialog.dialoghandleopen = true;
+      });
+      //  updateDianmianManager(i).then(res=>{
+
+      //  })
     },
-    
     // 获取合同日志跟进
     getcontractOperlog() {
       contractOperlog()
         .then(res => {
           this.OperlogList = res.rows;
-          console.log("qqqqqqqq", this.OperlogList);
         })
         .catch(error => {});
     },
@@ -1194,23 +1292,45 @@ export default {
           this.$message.error("操作失败");
         });
     },
-    importTemplate: function() {
-      table.set();
-      $.get(table.options.importTemplateUrl, function(result) {
-        if (result.code == web_status.SUCCESS) {
-          window.location.href =
-            ctx +
-            "common/download?fileName=" +
-            encodeURI(result.msg) +
-            "&delete=" +
-            true;
-        } else if (result.code == web_status.WARNING) {
-          $.modal.alertWarning(result.msg);
-        } else {
-          $.modal.alertError(result.msg);
-        }
+    // 获取附件信息
+    getAttachment() {
+      var params = {
+        contractNum: this.contractList.num
+      };
+      getAttachmentinfo(params).then(res => {
+        this.attachmentList = res.rows;
       });
+    },
+    // 新增费用按钮
+    handleAddfee() {
+        getInfo().then(res=>{  
+           this.addfeeInfo.shoukuanDate = new Date() 
+           this.addfeeInfo.reciever=res.user.userName
+           this.dialog.dialogaddFee=true
+       })
+    },
+    // 新增费用按钮提交
+    submitAddfee(){
+        // console.log('this.addfeeInfo',this.contractList)
+        const data = {
+            num:this.addfeeInfo.num,
+            contractNum:this.contractList.num,
+            type:this.addfeeInfo.type,
+            payMethod:this.addfeeInfo.payMethod,
+            payer:this.contractList.customerName,
+            reciever:this.addfeeInfo.reciever,
+            checkStatus:this.addfeeInfo.checkStatus,
+            shoukuanDate:this.addfeeInfo.shoukuanDate,
+            amount:this.addfeeInfo.amount
+        }
+        addFeeManager(data).then(res=>{
+            this.$message.success("操作成功");
+            this.dialog.dialogaddFee = false;
+        }).catch(error=>{
+             this.$message.error("操作失败");
+        })
     }
+
   }
 };
 </script>

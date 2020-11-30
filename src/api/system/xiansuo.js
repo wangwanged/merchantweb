@@ -51,3 +51,24 @@ export function exportXiansuo(query) {
     params: query
   })
 }
+
+// 导入客户线索
+export function importXiansuo(data) {
+  return request({
+    url: '/system/importData',
+    method: 'post',
+    data: data
+  })
+}
+
+// 批量转成客户
+export function transfortoCustomer(data) {
+  return request({
+    url: '/system/customer/evolve',
+    method: 'post',
+    data: data
+  })
+}
+
+
+
