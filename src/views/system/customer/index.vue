@@ -361,7 +361,7 @@ import {
   exportCustomer,
   invalidCustomer,
   transforCustomer,
-  transforcustomer
+  transforcustomer,
 } from "@/api/system/customer";
 import { listUser } from "@/api/system/user";
 import Liandong from "@/components/Liandong/liandong.vue";
@@ -487,7 +487,7 @@ export default {
       transforcustomer(data).then(response => {
            this.$message.success("操作成功");
            this.getList();
-           this. dialogTransfor = false;
+           this.dialogTransfor = false;
       }).catch(error=>{
            this.$message.error("操作失败");
       });
