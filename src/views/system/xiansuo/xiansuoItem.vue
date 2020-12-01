@@ -3,8 +3,8 @@
     <div class="header">
       <div class="header_top">
         <span class="title_name">{{ xiansuoList.name }}</span>
-        <el-button type="primary" plain>{{ xiansuoList.status }}</el-button>
-        <el-button @click="handletocustomer" type="primary">转成客户</el-button>
+        <el-button size="small" type="primary" plain>{{ xiansuoList.status }}</el-button>
+        <el-button size="small" @click="handletocustomer" type="primary">转成客户</el-button>
       </div>
       <div class="header_bottom">
         <div class="title_name" style="font-size:20px">
@@ -35,7 +35,7 @@
           </p>
           <p class="main_content_name">
             <span class="main_content_firstname">中介经验：</span>
-            <span>{{ experienceFormat }}</span>
+            <span>{{xiansuoList.experience | experienceFormat }}</span>
           </p>
           <p class="main_content_name">
             <span class="main_content_firstname">客户来源：</span>
@@ -139,6 +139,7 @@
         </el-form-item>
         <el-form-item label="负责人">
           <el-autocomplete
+            style='width:100%'
             class="inline-input"
             v-model="transforKeywords"
             :fetch-suggestions="querySearch"
@@ -259,7 +260,6 @@ export default {
     getList() {
       getXiansuo(this.id).then(response => {
         this.xiansuoList = response.data;
-        console.log("getXiansuo", this.xiansuoList);
       });
     },
     // 客户等级字典
@@ -342,10 +342,14 @@ export default {
     },
         goSecond() {
       //这是操作follow子组件的方法
-      this.$refs.follow.dialogfollow = true;
+      this.$refs.follow.handleAdd
     },
   }
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.el-form{
+      margin:0 20px;
+  }
+  </style>

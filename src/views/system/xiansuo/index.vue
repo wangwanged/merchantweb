@@ -129,11 +129,11 @@
     />
     <!-- 添加或修改客户线索对话框 -->
     <el-dialog title="新增线索" :visible.sync="dialog.dialogaddxiansuo" width="650px" append-to-body>
-      <el-form  :model="form"  label-width="80px" label-position="left">
-        <el-form-item label="客户姓名"  prop="name" :rules="[{ required: true, message: '客户姓名不能为空', trigger: 'blur'}]">
+      <el-form ref="form" :rules="rules"  :model="form"  label-width="80px" label-position="left">
+        <el-form-item label="客户姓名"  prop="name" >
           <el-input v-model="form.name" placeholder="请输入客户姓名" />
         </el-form-item>
-        <el-form-item label="客户电话" prop="phone" :rules="[{ required: true, message: '客户电话不能为空', trigger: 'blur'}]">
+        <el-form-item label="客户电话" prop="phone" >
           <el-input v-model="form.phone" placeholder="请输入电话" />
         </el-form-item>  
         <el-form-item label="客户地区">
@@ -145,7 +145,7 @@
           <el-form-item label="店面地址" prop="resource">
             <el-input v-model='form.dianmianAddress' placeholder="请输入店面地址"></el-input>
         </el-form-item>    
-         <el-form-item label="中介经验" prop="resource">
+         <el-form-item label="中介经验" prop="experience">
           <el-select style="width:100%" v-model="form.experience" placeholder="请选择线索来源">
             <el-option
               v-for="dict in experienceOptions"
@@ -170,6 +170,7 @@
         </el-form-item>
         <el-form-item label="负责人">
           <el-autocomplete
+            style="width:100%"
             class="inline-input"
             v-model="form.transforKeywords"
             :fetch-suggestions="querySearch"
@@ -178,7 +179,7 @@
             @select="handleSelect"
           ></el-autocomplete>
         </el-form-item>
-        <el-form-item label="所属部门" prop="phone">
+        <el-form-item label="所属部门" prop="dept">
           <el-input disabled v-model="deptName" placeholder="请输入所属部门" />
         </el-form-item>
       </el-form>
@@ -188,44 +189,66 @@
       </div>
     </el-dialog>
     <!-- 转成客户弹框 -->
-    <el-dialog title="转成客户" :visible.sync="dialog.dialogtocustomer" width="500px">
-       <el-form label-width="80px">
+    <el-dialog title="转成客户" :visible.sync="dialog.dialogtocustomer" width="650px">
+       <el-form ref="form" :rules="rules"  :model="form" label-width="80px" label-position="left">
             <el-form-item label="客户姓名" prop="name">
-          <el-input v-model="tocustomerInfo.name" placeholder="请输入客户姓名" />
+          <el-input v-model="form.name" placeholder="请输入客户姓名" />
         </el-form-item>
         <el-form-item label="客户电话" prop="phone">
-          <el-input v-model="tocustomerInfo.phone" placeholder="请输入电话" />
+          <el-input v-model="form.phone" placeholder="请输入电话" />
         </el-form-item>
-          <el-form-item label="客户等级" prop="name">
-          <el-input v-model="tocustomerInfo.level" placeholder="请输入" />
+          <el-form-item label="客户等级">
+           <el-select style="width:100%" v-model="form.level" placeholder="请选择线索来源">
+            <el-option
+              v-for="dict in levelOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="客户需求" prop="phone">
-          <el-input v-model="tocustomerInfo.customerNeeds" placeholder="请输入" />
+        <el-form-item label="客户需求" >
+          <el-select style="width:100%" v-model="form.customerNeeds" placeholder="请选择线索来源">
+            <el-option
+              v-for="dict in userneedOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
-          <el-form-item label="客户地区" prop="name">
-          <el-input v-model="form.name" placeholder="请输入" />
+          <el-form-item label="客户地区">
+          <Liandong @placeInfo='getPlace'></Liandong>
         </el-form-item>
-        <el-form-item label="客户公司" prop="phone">
-          <el-input v-model="tocustomerInfo.companyName" placeholder="请输入" />
+        <el-form-item label="客户公司" >
+          <el-input v-model="form.companyName" placeholder="请输入公司" />
         </el-form-item>
-          <el-form-item label="店面地址" prop="name">
-          <el-input v-model="tocustomerInfo.dianmianAddress" placeholder="请输入" />
+          <el-form-item label="店面地址" >
+          <el-input v-model="form.dianmianAddress" placeholder="请输入店面地址" />
         </el-form-item>
-        <el-form-item label="中介经验" prop="phone">
-          <el-input v-model="tocustomerInfo.experience" placeholder="请输入" />
+        <el-form-item label="中介经验" >
+          <el-select style="width:100%" v-model="form.experience" placeholder="请选择线索来源">
+            <el-option
+              v-for="dict in  experienceOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="负责人">
-            <el-autocomplete
+          <el-autocomplete
+            style="width:100%"
             class="inline-input"
-            v-model="transforKeywords"
+            v-model="form.transforKeywords"
             :fetch-suggestions="querySearch"
             placeholder="请输入内容"
             :trigger-on-focus="false"
             @select="handleSelect"
-    ></el-autocomplete>
+          ></el-autocomplete>
         </el-form-item>
-        <el-form-item label="所属部门" prop="phone">
-          <el-input disabled v-model='deptName'  placeholder="请输入电话" />
+        <el-form-item label="所属部门" prop="dept">
+          <el-input disabled v-model="deptName" placeholder="请输入所属部门" />
         </el-form-item>
        </el-form>
         <div slot="footer" class="dialog-footer">
@@ -276,18 +299,16 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
-      // 城市字典
-      companyIdOptions: [],
-      // 省字典
-      provinceOptions: [],
-      // 城市字典
-      cityOptions: [],
       // 线索来源字典
       resourceOptions: [],
       //  跟进状态字典
       statusOptions:[],
     //   中介经验字典
       experienceOptions:[],
+      // 客户需求字典
+      userneedOptions:[],
+      // 客户等级字典
+      levelOptions:[],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -304,6 +325,18 @@ export default {
       },
       // 表单参数
       form: {},
+      rules: {
+        name: [
+          { required: true, message: "客户名称不能为空", trigger: "blur" }
+        ],
+        phone: [
+          { required: true, message: "您的手机号不能为空" },
+          {
+            pattern: /^1[3-9]\d{9}$/, // 正则表达式
+            message: "您的手机号格式不正确"
+          }
+        ]
+      }
     };
   },
    components: {
@@ -312,21 +345,19 @@ export default {
   },
   created() {
     this.getList();
-    this.getDicts("sys_company").then(response => {
-      this.companyIdOptions = response.data;
-    });
-    this.getDicts("sys_province").then(response => {
-      this.provinceOptions = response.data;
-    });
-    this.getDicts("sys_company").then(response => {
-      this.cityOptions = response.data;
-    });
     this.getDicts("sys_customer_resource").then(response => {
       this.resourceOptions = response.data;
     });
     this.getDicts("experience").then(response => {
       this.experienceOptions = response.data
     });
+    this.getDicts("sys_user_need").then(response => {
+      this.userneedOptions = response.data
+    });
+    this.getDicts("customer_level").then(response => {
+      this.levelOptions = response.data
+    });
+    
   },
   methods: {
     // 表单重置
@@ -415,14 +446,19 @@ export default {
     },
     /** 新增提交按钮 */
     submitForm() {
-        this.form.status='0'
-        addCustomer(this.form).then(response => {
+        this.$refs["form"].validate(valid => {
+          if(valid){
+              this.form.status='0'
+              addCustomer(this.form).then(response => {
               this.$message.success("新增成功");
               this.dialog.dialogaddxiansuo = false;
               this.getList();
             }).catch(error=>{
               this.$message.error("新增失败");
             })
+          }
+        })
+       
     //   this.$refs["form"].validate(valid => {
     //     if (valid) {
     //       if (this.form.id != null) {
@@ -456,22 +492,26 @@ export default {
     },
     // 转成客户按钮
     handletocustomer(){
+        this.reset()
         this.dialog.dialogtocustomer=true
         var aaa =this.xiansuoList.filter(item=>{
            return item.id===this.ids[0]
         })
-        this.tocustomerInfo = aaa[0]
+        this.form = aaa[0]
         this.userInfo()
     },
     // 转成客户提交
     submitTocustomer(){  
-        transfortoCustomer(this.form).then(res=>{
+       this.$refs["form"].validate(valid => {
+          if(valid){
+            transfortoCustomer(this.form).then(res=>{
              this.$message.success('操作成功')
              this.dialog.dialogtocustomer=false
              this.getList()
         }).catch(error=>{
             this.$message.error('操作失败')
         })
+          }})
     },
     // 负责人查询
     handleSelect(item) {

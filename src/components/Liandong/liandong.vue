@@ -1,7 +1,7 @@
 <template>
   <span>
-    <el-form-item>
-      <el-select style="width:150px" v-model="prov" placeholder="请选择省">
+    <el-form-item style="width:30%">
+      <el-select  v-model="prov" placeholder="请选择省">
         <el-option
           v-for="(item, index) of arr"
           :key="index"
@@ -9,8 +9,8 @@
         ></el-option>
       </el-select>
     </el-form-item>
-    <el-form-item>
-      <el-select style="width:150px" v-model="city" placeholder="请选择市">
+    <el-form-item style="width:30%">
+      <el-select  v-model="city" placeholder="请选择市">
         <el-option
           v-for="(item, index) of cityArr"
           :key="index"
@@ -18,8 +18,8 @@
         ></el-option>
       </el-select>
     </el-form-item>
-    <el-form-item>
-      <el-select style="width:150px" v-model="district" placeholder="请选择区">
+    <el-form-item style="width:30%">
+      <el-select  v-model="district" placeholder="请选择区">
         <el-option
           v-for="(item, index) of districtArr"
           :key="index"
@@ -107,11 +107,13 @@ export default {
 .el-select {
   height: 32px;
 }
+.el-form-item{
+  margin:0 1.5%
+}
 .el-form-item__content{
    display: inline-block;
 }
 .el-form-item--medium{
     display: inline-block;
-       margin-right:13px
 }
 </style>

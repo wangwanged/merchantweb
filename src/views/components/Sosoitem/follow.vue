@@ -25,33 +25,31 @@
       </p>
       <div class="line_between"></div>
     </div>
-    <el-dialog title="写跟进" :visible.sync="dialogfollow" width="40%">
+    <el-dialog title="写跟进" :visible.sync="handleAdd" width="700px">
       <el-form>
-        <el-form-item>
+        <el-form-item required>
           <el-input
-            v-model="addInfo.method"
+            v-model="form.method"
             class="input"
             placeholder="请输入跟进方式"
           ></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item class='textarea'>
           <el-input
             type="textarea"
-            :autosize="{ minRows: 8, maxRows: 10 }"
+            :autosize="{ minRows: 8, maxRows: 8 }"
             placeholder="请输入跟进内容"
-            v-model="addInfo.content"
+            v-model="form.content"
           >
           </el-input>
-        </el-form-item>
-          <el-form-item >
-            <div class="status" style="text-align:center">
+          <div class="status" style="text-align:center">
             <el-button
-              size="small"
+              size="mini"
               plain
               type="info"
               v-for="(item, index) in genjinStatus"
               :key="index"
-              :class="index === addInfo.status ? 'genjinbutton' : ''"
+              :class="index === form.status ? 'genjinbutton' : ''"
                @click="changestatus(index)"
               >{{ item }}</el-button
             >
@@ -67,7 +65,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogfollow = false">取 消</el-button>
-        <el-button type="primary" @click="handleAdd()">保存</el-button>
+        <el-button type="primary" @click="handleAd">保存</el-button>
       </span>
     </el-dialog>
   </section>
@@ -95,7 +93,7 @@ export default {
       id: this.$route.query.id, //   当前客户数据id
       genjinList: [], //   跟进列表
       genjinStatus: [], //跟进状态字典
-      addInfo: {} // 跟进数据添加
+      form:{}  //表单数据
     };
   },
   created() {
@@ -108,6 +106,17 @@ export default {
     });
   },
   methods: {
+    reset(){
+     this.form={
+       imgs: null,
+        content: null,
+        customerId: null,
+        image:  null,
+        method: null,
+        status:  null,
+        sysUserId:  null
+     }
+    },
     // 改变跟进状态
     changestatus(i) {
       this.addInfo.status = i;
@@ -141,18 +150,23 @@ export default {
         console.log("getGenjin", this.genjinList);
       });
     },
-    // 添加跟进信息
-    handleAdd() {
-      var params = {
-        imgs: this.addInfo.imgs,
-        content: this.addInfo.content,
-        customerId: Number(this.$route.query.id),
-        image: this.addInfo.image,
-        method: this.addInfo.method,
-        status: this.addInfo.status,
-        sysUserId: this.tofollow.userId
-      };
-      addGenjin(params)
+    // 添加跟进按钮
+    handleAdd(){
+      this.reset()
+      this.dialogfollow=true
+    },
+    // 添加跟进按钮提交
+    submitAdd() {
+      // var params = {
+      //   imgs: this.addInfo.imgs,
+      //   content: this.addInfo.content,
+      //   customerId: Number(this.$route.query.id),
+      //   image: this.addInfo.image,
+      //   method: this.addInfo.method,
+      //   status: this.addInfo.status,
+      //   sysUserId: this.tofollow.userId
+      // };
+      addGenjin(this.form)
         .then(response => {
           this.$message.success("操作成功");
           this.dialogfollow = false;
@@ -167,16 +181,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.el_dialog_follow {
+.textarea {
   position: relative;
   .status {
-    text-align: center;
     position: absolute;
-    bottom: 10px;
-    margin-left: 9px;
+    bottom:10px;
+    margin:0 auto;
+    left:5px;
+    right:5px;
   }
-  .input {
-    width: 250px;
+  .el-input {
+    width: 100%;
   }
 }
 .noinfo {
@@ -190,5 +205,11 @@ export default {
     // #606266
   background-color: pink;
   color: #fff;
+}
+.el-form{
+  margin:0 20px;
+  }
+.el-button{
+  margin:0 3px
 }
 </style>
