@@ -42,7 +42,9 @@
             v-model="addInfo.content"
           >
           </el-input>
-          <div class="status">
+        </el-form-item>
+          <el-form-item >
+            <div class="status" style="text-align:center">
             <el-button
               size="small"
               plain

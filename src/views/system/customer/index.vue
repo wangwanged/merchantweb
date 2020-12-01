@@ -241,7 +241,6 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-
     <!-- 添加或编辑我的客户对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
@@ -273,7 +272,7 @@
         </el-form-item>
         <el-form-item label="客户地区" prop="dianmianAddress">
           <!-- <Liandong @placeInfo="getPlace(arguments)"></Liandong> -->
-          <Area/>
+          <!-- <Area/> -->
         </el-form-item>
         <el-form-item label="客户公司" prop="companyName">
           <el-input v-model="form.companyName" placeholder="请输入公司和部门" />
@@ -531,7 +530,6 @@ export default {
     // 根据天数筛选颜色
     // filterColor({row}){
     //    if(row.id===1){
-
     //    }
     // },
     //   15,30,60时间段数据获取

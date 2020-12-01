@@ -545,7 +545,7 @@
               </el-form>
                 <span slot="footer" class="dialog-footer">
                 <el-button @click="dialog.dialoghandleopen = false">取 消</el-button>
-                <el-button type="primary" @click="breakoffSubmit">确 定</el-button>
+                <el-button type="primary" @click="submitOpenshop">确 定</el-button>
                 </span>
             </el-dialog>
             <!-- 开店按钮 -->
@@ -1195,17 +1195,19 @@ export default {
     // 开店编辑按钮
     handleoOpenshop(i) {
       contractOpenshop(this.rootNum).then(res => {
-        console.log("Openshop", res.rows[i]);
         this.openshopform = res.rows[i];
         this.dialog.dialoghandleopen = true;
       });
     },
     // 开店编辑提交
     submitOpenshop() {
-        const data = {
-          
-        }
-      updateDianmianManager().then(res => {});
+      updateDianmianManager( this.openshopform).then(res => {
+           this.$message.success("操作成功");
+           this.dialog.dialoghandleopen = false;
+           this.getList()
+      }).catch(error=>{
+           this.$message.error("操作失败");
+      })
     },
     // 获取合同日志跟进
     getcontractOperlog() {
