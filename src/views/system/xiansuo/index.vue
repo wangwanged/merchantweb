@@ -10,7 +10,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <Liandong @placeInfo="getPlace(arguments)"></Liandong>
+      <!-- <Liandong @placeInfo="getPlace(arguments)"></Liandong> -->
       <el-form-item  prop="resource">
         <el-select v-model="queryParams.resource" placeholder="请选择线索来源" clearable size="small">
           <el-option
@@ -100,7 +100,7 @@
           >
         </template>
       </el-table-column>
-      <el-table-column label="客户电话" align="center" prop="phone" />
+      <el-table-column label="客户电话" align="center" prop="phone[0]" />
       <el-table-column label="客户公司" align="center" prop="companyName" />
       <el-table-column label="客户地区" align="center">
           <template slot-scope="obj">
@@ -131,11 +131,18 @@
     <el-dialog title="新增线索" :visible.sync="dialog.dialogaddxiansuo" width="650px" append-to-body>
       <el-form ref="form" :rules="rules"  :model="form"  label-width="80px" label-position="left">
         <el-form-item label="客户姓名"  prop="name" >
-          <el-input v-model="form.name" placeholder="请输入客户姓名" />
+          <el-input  v-model="form.name" placeholder="请输入客户姓名" />
         </el-form-item>
-        <el-form-item label="客户电话" prop="phone" >
-          <el-input v-model="form.phone" placeholder="请输入电话" />
-        </el-form-item>  
+         <el-form-item   label="客户电话" prop='phone'> 
+             <el-input style='width:90%' v-model='customerPhone[0]'  placeholder="请输入客户电话" /> 
+             <i class='el-icon-circle-plus' style='font-size:30px;margin-left:10px;' @click='addPhone()'></i>
+        </el-form-item>
+        <el-form-item>
+             <div v-for='(item,index) in customerPhone'  :key='index' >
+              <el-input  style='width:90%' v-model='customerPhone[index+1]' placeholder="请输入客户电话" /> 
+              <i class='el-icon-remove' style='font-size:30px;margin-left:10px;' @click='decreasePhone(index)'></i>
+          </div>
+        </el-form-item>
         <el-form-item label="客户地区">
             <Liandong @placeInfo='getPlace'></Liandong>
         </el-form-item>
@@ -146,7 +153,7 @@
             <el-input v-model='form.dianmianAddress' placeholder="请输入店面地址"></el-input>
         </el-form-item>    
          <el-form-item label="中介经验" prop="experience">
-          <el-select style="width:100%" v-model="form.experience" placeholder="请选择线索来源">
+          <el-select  v-model="form.experience" placeholder="请选择线索来源">
             <el-option
               v-for="dict in experienceOptions"
               :key="dict.dictValue"
@@ -156,7 +163,7 @@
           </el-select>
         </el-form-item>
         <el-form-item  label="线索来源" prop="resource">
-          <el-select style="width:100%" v-model="form.resource" placeholder="请选择线索来源">
+          <el-select  v-model="form.resource" placeholder="请选择线索来源">
             <el-option
               v-for="dict in resourceOptions"
               :key="dict.dictValue"
@@ -271,6 +278,8 @@ export default {
   name: "Xiansuo",
   data() {
     return {
+    // 客户电话
+      customerPhone:[],
     //   所属部门
       deptName:'',
     //   转成客户字段
@@ -330,16 +339,17 @@ export default {
           { required: true, message: "客户名称不能为空", trigger: "blur" }
         ],
         phone: [
-          { required: true, message: "您的手机号不能为空" },
+          { required: true, message: "您的手机号不能为空",trigger: "blur"},
           {
             pattern: /^1[3-9]\d{9}$/, // 正则表达式
-            message: "您的手机号格式不正确"
+            message: "您的手机号格式不正确",
+            trigger: "blur"
           }
         ]
       }
     };
   },
-   components: {
+  components: {
     Liandong,
     'input-excel':inputExcel
   },
@@ -393,9 +403,12 @@ export default {
     /** 查询客户线索列表 */
     getList() {
       this.loading = true;
-      listXiansuo(this.queryParams).then(response => {
+      listXiansuo(this.form).then(response => {
         this.xiansuoList = response.rows;
-        console.log(this.xiansuoList)
+        this.xiansuoList.forEach(item=>{
+           item.phone = item.phone.split(',')
+        });
+        console.log('this.xiansuoList',this.xiansuoList)
         this.total = response.total;
         this.loading = false;
       });
@@ -411,7 +424,6 @@ export default {
     },
     // 跟进状态字典翻译
     statusFormat(row, column) {
-        console.log('row1',row)
       return this.selectDictLabel(this.statusOptions, row.status);
     },
     // 中介经验字典翻译
@@ -446,6 +458,7 @@ export default {
     },
     /** 新增提交按钮 */
     submitForm() {
+        this.handlePhone()
         this.$refs["form"].validate(valid => {
           if(valid){
               this.form.status='0'
@@ -555,6 +568,18 @@ export default {
           this.deptName = b[0]
       });
     },
+    // 添加电话号码
+    addPhone(){
+        this.customerPhone.push('')
+    },
+    // 删除电话号码
+    decreasePhone(i){
+        this.customerPhone.splice(i+1,1)
+        console.log('this.customerPhone',this.customerPhone)
+    },
+    handlePhone(){
+        this.form.phone = this.customerPhone.toString()
+    },
     // 导入数据
     getMyExcelData(data){
         console.log('import',data)
@@ -562,12 +587,9 @@ export default {
         importXiansuo(data).then(res=>{
            console.log(res)
         })
-      }
+    }
   }
 };
 </script>
 <style lang="less" scoped>
-  .el-form{
-      margin:0 20px;
-  }
 </style>

@@ -7,8 +7,8 @@
         <el-button size="small" @click="handletocustomer" type="primary">转成客户</el-button>
       </div>
       <div class="header_bottom">
-        <div class="title_name" style="font-size:20px">
-          {{ xiansuoList.phone }}
+        <div class="title_name" style="font-size:20px" v-for='(item,index) in xiansuoList.phone' :key='index'>
+          {{item}}
         </div>
       </div>
     </div>
@@ -17,6 +17,8 @@
         <div class="tab_style">
           客户信息
         </div>
+        <GeminiScrollbar
+      class="my-scroll-bar">
         <div class="main_content_top">
           <p class="main_content_name">
             <span class="main_content_firstname">地区：</span>
@@ -64,6 +66,7 @@
             <span>{{ xiansuoList.genjinDate }}</span>
           </p>
         </div>
+        </GeminiScrollbar>
       </div>
       <div class="main_right">
         <div class="main_right_top" style="overflow:hidden">
@@ -74,7 +77,7 @@
             >写跟进</el-button
           >
         </div>
-        <Follow ref="follow"></Follow>
+        <Follow ref="follow" :tofollow='xiansuoList'></Follow>
       </div>
     </div>
     <!-- 转成客户dialog弹出 -->
@@ -179,10 +182,12 @@ export default {
       xiansuoList: [], // 当前线索列表
       systemuser: [], //系统信息
       dialogrollout: false, //转成客户按钮
+    //   字典start
       genjinStatus: [], //跟进状态字典
       levelOptions: [], //客户等级字典
       userneedOptions: [], //客户需求字典
       experienceOptions:[],  //中介经验字典
+    //   字典end
       showGenjin: "跟进",
       form: {}
     };
@@ -260,6 +265,8 @@ export default {
     getList() {
       getXiansuo(this.id).then(response => {
         this.xiansuoList = response.data;
+        this.xiansuoList.phone=this.xiansuoList.phone.split(',')
+        console.log('this.xiansuoList.phone',this.xiansuoList.phone)
       });
     },
     // 客户等级字典
@@ -340,9 +347,9 @@ export default {
         this.deptName = b[0];
       });
     },
-        goSecond() {
+    goSecond() {
       //这是操作follow子组件的方法
-      this.$refs.follow.handleAdd
+    this.$refs.follow.handleAdd()
     },
   }
 };

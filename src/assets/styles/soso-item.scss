@@ -1,6 +1,6 @@
 .container {
-  margin: 30px;
-  font-size:14px
+  margin: 20px 30px;
+  font-size:14px;
 }
 .sousou-background{
     background-color:rgb(236, 239, 244)
@@ -73,5 +73,20 @@
 .el-image{
     margin:30px 15px
 }
-
+.el-dialog .el-input {
+    width: 100% 
+}
+.el-dialog .el-select{
+    width: 100% 
+}
+.el-dialog .el-autocomplete {
+    width: 100% 
+}
+ .el-form {
+  margin: 0 20px;
+}
+.my-scroll-bar {
+  position:fixed;
+  bottom:0
+}
 

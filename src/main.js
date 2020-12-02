@@ -67,6 +67,8 @@ Vue.prototype.$echarts = echarts;
  * Currently MockJs will be used in the production environment,
  * please remove it before going online! ! !
  */
+import GeminiScrollbar from 'vue-gemini-scrollbar'
+Vue.use(GeminiScrollbar)
 
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium' // set element-ui default size

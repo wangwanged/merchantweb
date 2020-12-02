@@ -32,10 +32,15 @@
       </div>
     </div>
     <div class="main">
+    
+    
+     
       <div class="main_left">
         <div class="tab_style">
           客户信息
         </div>
+         <GeminiScrollbar
+         class="my-scroll-bar">
         <div class="main_content_top">
           <p class="main_content_name">
             <span class="main_content_firstname">客户等级：</span>
@@ -111,6 +116,7 @@
             <span>{{ customerList.genjinDate }}</span>
           </p>
         </div>
+        </GeminiScrollbar>
       </div>
       <div class="main_right">
         <div class="main_right_top" style="overflow:hidden">
@@ -123,6 +129,7 @@
         </div>
         <Follow ref="follow" :tofollow='customerList'></Follow>
       </div>
+      
     </div>
     <!-- 新签合同弹框 -->
     <el-dialog title="新签合同" :visible.sync="dialogNewsign" width="40%">
@@ -677,5 +684,8 @@ export default {
   text-align: center;
   line-height: 34px;
   font-size: 12px;
+}
+.my-scroll-bar{
+    height: 738px;
 }
 </style>

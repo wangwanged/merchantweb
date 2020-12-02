@@ -1,5 +1,7 @@
 <template>
   <section>
+    <GeminiScrollbar
+      class="my-scroll-bar">
     <div class="noinfo" v-if="genjinList.length === 0">当前没有跟进信息</div>
     <div
       v-for="item in genjinList"
@@ -25,7 +27,8 @@
       </p>
       <div class="line_between"></div>
     </div>
-    <el-dialog title="写跟进" :visible.sync="handleAdd" width="700px">
+    </GeminiScrollbar>
+    <el-dialog title="写跟进" :visible.sync="dialogfollow" width="700px">
       <el-form>
         <el-form-item required>
           <el-input
@@ -56,18 +59,19 @@
           </div>
         </el-form-item>
         <!-- 图片上传 -->
-        <UpImg
+        <!-- <UpImg
           :value="value"
           :show="true"
           @update="update"
           :imgType="imgType"
-        ></UpImg>
+        ></UpImg> -->
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogfollow = false">取 消</el-button>
-        <el-button type="primary" @click="handleAd">保存</el-button>
+        <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" @click="submitAdd">保存</el-button>
       </span>
     </el-dialog>
+    
   </section>
 </template>
 <script>
@@ -81,15 +85,7 @@ export default {
   props: ["tofollow"],
   data() {
     return {
-      value: [],
-      imgType: "1",
-      initData: [],
       dialogfollow: false, //跟进按钮弹框显示
-      dialogImageUrl: "",
-      dialogVisible: false,
-      disabled: false,
-      //   图片数据
-      imgList: [],
       id: this.$route.query.id, //   当前客户数据id
       genjinList: [], //   跟进列表
       genjinStatus: [], //跟进状态字典
@@ -119,7 +115,12 @@ export default {
     },
     // 改变跟进状态
     changestatus(i) {
-      this.addInfo.status = i;
+      this.form.status = i;
+    },
+     // 取消按钮
+    cancel() {
+      this.reset();
+      this.dialogfollow = false;
     },
     update() {
       console.log(this.value);
@@ -147,7 +148,6 @@ export default {
     getList() {
       getGenjin(this.id).then(response => {
         this.genjinList = response.rows;
-        console.log("getGenjin", this.genjinList);
       });
     },
     // 添加跟进按钮
@@ -166,6 +166,9 @@ export default {
       //   status: this.addInfo.status,
       //   sysUserId: this.tofollow.userId
       // };
+      console.log('this.tofollow',this.tofollow)
+      this.form.customerId=this.$route.query.id
+      this.form.sysUserId=this.tofollow.userId
       addGenjin(this.form)
         .then(response => {
           this.$message.success("操作成功");
@@ -202,8 +205,7 @@ export default {
   padding-top: 20px;
 }
 .genjinbutton {
-    // #606266
-  background-color: pink;
+  background-color: #606266;
   color: #fff;
 }
 .el-form{
@@ -211,5 +213,8 @@ export default {
   }
 .el-button{
   margin:0 3px
+}
+.my-scroll-bar{
+    height: 738px;
 }
 </style>
