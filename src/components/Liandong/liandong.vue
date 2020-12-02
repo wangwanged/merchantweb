@@ -42,8 +42,14 @@ export default {
       district: ""
     };
   },
-  created() {},
-  watch: {
+  props:{
+    toSon:{
+      type:Object
+    }},
+  created() {
+    this.showPlace()
+  },
+  watch: { 
     prov: {
       // 表格数据刷新后需清空之前查看的订单详情内容
       handler: function(newVal, oldVal) {
@@ -68,6 +74,12 @@ export default {
     }
   },
   methods: {
+    // 回显省市区
+    showPlace(){
+      this.prov=this.toSon.province
+      this.city=this.toSon.city
+      this.district=this.toSon.district
+    },
     toFather() {
       this.$emit("placeInfo", this.prov, this.city, this.district);
     },

@@ -242,15 +242,15 @@
       @pagination="getList"
     />
     <!-- 添加或编辑我的客户对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-dialog :title="title" :visible.sync="open" width="650px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px" label-position="left">
         <el-form-item label="客户姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入" />
         </el-form-item>
         <el-form-item label="客户电话" prop="phone">
           <el-input v-model="form.phone" placeholder="请输入客户电话" />
         </el-form-item>
-        <el-form-item label="客户等级" prop="level">
+        <el-form-item label="客户等级">
           <el-select v-model="form.level" placeholder="请选择客户等级">
             <el-option
               v-for="dict in levelOptions"
@@ -260,7 +260,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="客户需求" prop="customerNeeds">
+        <el-form-item label="客户需求">
           <el-select v-model="form.customerNeeds" placeholder="请选择客户需求">
             <el-option
               v-for="dict in customerNeedsOptions"
@@ -270,17 +270,16 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="客户地区" prop="dianmianAddress">
-          <!-- <Liandong @placeInfo="getPlace(arguments)"></Liandong> -->
-          <!-- <Area/> -->
+        <el-form-item label="客户地区">
+            <Liandong @placeInfo='getPlace'  :toSon='toplace'></Liandong>
         </el-form-item>
-        <el-form-item label="客户公司" prop="companyName">
+        <el-form-item label="客户公司">
           <el-input v-model="form.companyName" placeholder="请输入公司和部门" />
         </el-form-item>
-        <el-form-item label="中介经验" prop="experience">
+        <el-form-item label="中介经验">
           <el-input v-model="form.experience" placeholder="请输入中介经验" />
         </el-form-item>
-        <el-form-item label="客户来源" prop="resource">
+        <el-form-item label="客户来源">
           <el-select v-model="form.resource" placeholder="请选择客户来源">
             <el-option
               v-for="dict in resourceOptions"
@@ -290,7 +289,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="备注" prop="remark">
+        <el-form-item label="备注" >
           <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
         <!-- <el-form-item label="负责人" prop="username">
@@ -301,14 +300,14 @@
          <el-form-item label="负责人">
             <el-autocomplete
             class="inline-input"
-            v-model="transforKeywords"
+            v-model="form.transforKeywords"
             :fetch-suggestions="querySearch"
             placeholder="请输入内容"
             :trigger-on-focus="false"
             @select="handleSelect"
     ></el-autocomplete>
         </el-form-item>
-        <el-form-item label="所属部门" prop="phone">
+        <el-form-item label="所属部门" >
           <el-input disabled v-model='deptName'  placeholder="所属部门" />
         </el-form-item>
       </el-form>
@@ -337,7 +336,7 @@
     <el-dialog title="转移" :visible.sync="dialogTransfor" width="500px">
         <el-autocomplete
             class="inline-input"
-            v-model="transforKeywords"
+            v-model="form.transforKeywords"
             :fetch-suggestions="querySearch"
             placeholder="请输入内容"
             :trigger-on-focus="false"
@@ -374,6 +373,12 @@ export default {
   },
   data() {
     return {
+        //  传给省市区
+    toplace:{
+      province:'',
+      city:'',
+      district:""
+    },
       //   所属部门
       deptName:'',
         // 要转移的电话号码
@@ -432,7 +437,7 @@ export default {
         resource: null,
         username: null,
         inputDateStart: null,
-        inputDateEnd: null
+        inputDateEnd: null, 
       },
       // 表单参数
       form: {},
@@ -476,6 +481,35 @@ export default {
     });
   },
   methods: {
+     // 表单重置
+    reset() {
+      this.form = {
+        id: null,
+        name: null,
+        phone: null,
+        level: null,
+        customerNeeds: null,
+        companyName: null,
+        province: null,
+        dianmianAddress: null,
+        city: null,
+        district: null,
+        resource: null,
+        userId: null,
+        username: null,
+        luruId: null,
+        luruName: null,
+        experience: null,
+        remark: null,
+        status: null,
+        inputDate: null,
+        updateDate: null,
+        experience:null,
+        transforphone:null,
+        transforKeywords:null,
+      };
+      this.resetForm("form");
+    },
     //   转移确定按钮
     handleTransfor(row) {
        const ids = row.id || this.ids;
@@ -553,14 +587,25 @@ export default {
       var d = dd.getDate() < 10 ? "0" + dd.getDate() : dd.getDate(); //获取当前几号，不足10补0
       return y + "-" + m + "-" + d;
     },
+    // 获取当前负责人和部门
+    getdeptuser(){
+       getInfo().then(res=>{
+          this.form.username=res.user.userName
+          this.form.transforKeywords=res.user.userName
+          this.deptName=res.user.dept.deptName
+      })
+    },
+     // 省市区赋值
+    toPlace(){
+      this.toplace.province=this.form.province
+      this.toplace.city=this.form.city
+      this.toplace.district=this.form.district
+    },
     //   获取省市区的地址
-    getPlace(i) {
-      this.queryParams.province = i[0];
-      this.queryParams.city = i[1];
-      this.queryParams.district = i[2];
-      this.form.province = i[0];
-      this.form.city = i[1];
-      this.form.district = i[2];
+    getPlace(i,j,k) {
+      this.form.province = i;
+      this.form.city = j;
+      this.form.district = k;
     },
     /** 查询我的客户列表 */
     getList() {
@@ -589,32 +634,7 @@ export default {
       this.open = false;
       this.reset();
     },
-    // 表单重置
-    reset() {
-      this.form = {
-        id: null,
-        name: null,
-        phone: null,
-        level: null,
-        customerNeeds: null,
-        companyName: null,
-        province: null,
-        dianmianAddress: null,
-        city: null,
-        district: null,
-        resource: null,
-        userId: null,
-        username: null,
-        luruId: null,
-        luruName: null,
-        experience: null,
-        remark: null,
-        status: "0",
-        inputDate: null,
-        updateDate: null
-      };
-      this.resetForm("form");
-    },
+   
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
@@ -633,6 +653,7 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加我的客户";
+      this.getdeptuser()
     },
     /** 提交按钮 */
     submitForm() {
@@ -669,23 +690,22 @@ export default {
           this.download(response.msg);
         });
     },
-     // 负责人查询
+    // 负责人查询
     handleSelect(item) {
-        console.log(item)
         var item = item.value
+        this.form.transforKeywords=item.substring(12)
         item=item.substring(0,11);
         this.transforphone=item
         this.userInfo()
       },
       // 负责人查询
     querySearch(queryString, callback) {
-            const keywords=this.transforKeywords
+            const keywords=this.form.transforKeywords
             var params={
                 keywords:keywords
             }
         transforCustomer(params).then(response => {
            var restaurants = response.rows;
-           console.log('eeeeeeeeeeeeeeee',restaurants)
            const list = []
              //封装要显示的数据
            for (let v of restaurants) {
@@ -693,7 +713,7 @@ export default {
             }
                  // 调用 callback 返回建议列表的数据,是一个数组类型
             callback(list)
-      });
+      });      
       },
       // 获取user用户信息
     userInfo() {
@@ -716,15 +736,15 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-  /deep/ .el-input--suffix{
-     width: 140px;
-  };
-  /deep/ .el-range-editor--medium{
-      width: 230px;
-      height: 32px;
-      padding:0px;
-  };
-  /deep/ .avue-form__menu{
-      display:none
-  }
+  // /deep/ .el-input--suffix{
+  //    width: 140px;
+  // };
+  // /deep/ .el-range-editor--medium{
+  //     width: 230px;
+  //     height: 32px;
+  //     padding:0px;
+  // };
+  // /deep/ .avue-form__menu{
+  //     display:none
+  // }
 </style>
