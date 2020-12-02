@@ -305,6 +305,7 @@ export default {
           if (this.form.configId != undefined) {
             updateConfig(this.form).then(response => {
               this.msgSuccess("修改成功");
+
               this.open = false;
               this.getList();
             });

@@ -448,7 +448,7 @@ export default {
   },
   watch: {
     // 根据名称筛选部门树
-    deptName(val) {
+    deptName(val) { 
       this.$refs.tree.filter(val);
     }
   },

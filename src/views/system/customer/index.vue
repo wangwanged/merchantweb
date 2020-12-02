@@ -113,7 +113,7 @@
         >
       </el-form-item>
         <div class="timesearch" style='margin-bottom:20px'>
-          <span style='display:inline-block;margin-right:15px;font-size:14px'>最新跟进</span> 
+          <span style='display:inline-block;margin-right:15px;font-size:14px'>最新跟进</span>
           <el-button
             v-for="(item, index) in customerGenjinnum"
             :key="index"
@@ -122,7 +122,7 @@
             >超过{{ item }}天未跟进</el-button
           >
         </div>
-      
+
     </el-form>
 
     <el-row :gutter="10" class="mb8">
@@ -500,7 +500,7 @@ export default {
           status:status
       }
       invalidCustomer(params)
-        .then(response => { 
+        .then(response => {
           this.$message.success("操作成功");
           this.$router.push("/customer/customer");
           this.getList();
@@ -693,7 +693,7 @@ export default {
             }
                  // 调用 callback 返回建议列表的数据,是一个数组类型
             callback(list)
-      });      
+      });
       },
       // 获取user用户信息
     userInfo() {

@@ -47,7 +47,7 @@
         <el-col :lg="{span: 2, offset: 6}" :md="2">
           <el-button type="primary" size="small" @click="uploadImg()">提 交</el-button>
         </el-col>
-      </el-row>
+      </el-row>《
     </el-dialog>
   </div>
 </template>
