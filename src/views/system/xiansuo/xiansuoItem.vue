@@ -22,7 +22,7 @@
       </div>
     </div>
     <div class="main">
-      <div class="main_left">
+      <div class="main_left" >
         <div class="tab_style">客户信息</div>
         <GeminiScrollbar class="my-scroll-bar">
           <div class="main_content_top">

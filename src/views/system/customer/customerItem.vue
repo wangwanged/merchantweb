@@ -5,7 +5,7 @@
         <span class="title_name fl">{{ customerList.name }}</span>
         <el-button style="margin:0 20px" type="primary" circle
           ><div style="width:12px;height:12px;">
-            {{ customerList.level }}
+            {{level }}
           </div></el-button
         >
         <!-- <div class="circle fl" style="margin-right:10px">
@@ -44,7 +44,7 @@
         <div class="main_content_top">
           <p class="main_content_name">
             <span class="main_content_firstname">客户等级：</span>
-            <span>{{ customerList.level }}</span>
+            <span>{{level}}({{ customerList.level}})</span>
           </p>
           <p class="main_content_name">
             <span class="main_content_firstname">客户需求：</span>
@@ -324,7 +324,7 @@
         <el-form-item required label="客户等级">
           <el-select v-model="form.level" placeholder="请选择客户等级">
             <el-option
-              v-for="dict in dict.levelOptions"
+              v-for="dict in levelOptions"
               :key="dict.dictValue"
               :label="dict.dictLabel"
               :value="dict.dictValue"
@@ -334,7 +334,7 @@
         <el-form-item required label="客户需求">
           <el-select v-model="form.customerNeeds" placeholder="请选择客户需求">
             <el-option
-              v-for="dict in dict.customerNeedsOptions"
+              v-for="dict in customerNeedsOptions"
               :key="dict.dictValue"
               :label="dict.dictLabel"
               :value="dict.dictValue"
@@ -366,7 +366,7 @@
         <el-form-item required label="客户来源">
           <el-select v-model="form.resource" placeholder="请选择客户来源">
             <el-option
-              v-for="dict in dict.resourceOptions"
+              v-for="dict in resourceOptions"
               :key="dict.dictValue"
               :label="dict.dictLabel"
               :value="dict.dictValue"
@@ -440,6 +440,8 @@ export default {
         daiban: ""
         // jingyingManage: {},
       },
+    //   客户等级字母显示
+      level:'',
       //   编辑按钮
       editinfo: {
         pageNum: 1,
@@ -489,10 +491,13 @@ export default {
       genjinStatus: [],
       //   显示的跟进状态
       showGenjin: "跟进",
-        customerNeedsOptions: [],
-        levelOptions: [],
-        resourceOptions: [],
-    
+    //   跟进start
+      genjinOptions: [], //跟进状态字典
+      levelOptions: [], //客户等级字典
+      userneedOptions: [], //客户需求字典
+      experienceOptions: [], //中介经验字典
+      experienceOptions: [], //客户来源字典
+    //   跟进end
       showDianmian: false, //新签合同按钮中显示店面或区域信息
       location: {
         //地址
@@ -541,12 +546,11 @@ export default {
       };
       this.resetForm("form");
     },
-
     getList() {
       // 获取当前页客户信息
       getCustomer(this.id).then(response => {
         this.customerList = response.data;
-        console.log(this.customerList)
+        this.getdicts()
       });
       //   获取当前页合同信息
       getContractInfo(this.id).then(response => {
@@ -555,37 +559,46 @@ export default {
     },
     // 获取字典
     getdicts(){
+          //   获取跟进状态字典
+      this.getDicts("customer_genjin").then(response => {
+        this.genjinOptions = response.data;
+        var a = this.genjinOptions.filter(item => {
+          return item.dictValue === this.customerList.genjinStatus;
+        });
+        this.customerList.genjinStatus = a[0].dictLabel;
+        this.level=a[0].dictValue
+      });
       // 获取客户等级字典
       this.getDicts("customer_level").then(response => {
         this.levelOptions = response.data;
         var a = this.levelOptions.filter(item => {
-          return item.dictValue === this.xiansuoList.level;
+          return item.dictValue === this.customerList.level;
         });
-        this.xiansuoList.level = a[0].dictLabel;
+        this.customerList.level = a[0].dictLabel;
       });
       // 获取客户需求字典
       this.getDicts("sys_user_need").then(response => {
         this.userneedOptions = response.data;
         var a = this.userneedOptions.filter(item => {
-          return item.dictValue === this.xiansuoList.customerNeeds;
+          return item.dictValue === this.customerList.customerNeeds;
         });
-        this.xiansuoList.customerNeeds = a[0].dictLabel;
+        this.customerList.customerNeeds = a[0].dictLabel;
       });
       // 获取中介经验字典
       this.getDicts("experience").then(response => {
         this.experienceOptions = response.data;
         var a = this.experienceOptions.filter(item => {
-          return item.dictValue === this.xiansuoList.experience;
+          return item.dictValue === this.customerList.experience;
         });
-        this.xiansuoList.experience = a[0].dictLabel;
+        this.customerList.experience = a[0].dictLabel;
       });
       // 获取客户来源字典
       this.getDicts("sys_customer_resource").then(response => {
         this.experienceOptions = response.data;
         var a = this.experienceOptions.filter(item => {
-          return item.dictValue === this.xiansuoList.resource;
+          return item.dictValue === this.customerList.resource;
         });
-        this.xiansuoList.resource = a[0].dictLabel;
+        this.customerList.resource = a[0].dictLabel;
       });
     },
     },
@@ -706,9 +719,7 @@ export default {
       //   }
       //   return arr;
     },
-    
-  }
-};
+}
 </script>
 
 <style lang="scss" scoped>

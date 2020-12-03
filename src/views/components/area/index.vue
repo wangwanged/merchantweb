@@ -1,11 +1,11 @@
 <template>
   <div>
-      <avue-form class='area' v-model="form" :option="option" :emitPath='false'>
-  <template slot="cascader3Type" slot-scope="{node,data}">
-    <span>{{ (data || {}).label }}</span>
-    <span v-if="!node.isLeaf"> ({{((data || {}).children || []).length }}) </span>
-  </template>
-</avue-form>
+     <avue-form class='area' v-model="form" :option="option" :emitPath='false'>
+        <template slot="cascader3Type" slot-scope="{node,data}">
+            <span>{{ (data || {}).label }}</span>
+            <span v-if="!node.isLeaf"> ({{((data || {}).children || []).length }}) </span>
+        </template>
+    </avue-form>
   </div>
   <!-- <div>
     <el-cascader

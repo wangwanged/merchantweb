@@ -387,6 +387,7 @@ export default {
         city: "",
         district: ""
       },
+      userId:null,
       //   所属部门
       deptName: "",
       // 要转移的电话号码
@@ -530,10 +531,12 @@ export default {
     },
     //   转移确定按钮
     handleTransfor(row) {
+
       const ids = row.id || this.ids;
       var data = {
         ids: ids,
-        phone: this.transforphone
+        userId: this.userId
+        // phone: this.transforphone
       };
       transforcustomer(data)
         .then(response => {
@@ -704,25 +707,36 @@ export default {
     },
     // 负责人查询
     handleSelect(item) {
+        console.log("item", item)
+        this.reset()
+        this.userId = item.id;
       var item = item.value;
+      
       this.form.transforKeywords = item.substring(12);
-      item = item.substring(0, 11);
-      this.transforphone = item;
+    //   item = item.substring(0, 11);
+    //   this.transforphone = item;
       this.userInfo();
     },
     // 负责人查询
     querySearch(queryString, callback) {
       const keywords = this.form.transforKeywords;
+      
       var params = {
         keywords: keywords
       };
+      console.log("aaaaa")
       transforCustomer(params).then(response => {
+        // let callbackList = [];
         var restaurants = response.rows;
+        console.log("restaurants", restaurants)
         const list = [];
         //封装要显示的数据
         for (let v of restaurants) {
-          list.push({ value: v.phonenumber + " " + v.userName });
+            console.log("v", v)
+          list.push({ value: v.phonenumber + " " + v.userName, id: v.id});
+        //   callbackList.push({ value: v.id})
         }
+        
         // 调用 callback 返回建议列表的数据,是一个数组类型
         callback(list);
       });
