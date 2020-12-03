@@ -23,7 +23,7 @@
       </el-form-item>
       <el-form-item  prop="sysUserId">
         <el-input
-          v-model="queryParams.sysUserId"
+          v-model="queryParams.username"
           placeholder="请输入负责人"
           clearable
           size="small"
@@ -81,7 +81,7 @@
           v-hasPermi="['system:xiansuo:export']"
         >导出</el-button>
       </el-col>
-      </div>   
+      </div>
     </el-row>
     <el-table v-loading="loading" :data="xiansuoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
@@ -133,13 +133,13 @@
         <el-form-item label="客户姓名"  prop="name" >
           <el-input  v-model="form.name" placeholder="请输入客户姓名" />
         </el-form-item>
-         <el-form-item   label="客户电话" prop='phone'> 
-             <el-input style='width:90%' v-model='customerPhone[0]'  placeholder="请输入客户电话" /> 
+         <el-form-item   label="客户电话" prop='phone'>
+             <el-input style='width:90%' v-model='customerPhone[0]'  placeholder="请输入客户电话" />
              <i class='el-icon-circle-plus' style='font-size:30px;margin-left:10px;' @click='addPhone()'></i>
         </el-form-item>
         <el-form-item>
              <div v-for='(item,index) in customerPhone'  :key='index' >
-              <el-input  style='width:90%' v-model='customerPhone[index+1]' placeholder="请输入客户电话" /> 
+              <el-input  style='width:90%' v-model='customerPhone[index+1]' placeholder="请输入客户电话" />
               <i class='el-icon-remove' style='font-size:30px;margin-left:10px;' @click='decreasePhone(index)'></i>
           </div>
         </el-form-item>
@@ -151,7 +151,7 @@
         </el-form-item>
           <el-form-item label="店面地址" prop="resource">
             <el-input v-model='form.dianmianAddress' placeholder="请输入店面地址"></el-input>
-        </el-form-item>    
+        </el-form-item>
          <el-form-item label="中介经验" prop="experience">
           <el-select  v-model="form.experience" placeholder="请选择线索来源">
             <el-option
@@ -402,7 +402,7 @@ export default {
         status: null,
         experience:null,
         transforphone:null,
-        transforKeywords:null, 
+        transforKeywords:null,
       };
       this.resetForm("form");
     },
@@ -488,7 +488,7 @@ export default {
             })
           }
         })
-       
+
     //   this.$refs["form"].validate(valid => {
     //     if (valid) {
     //       if (this.form.id != null) {
@@ -522,7 +522,7 @@ export default {
     },
     // 转成客户按钮
     handletocustomer(){
-        this.reset()  
+        this.reset()
         var aaa =this.xiansuoList.filter(item=>{
            return item.id===this.ids[0]
         })
@@ -533,7 +533,7 @@ export default {
          this.dialog.dialogtocustomer=true
     },
     // 转成客户提交
-    submitTocustomer(){  
+    submitTocustomer(){
        this.$refs["form"].validate(valid => {
           if(valid){
             transfortoCustomer(this.form).then(res=>{
@@ -568,7 +568,7 @@ export default {
             }
                  // 调用 callback 返回建议列表的数据,是一个数组类型
             callback(list)
-      });      
+      });
       },
       // 获取user用户信息
     userInfo() {
