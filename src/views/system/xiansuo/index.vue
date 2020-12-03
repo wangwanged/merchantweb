@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form class='search' :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item  prop="phone">
         <el-input
           v-model="queryParams.phone"
@@ -612,4 +612,10 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+.search .el-input{
+    width: 150px;
+}
+.search .el-select{
+    width: 150px;
+}
 </style>
