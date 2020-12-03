@@ -795,6 +795,13 @@ export default {
       this.loading = true;
       listContractManager(this.queryParams).then(response => {
         this.contractManagerList = response.rows;
+
+        this.contractManagerList.forEach((item)=>{
+          item.fee = JSON.parse(item.fee)
+          item.fee = Number.parseInt(item.fee.daibanFee) + Number.parseInt(item.fee.guohuoFee) + Number.parseInt(item.fee.systemUseFee) + Number.parseInt(item.fee.yunyingManagerFee)
+            + Number.parseInt(item.fee.systemMaintenanceFee) + Number.parseInt(item.fee.jingyingManagerFee.total)
+          console.log("item.fee", item.fee)
+        })
         this.total = response.total;
         this.loading = false;
       });
@@ -926,7 +933,7 @@ export default {
     },
     // 合同审核
     handleCheck() {
-      var data = { 
+      var data = {
           signDate:this.checkDate,
           id:this.ids[0],
       }
@@ -1025,7 +1032,7 @@ export default {
             }
                  // 调用 callback 返回建议列表的数据,是一个数组类型
             callback(list)
-      });      
+      });
       },
          // 负责人查询
     handleSelect(item) {
@@ -1060,13 +1067,20 @@ export default {
            phone:this.transforphone
        }
        contractTransfor(params).then(response => {
-           this.$message.success("操作成功");       
+           this.$message.success("操作成功");
            this. dialogTransfor = false;
            this.getList();
       }).catch(error=>{
            this.$message.error("操作失败");
       });
     },
+  },
+  computed:{
+    // totalfee: function () {
+    //   console.log(this.fee.daibanFee)
+    //   return  this.fee.daibanFee + this.fee.guohuoFee + this.fee.systemUseFee + this.fee.yunyingManagerFee+ this.fee.jingyingManagerFee.total
+    //     + this.fee.systemMaintenanceFee
+    // }
   }
 };
 </script>
