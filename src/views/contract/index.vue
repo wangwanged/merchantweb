@@ -64,10 +64,25 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item prop="checkStatus">
+        <el-select
+          v-model="queryParams.checkStatus"
+          placeholder="审核状态"
+          clearablea
+          size="small"
+        >
+          <el-option
+            v-for="dict in checkStatusOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item prop="operation">
         <el-input
-          v-model="queryParams.operation"
-          placeholder="请输入操作"
+          v-model="queryParams.keywords"
+          placeholder="模糊搜索"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -703,8 +718,11 @@ export default {
       produceOptions: [],
       // 生效失效状态字典
       statusOptions: [],
+      // 合同审核状态
+      checkStatusOptions: [],
       // 查询参数
       queryParams: {
+        keywords: null,
         pageNum: 1,
         pageSize: 10,
         num: null,
@@ -716,7 +734,8 @@ export default {
         signDate: null,
         beginDate: null,
         endDate: null,
-        status: null
+        status: null,
+        checkStatus: null
       },
       // 表单参数
       form: {},
@@ -789,6 +808,9 @@ export default {
     this.getDicts("contract_status").then(response => {
       this.statusOptions = response.data;
     });
+    this.getDicts("check_status").then(response => {
+      this.checkStatusOptions = response.data;
+    });
   },
   methods: {
     /** 查询合同列表 */
@@ -818,6 +840,10 @@ export default {
     // 生效失效状态字典翻译
     statusFormat(row, column) {
       return this.selectDictLabel(this.statusOptions, row.status);
+    },
+    // 审核状态字典翻译
+    checkStatusFormat(row, column) {
+      return this.selectDictLabel(this.checkStatusOptions, row.status);
     },
     // 取消按钮
     cancel() {
