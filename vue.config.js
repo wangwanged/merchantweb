@@ -32,9 +32,9 @@ module.exports = {
     port: port,
     open: true,
     proxy: {
-      // detail: 'https://cli.vuejs.org/config/#devserver-proxy
-      [process.env.VUE_APP_BASE_API]: {
-        // target: `http://bbb8qv.natappfree.cc`,
+      // detail: https://cli.vuejs.org/config/#devserver-proxy
+      [process.env.VUE_APP_BASE_API]: {      
+        // target: `http://yusnan.natappfree.cc`,
         target: `http://192.168.53.237:8888`,
         changeOrigin: true,
         pathRewrite: {

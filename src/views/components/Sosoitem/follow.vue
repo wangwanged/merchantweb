@@ -97,7 +97,7 @@ export default {
     //   获取跟进状态字典
     this.getDicts("customer_genjin").then(response => {
       this.genjinStatus = response.data.map(item => {
-        return item.dictValue;
+        return item.dictLabel;
       });
     });
   },

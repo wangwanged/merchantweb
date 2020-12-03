@@ -43,7 +43,7 @@
             </p>
             <p class="main_content_name">
               <span class="main_content_firstname">中介经验：</span>
-              <span>{{xiansuoList.experience}}</span>
+              <span>{{ xiansuoList.experience }}</span>
             </p>
             <p class="main_content_name">
               <span class="main_content_firstname">客户来源：</span>
@@ -173,16 +173,16 @@ import Follow from "@/views/components/Sosoitem/follow.vue";
 import { transforcustomer, transforCustomer } from "@/api/system/customer";
 import { listUser } from "@/api/system/user";
 import Liandong from "@/components/Liandong/liandong.vue";
-import {getInfo } from "@/api/login";
+import { getInfo } from "@/api/login";
 export default {
   data() {
     return {
-       //  传给省市区
-    toplace:{
-      province:'',
-      city:'',
-      district:""
-    },
+      //  传给省市区
+      toplace: {
+        province: "",
+        city: "",
+        district: ""
+      },
       //   所属部门
       deptName: "",
       // 要转移的电话号码
@@ -193,17 +193,18 @@ export default {
       xiansuoList: [], // 当前线索列表
       systemuser: [], //系统信息
       dialogrollout: false, //转成客户按钮
-    //   字典start
+      //   字典start
       genjinStatus: [], //跟进状态字典
       levelOptions: [], //客户等级字典
       userneedOptions: [], //客户需求字典
-      experienceOptions:[],  //中介经验字典
-    //   字典end
+      experienceOptions: [], //中介经验字典
+      experienceOptions:[],  //客户来源字典
+      //   字典end
       showGenjin: "跟进",
       form: {},
-      filter:{
-        value:'',
-        label:''
+      filter: {
+        value: "",
+        label: ""
       }
     };
   },
@@ -216,32 +217,11 @@ export default {
     Liandong,
     Follow
   },
-  // filters:{
-  //   filterexperience(this.experienceOptions.dictValue){
-  //      return  this.experienceOptions.dictLabel;
-  //   }
-  //  },
   beforeDestroy() {
     document.querySelector("body").removeAttribute("style");
   },
   created() {
     this.getList();
-    //   获取跟进状态字典
-    this.getDicts("customer_genjin").then(response => {
-      this.genjinStatus = response.data;
-    });
-    // 获取客户等级字典
-    this.getDicts("customer_level").then(response => {
-      this.levelOptions = response.data;
-    });
-    // 获取客户需求字典
-    this.getDicts("sys_user_need").then(response => {
-      this.userneedOptions = response.data;
-    });
-    // 获取客户需求字典
-    this.getDicts("experience").then(response => {
-      this.experienceOptions = response.data;
-    });
   },
   computed: {},
   methods: {
@@ -262,10 +242,10 @@ export default {
         inputDate: null,
         keywords: null,
         level: null,
-        luruName:null,
+        luruName: null,
         name: null,
         num: null,
-        params:null,
+        params: null,
         phone: null,
         province: null,
         remark: null,
@@ -277,9 +257,9 @@ export default {
         updateTime: null,
         userId: null,
         username: null,
-        experience:null,
-        transforphone:null,
-        transforKeywords:null,
+        experience: null,
+        transforphone: null,
+        transforKeywords: null
       };
       this.resetForm("form");
     },
@@ -287,27 +267,70 @@ export default {
     getList() {
       getXiansuo(this.id).then(response => {
         this.xiansuoList = response.data;
-        this.xiansuoList.phone=this.xiansuoList.phone.split(',')
+        this.xiansuoList.phone = this.xiansuoList.phone.split(",");
+        this.getdicts()
       });
     },
+    getdicts(){
+            //   获取跟进状态字典
+        this.getDicts("customer_genjin").then(response => {
+        this.genjinStatus = response.data;
+        var a = this.genjinStatus.filter(item => {
+            return item.dictValue === this.xiansuoList.status;
+        });
+        this.xiansuoList.status = a[0].dictLabel;
+        });
+        // 获取客户等级字典
+        this.getDicts("customer_level").then(response => {
+        this.levelOptions = response.data;
+        var a = this.levelOptions.filter(item => {
+            return item.dictValue === this.xiansuoList.level;
+        });
+        this.xiansuoList.level = a[0].dictLabel;
+        });
+        // 获取客户需求字典
+        this.getDicts("sys_user_need").then(response => {
+        this.userneedOptions = response.data;
+        var a = this.userneedOptions.filter(item => {
+            return item.dictValue === this.xiansuoList.customerNeeds;
+        });
+        this.xiansuoList.customerNeeds = a[0].dictLabel;
+        });
+        // 获取中介经验字典
+        this.getDicts("experience").then(response => {
+        this.experienceOptions = response.data;
+        var a = this.experienceOptions.filter(item => {
+            return item.dictValue === this.xiansuoList.experience;
+        });
+        this.xiansuoList.experience = a[0].dictLabel;
+        });
+         // 获取客户来源字典
+        this.getDicts("sys_customer_resource").then(response => {
+        this.experienceOptions = response.data;
+        var a = this.experienceOptions.filter(item => {
+            return item.dictValue === this.xiansuoList.resource;
+        });
+        this.xiansuoList.resource = a[0].dictLabel;
+        });
+     },
     // 客户等级字典
     levelFormat(row, column) {
-      console.log('this.column',column)
-      console.log('this.row',row)
+      console.log("this.column", column);
+      console.log("this.row", row);
       return this.selectDictLabel(this.levelOptions, row.resource);
     },
-     // 中介经验字典
-    experienceFormat(row,column){
-       return this.selectDictLabel(this.experienceOptions, row.status);
+    // 中介经验字典
+    experienceFormat(row, column) {
+      return this.selectDictLabel(this.experienceOptions, row.status);
     },
     // 转成客户按钮
     handletocustomer() {
       this.reset();
       this.form = this.xiansuoList;
-      this.getdeptuser()
-      this.toPlace()
+      this.getdeptuser();
+      this.toPlace();
       this.dialogrollout = true;
-      console.log('this.form',this.form)
+      console.log("this.form", this.form);
     },
     // 转成客户提交
     submitToCustomer() {
@@ -329,43 +352,43 @@ export default {
       this.form.district = k;
     },
     // 省市区赋值
-    toPlace(){
-      this.toplace.province=this.form.province
-      this.toplace.city=this.form.city
-      this.toplace.district=this.form.district
+    toPlace() {
+      this.toplace.province = this.form.province;
+      this.toplace.city = this.form.city;
+      this.toplace.district = this.form.district;
     },
     // 负责人查询
     handleSelect(item) {
-        var item = item.value
-        this.form.transforKeywords=item.substring(12)
-        item=item.substring(0,11);
-        this.transforphone=item
-        this.userInfo()
-      },
-      // 负责人查询
+      var item = item.value;
+      this.form.transforKeywords = item.substring(12);
+      item = item.substring(0, 11);
+      this.transforphone = item;
+      this.userInfo();
+    },
+    // 负责人查询
     querySearch(queryString, callback) {
-            const keywords=this.form.transforKeywords
-            var params={
-                keywords:keywords
-            }
-        transforCustomer(params).then(response => {
-           var restaurants = response.rows;
-           const list = []
-             //封装要显示的数据
-           for (let v of restaurants) {
-            list.push({ value: v.phonenumber + " " + v.userName})
-            }
-                 // 调用 callback 返回建议列表的数据,是一个数组类型
-            callback(list)
-      });      
-      },
+      const keywords = this.form.transforKeywords;
+      var params = {
+        keywords: keywords
+      };
+      transforCustomer(params).then(response => {
+        var restaurants = response.rows;
+        const list = [];
+        //封装要显示的数据
+        for (let v of restaurants) {
+          list.push({ value: v.phonenumber + " " + v.userName });
+        }
+        // 调用 callback 返回建议列表的数据,是一个数组类型
+        callback(list);
+      });
+    },
     // 获取当前负责人和部门
-    getdeptuser(){
-       getInfo().then(res=>{
-          this.form.username=res.user.userName
-          this.form.transforKeywords=res.user.userName
-          this.deptName=res.user.dept.deptName
-      })
+    getdeptuser() {
+      getInfo().then(res => {
+        this.form.username = res.user.userName;
+        this.form.transforKeywords = res.user.userName;
+        this.deptName = res.user.dept.deptName;
+      });
     },
     // 获取user用户信息
     userInfo() {
@@ -386,9 +409,9 @@ export default {
     },
     goSecond() {
       //这是操作follow子组件的方法
-    this.$refs.follow.handleAdd()
-    },
-  },
+      this.$refs.follow.handleAdd();
+    }
+  }
 };
 </script>
 
