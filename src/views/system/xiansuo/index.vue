@@ -107,7 +107,7 @@
               {{obj.row.province}}-{{obj.row.city}}
           </template>
       </el-table-column>
-       <el-table-column label="跟进状态" align="center" prop="status" :formatter="statusFormat" />
+       <el-table-column label="跟进状态" align="center" prop="genjinStatus" :formatter="statusFormat" />
       <el-table-column label="线索来源" align="center" prop="resource" :formatter="resourceFormat" />
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
@@ -374,6 +374,9 @@ export default {
     this.getDicts("customer_level").then(response => {
       this.levelOptions = response.data
     });
+    this.getDicts("customer_genjin").then(response => {
+      this.statusOptions = response.data
+    });
   },
   methods: {
     // 表单重置
@@ -392,16 +395,15 @@ export default {
         updateTime: null,
         username:null,
         companyName:null,
-        experience:null,
         remark:null,
         ids:null,
         level: null,
-        resource: null,
         customerNeeds:null,
         dianmianAddress: null,
         status: null,
         experience:null,
         transforphone:null,
+        genjinStatus: null,
         transforKeywords:null,
       };
       this.resetForm("form");
@@ -437,7 +439,7 @@ export default {
     },
     // 跟进状态字典翻译
     statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status);
+      return this.selectDictLabel(this.statusOptions, row.genjinStatus);
     },
     // 中介经验字典翻译
     experienceFormat(row,column){
