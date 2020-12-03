@@ -437,7 +437,7 @@ export default {
         resource: null,
         username: null,
         inputDateStart: null,
-        inputDateEnd: null, 
+        inputDateEnd: null,
       },
       // 表单参数
       form: {},
@@ -504,7 +504,6 @@ export default {
         status: null,
         inputDate: null,
         updateDate: null,
-        experience:null,
         transforphone:null,
         transforKeywords:null,
       };
@@ -634,7 +633,7 @@ export default {
       this.open = false;
       this.reset();
     },
-   
+
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
@@ -713,7 +712,7 @@ export default {
             }
                  // 调用 callback 返回建议列表的数据,是一个数组类型
             callback(list)
-      });      
+      });
       },
       // 获取user用户信息
     userInfo() {
