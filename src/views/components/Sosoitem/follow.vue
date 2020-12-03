@@ -199,7 +199,7 @@ export default {
 }
 .noinfo {
   width: 100%;
-  height: 100px;
+  height: 1000px;
   background-color: #fff;
   text-align: center;
   padding-top: 20px;
@@ -213,8 +213,5 @@ export default {
   }
 .el-button{
   margin:0 3px
-}
-.my-scroll-bar{
-    height: 738px;
 }
 </style>

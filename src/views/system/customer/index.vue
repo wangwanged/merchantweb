@@ -92,7 +92,7 @@
         />
       </el-form-item>
       <!-- <Liandong @placeInfo="getPlace(arguments)"></Liandong> -->
-      <Area/>
+      <!-- <Area /> -->
       <el-form-item prop="username">
         <el-input
           v-model="queryParams.username"
@@ -112,17 +112,18 @@
           >搜索</el-button
         >
       </el-form-item>
-        <div class="timesearch" style='margin-bottom:20px'>
-          <span style='display:inline-block;margin-right:15px;font-size:14px'>最新跟进</span>
-          <el-button
-            v-for="(item, index) in customerGenjinnum"
-            :key="index"
-            type="text"
-            @click="getTimeRange(index)"
-            >超过{{ item }}天未跟进</el-button
-          >
-        </div>
-
+      <div class="timesearch" style="margin-bottom:20px">
+        <span style="display:inline-block;margin-right:15px;font-size:14px"
+          >最新跟进</span
+        >
+        <el-button
+          v-for="(item, index) in customerGenjinnum"
+          :key="index"
+          type="text"
+          @click="getTimeRange(index)"
+          >超过{{ item }}天未跟进</el-button
+        >
+      </div>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
@@ -146,12 +147,12 @@
           >导出</el-button
         >
       </el-col>
-       <el-col :span="1.5">
+      <el-col :span="1.5">
         <el-button
           type="primary"
           size="mini"
           :disabled="multiple"
-          @click="dialogTransfor=true"
+          @click="dialogTransfor = true"
           v-hasPermi="['system:customer:remove']"
           >转移</el-button
         >
@@ -161,7 +162,7 @@
           type="primary"
           size="mini"
           :disabled="multiple"
-          @click="dialogeInvalid=true"
+          @click="dialogeInvalid = true"
           v-hasPermi="['system:customer:remove']"
           >失效</el-button
         >
@@ -243,7 +244,13 @@
     />
     <!-- 添加或编辑我的客户对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="650px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px" label-position="left">
+      <el-form
+        ref="form"
+        :model="form"
+        :rules="rules"
+        label-width="80px"
+        label-position="left"
+      >
         <el-form-item label="客户姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入" />
         </el-form-item>
@@ -271,7 +278,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="客户地区">
-            <Liandong @placeInfo='getPlace'  :toSon='toplace'></Liandong>
+          <Liandong @placeInfo="getPlace" :toSon="toplace"></Liandong>
         </el-form-item>
         <el-form-item label="客户公司">
           <el-input v-model="form.companyName" placeholder="请输入公司和部门" />
@@ -289,7 +296,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="备注" >
+        <el-form-item label="备注">
           <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
         <!-- <el-form-item label="负责人" prop="username">
@@ -297,18 +304,18 @@
             <el-input v-model='scope.row.username'></el-input>
         </template>
         </el-form-item> -->
-         <el-form-item label="负责人">
-            <el-autocomplete
+        <el-form-item label="负责人">
+          <el-autocomplete
             class="inline-input"
             v-model="form.transforKeywords"
             :fetch-suggestions="querySearch"
             placeholder="请输入内容"
             :trigger-on-focus="false"
             @select="handleSelect"
-    ></el-autocomplete>
+          ></el-autocomplete>
         </el-form-item>
-        <el-form-item label="所属部门" >
-          <el-input disabled v-model='deptName'  placeholder="所属部门" />
+        <el-form-item label="所属部门">
+          <el-input disabled v-model="deptName" placeholder="所属部门" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -317,7 +324,7 @@
       </div>
     </el-dialog>
     <!-- 失效弹框 -->
-     <el-dialog title="失效" :visible.sync="dialogeInvalid" width="500px">
+    <el-dialog title="失效" :visible.sync="dialogeInvalid" width="500px">
       <tr>
         <td><i class="el-icon-message-solid" style="font-size:70px"></i></td>
         <td>
@@ -332,18 +339,19 @@
         <el-button @click="dialogeInvalid = false">取 消</el-button>
       </div>
     </el-dialog>
+
     <!-- 转移弹框 -->
     <el-dialog title="转移" :visible.sync="dialogTransfor" width="500px">
-        <el-autocomplete
-            class="inline-input"
-            v-model="form.transforKeywords"
-            :fetch-suggestions="querySearch"
-            placeholder="请输入内容"
-            :trigger-on-focus="false"
-            @select="handleSelect"
-    ></el-autocomplete>
-    <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click='handleTransfor'>确 定</el-button>
+      <el-autocomplete
+        class="inline-input"
+        v-model="form.transforKeywords"
+        :fetch-suggestions="querySearch"
+        placeholder="请输入内容"
+        :trigger-on-focus="false"
+        @select="handleSelect"
+      ></el-autocomplete>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleTransfor">确 定</el-button>
         <el-button @click="dialogeInvalid = false">取 消</el-button>
       </div>
     </el-dialog>
@@ -359,12 +367,12 @@ import {
   exportCustomer,
   invalidCustomer,
   transforCustomer,
-  transforcustomer,
+  transforcustomer
 } from "@/api/system/customer";
 import { listUser } from "@/api/system/user";
 import Liandong from "@/components/Liandong/liandong.vue";
-import {area} from '@/components/Liandong/liandong.vue'
-import Area from '@/views/components/area'
+import { area } from "@/components/Liandong/liandong.vue";
+import Area from "@/views/components/area";
 export default {
   name: "Customer",
   components: {
@@ -373,24 +381,24 @@ export default {
   },
   data() {
     return {
-        //  传给省市区
-    toplace:{
-      province:'',
-      city:'',
-      district:""
-    },
+      //  传给省市区
+      toplace: {
+        province: "",
+        city: "",
+        district: ""
+      },
       //   所属部门
-      deptName:'',
-        // 要转移的电话号码
-      transforphone:'',
-        // 转移关键词
-      transforKeywords:'',
-       // 转移弹框
+      deptName: "",
+      // 要转移的电话号码
+      transforphone: "",
+      // 转移关键词
+      transforKeywords: "",
+      // 转移弹框
       dialogTransfor: false,
       // 失效弹框
-      dialogeInvalid:false,
+      dialogeInvalid: false,
       // 用户信息
-      user:[],
+      user: [],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -437,7 +445,7 @@ export default {
         resource: null,
         username: null,
         inputDateStart: null,
-        inputDateEnd: null, 
+        inputDateEnd: null
       },
       // 表单参数
       form: {},
@@ -457,7 +465,7 @@ export default {
     };
   },
   created() {
-    this.userInfo()
+    this.userInfo();
     this.getList();
     this.getDicts("customer_level").then(response => {
       this.levelOptions = response.data;
@@ -481,7 +489,7 @@ export default {
     });
   },
   methods: {
-     // 表单重置
+    // 表单重置
     reset() {
       this.form = {
         id: null,
@@ -504,35 +512,47 @@ export default {
         status: null,
         inputDate: null,
         updateDate: null,
-        experience:null,
-        transforphone:null,
-        transforKeywords:null,
+        experience: null,
+        transforphone: null,
+        transforKeywords: null
       };
       this.resetForm("form");
     },
+    /** 查询我的客户列表 */
+    getList() {
+      this.loading = true;
+      listCustomer(this.queryParams).then(response => {
+        this.customerList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+        this.$store.commit("updateAlldata", this.customerList);
+      });
+    },
     //   转移确定按钮
     handleTransfor(row) {
-       const ids = row.id || this.ids;
-       var data ={
-           ids:ids,
-           phone:this.transforphone
-       }
-      transforcustomer(data).then(response => {
-           this.$message.success("操作成功");
-           this.getList();
-           this.dialogTransfor = false;
-      }).catch(error=>{
-           this.$message.error("操作失败");
-      });
+      const ids = row.id || this.ids;
+      var data = {
+        ids: ids,
+        phone: this.transforphone
+      };
+      transforcustomer(data)
+        .then(response => {
+          this.$message.success("操作成功");
+          this.getList();
+          this.dialogTransfor = false;
+        })
+        .catch(error => {
+          this.$message.error("操作失败");
+        });
     },
     //   失效按钮
     handleinvlid(row) {
       const ids = row.id || this.ids;
-      const status= '0'
+      const status = "0";
       const params = {
-          ids:ids,
-          status:status
-      }
+        ids: ids,
+        status: status
+      };
       invalidCustomer(params)
         .then(response => {
           this.$message.success("操作成功");
@@ -550,7 +570,7 @@ export default {
     // 获取user用户信息
     userInfo() {
       listUser({}).then(response => {
-          this.user=response.rows
+        this.user = response.rows;
         //   console.log(this.user)
         //   var a  = this.user.filter(item=>{
         //       console.log(item.userName)
@@ -588,35 +608,26 @@ export default {
       return y + "-" + m + "-" + d;
     },
     // 获取当前负责人和部门
-    getdeptuser(){
-       getInfo().then(res=>{
-          this.form.username=res.user.userName
-          this.form.transforKeywords=res.user.userName
-          this.deptName=res.user.dept.deptName
-      })
+    getdeptuser() {
+      getInfo().then(res => {
+        this.form.username = res.user.userName;
+        this.form.transforKeywords = res.user.userName;
+        this.deptName = res.user.dept.deptName;
+      });
     },
-     // 省市区赋值
-    toPlace(){
-      this.toplace.province=this.form.province
-      this.toplace.city=this.form.city
-      this.toplace.district=this.form.district
+    // 省市区赋值
+    toPlace() {
+      this.toplace.province = this.form.province;
+      this.toplace.city = this.form.city;
+      this.toplace.district = this.form.district;
     },
     //   获取省市区的地址
-    getPlace(i,j,k) {
+    getPlace(i, j, k) {
       this.form.province = i;
       this.form.city = j;
       this.form.district = k;
     },
-    /** 查询我的客户列表 */
-    getList() {
-      this.loading = true;
-      listCustomer(this.queryParams).then(response => {
-        this.customerList = response.rows;
-        this.total = response.total;
-        this.loading = false;
-        this.$store.commit("updateAlldata", this.customerList);
-      });
-    },
+
     // 客户等级字典翻译
     levelFormat(row, column) {
       return this.selectDictLabel(this.levelOptions, row.level);
@@ -634,7 +645,7 @@ export default {
       this.open = false;
       this.reset();
     },
-   
+
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
@@ -653,26 +664,27 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加我的客户";
-      this.getdeptuser()
+      this.getdeptuser();
     },
     /** 提交按钮 */
     submitForm() {
+         this.form.status = "1";
       this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.id != null) {
-            updateCustomer(this.form).then(response => {
-              this.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            addCustomer(this.form).then(response => {
-              this.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
-          }
-        }
+        addCustomer(this.form).then(response => {
+          this.msgSuccess("新增成功");
+          this.open = false;
+          this.getList();
+        });
+        // if (valid) {
+        //   if (this.form.id != null) {
+        //     updateCustomer(this.form).then(response => {
+        //       this.msgSuccess("修改成功");
+        //       this.open = false;
+        //       this.getList();
+        //     });
+        //   } else {
+        //   }
+        // }
       });
     },
     /** 导出按钮操作 */
@@ -692,59 +704,59 @@ export default {
     },
     // 负责人查询
     handleSelect(item) {
-        var item = item.value
-        this.form.transforKeywords=item.substring(12)
-        item=item.substring(0,11);
-        this.transforphone=item
-        this.userInfo()
-      },
-      // 负责人查询
+      var item = item.value;
+      this.form.transforKeywords = item.substring(12);
+      item = item.substring(0, 11);
+      this.transforphone = item;
+      this.userInfo();
+    },
+    // 负责人查询
     querySearch(queryString, callback) {
-            const keywords=this.form.transforKeywords
-            var params={
-                keywords:keywords
-            }
-        transforCustomer(params).then(response => {
-           var restaurants = response.rows;
-           const list = []
-             //封装要显示的数据
-           for (let v of restaurants) {
-            list.push({ value: v.phonenumber + " " + v.userName})
-            }
-                 // 调用 callback 返回建议列表的数据,是一个数组类型
-            callback(list)
-      });      
-      },
-      // 获取user用户信息
-    userInfo() {
-      listUser({}).then(response => {
-          this.user=response.rows
-          var a  = this.user.filter(item=>{
-              if(this.transforphone===item.phonenumber){
-                  return item
-              }
-          })
-          var b = []
-          for(var i = 0; i<a.length;i++){
-              var c = a[i].dept
-              b.push(c.deptName)
-              }
-          this.deptName = b[0]
+      const keywords = this.form.transforKeywords;
+      var params = {
+        keywords: keywords
+      };
+      transforCustomer(params).then(response => {
+        var restaurants = response.rows;
+        const list = [];
+        //封装要显示的数据
+        for (let v of restaurants) {
+          list.push({ value: v.phonenumber + " " + v.userName });
+        }
+        // 调用 callback 返回建议列表的数据,是一个数组类型
+        callback(list);
       });
     },
+    // 获取user用户信息
+    userInfo() {
+      listUser({}).then(response => {
+        this.user = response.rows;
+        var a = this.user.filter(item => {
+          if (this.transforphone === item.phonenumber) {
+            return item;
+          }
+        });
+        var b = [];
+        for (var i = 0; i < a.length; i++) {
+          var c = a[i].dept;
+          b.push(c.deptName);
+        }
+        this.deptName = b[0];
+      });
+    }
   }
 };
 </script>
 <style lang="less" scoped>
-  // /deep/ .el-input--suffix{
-  //    width: 140px;
-  // };
-  // /deep/ .el-range-editor--medium{
-  //     width: 230px;
-  //     height: 32px;
-  //     padding:0px;
-  // };
-  // /deep/ .avue-form__menu{
-  //     display:none
-  // }
+// /deep/ .el-input--suffix{
+//    width: 140px;
+// };
+// /deep/ .el-range-editor--medium{
+//     width: 230px;
+//     height: 32px;
+//     padding:0px;
+// };
+// /deep/ .avue-form__menu{
+//     display:none
+// }
 </style>

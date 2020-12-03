@@ -4,7 +4,7 @@
       <div class="header_top">
         <span class="title_name">{{ xiansuoList.name }}</span>
         <el-button size="small" type="primary" plain>{{
-          xiansuoList.status
+          xiansuoList.genjinStatus
         }}</el-button>
         <el-button size="small" @click="handletocustomer" type="primary"
           >转成客户</el-button
@@ -81,7 +81,7 @@
             >写跟进</el-button
           >
         </div>
-        <Follow ref="follow" :tofollow="xiansuoList"></Follow>
+             <Follow ref="follow" :tofollow="xiansuoList"></Follow>    
       </div>
     </div>
     <!-- 转成客户dialog弹出 -->
@@ -194,11 +194,11 @@ export default {
       systemuser: [], //系统信息
       dialogrollout: false, //转成客户按钮
       //   字典start
-      genjinStatus: [], //跟进状态字典
+      genjinOptions: [], //跟进状态字典
       levelOptions: [], //客户等级字典
       userneedOptions: [], //客户需求字典
       experienceOptions: [], //中介经验字典
-      experienceOptions:[],  //客户来源字典
+      experienceOptions: [], //客户来源字典
       //   字典end
       showGenjin: "跟进",
       form: {},
@@ -213,12 +213,12 @@ export default {
       .querySelector("body")
       .setAttribute("style", "background-color:rgb(242, 242, 242)");
   },
+  beforeDestroy() {
+    document.querySelector("body").removeAttribute("style");
+  },
   components: {
     Liandong,
     Follow
-  },
-  beforeDestroy() {
-    document.querySelector("body").removeAttribute("style");
   },
   created() {
     this.getList();
@@ -259,7 +259,8 @@ export default {
         username: null,
         experience: null,
         transforphone: null,
-        transforKeywords: null
+        transforKeywords: null,
+        genjinStatus: null
       };
       this.resetForm("form");
     },
@@ -268,51 +269,51 @@ export default {
       getXiansuo(this.id).then(response => {
         this.xiansuoList = response.data;
         this.xiansuoList.phone = this.xiansuoList.phone.split(",");
-        this.getdicts()
+        this.getdicts();
       });
     },
-    getdicts(){
-            //   获取跟进状态字典
-        this.getDicts("customer_genjin").then(response => {
-        this.genjinStatus = response.data;
-        var a = this.genjinStatus.filter(item => {
-            return item.dictValue === this.xiansuoList.status;
+    getdicts() {
+      //   获取跟进状态字典
+      this.getDicts("customer_genjin").then(response => {
+        this.genjinOptions = response.data;
+        var a = this.genjinOptions.filter(item => {
+          return item.dictValue === this.xiansuoList.genjinStatus;
         });
-        this.xiansuoList.status = a[0].dictLabel;
-        });
-        // 获取客户等级字典
-        this.getDicts("customer_level").then(response => {
+        this.xiansuoList.genjinStatus = a[0].dictLabel;
+      });
+      // 获取客户等级字典
+      this.getDicts("customer_level").then(response => {
         this.levelOptions = response.data;
         var a = this.levelOptions.filter(item => {
-            return item.dictValue === this.xiansuoList.level;
+          return item.dictValue === this.xiansuoList.level;
         });
         this.xiansuoList.level = a[0].dictLabel;
-        });
-        // 获取客户需求字典
-        this.getDicts("sys_user_need").then(response => {
+      });
+      // 获取客户需求字典
+      this.getDicts("sys_user_need").then(response => {
         this.userneedOptions = response.data;
         var a = this.userneedOptions.filter(item => {
-            return item.dictValue === this.xiansuoList.customerNeeds;
+          return item.dictValue === this.xiansuoList.customerNeeds;
         });
         this.xiansuoList.customerNeeds = a[0].dictLabel;
-        });
-        // 获取中介经验字典
-        this.getDicts("experience").then(response => {
+      });
+      // 获取中介经验字典
+      this.getDicts("experience").then(response => {
         this.experienceOptions = response.data;
         var a = this.experienceOptions.filter(item => {
-            return item.dictValue === this.xiansuoList.experience;
+          return item.dictValue === this.xiansuoList.experience;
         });
         this.xiansuoList.experience = a[0].dictLabel;
-        });
-         // 获取客户来源字典
-        this.getDicts("sys_customer_resource").then(response => {
+      });
+      // 获取客户来源字典
+      this.getDicts("sys_customer_resource").then(response => {
         this.experienceOptions = response.data;
         var a = this.experienceOptions.filter(item => {
-            return item.dictValue === this.xiansuoList.resource;
+          return item.dictValue === this.xiansuoList.resource;
         });
         this.xiansuoList.resource = a[0].dictLabel;
-        });
-     },
+      });
+    },
     // 客户等级字典
     levelFormat(row, column) {
       console.log("this.column", column);
@@ -415,8 +416,11 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .el-form {
   margin: 0 20px;
+}
+.my-scroll-bar{
+    height: 738px;
 }
 </style>

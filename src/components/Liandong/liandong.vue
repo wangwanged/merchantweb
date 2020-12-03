@@ -1,29 +1,32 @@
 <template>
   <span>
     <el-form-item style="width:30%">
-      <el-select  v-model="prov" placeholder="请选择省">
+      <el-select  clearable v-model="prov" placeholder="请选择省">
         <el-option
           v-for="(item, index) of arr"
           :key="index"
           :value="item.name"
+          clearable
         ></el-option>
       </el-select>
     </el-form-item>
     <el-form-item style="width:30%">
-      <el-select  v-model="city" placeholder="请选择市">
+      <el-select clearable  v-model="city" placeholder="请选择市">
         <el-option
           v-for="(item, index) of cityArr"
           :key="index"
           :value="item.name"
+          
         ></el-option>
       </el-select>
     </el-form-item>
     <el-form-item style="width:30%">
-      <el-select  v-model="district" placeholder="请选择区">
+      <el-select clearable  v-model="district" placeholder="请选择区">
         <el-option
           v-for="(item, index) of districtArr"
           :key="index"
           :value="item.name"
+          
         ></el-option>
       </el-select>
     </el-form-item>

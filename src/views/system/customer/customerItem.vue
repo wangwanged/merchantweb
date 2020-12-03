@@ -518,20 +518,6 @@ export default {
     this.getList();
   },
   methods: {
-    //   写跟进按钮
-    goSecond() {
-      //这是操作子组件的方法
-      this.$refs.follow.dialogfollow = true;
-    },
-    //   新签合同按钮店面或区域显示控制
-    showdianmian(i) {
-      if (i === "0") {
-        this.showDianmian = true;
-      } else {
-        this.showDianmian = false;
-      }
-      console.log(this.showDianmian);
-    },
     reset() {
       this.form = {
         id: null,
@@ -557,6 +543,37 @@ export default {
       };
       this.resetForm("form");
     },
+
+    getList() {
+      // 获取当前页客户信息
+      getCustomer(this.id).then(response => {
+        this.customerList = response.data;
+        console.log(this.customerList)
+      });
+      //   获取当前页合同信息
+      getContractInfo(this.id).then(response => {
+        this.contractList = response.rows;
+      });
+    },
+    // 获取字典
+    getdicts(){
+        
+    },
+    //   写跟进按钮
+    goSecond() {
+      //这是操作子组件的方法
+      this.$refs.follow.dialogfollow = true;
+    },
+    //   新签合同按钮店面或区域显示控制
+    showdianmian(i) {
+      if (i === "0") {
+        this.showDianmian = true;
+      } else {
+        this.showDianmian = false;
+      }
+      console.log(this.showDianmian);
+    },
+    
     //   获取省市区的地址
     getPlace(i) {
       this.queryParams.province = i[0];
@@ -659,17 +676,7 @@ export default {
       //   }
       //   return arr;
     },
-    getList() {
-      // 获取当前页客户信息
-      getCustomer(this.id).then(response => {
-        this.customerList = response.data;
-        console.log(this.customerList)
-      });
-      //   获取当前页合同信息
-      getContractInfo(this.id).then(response => {
-        this.contractList = response.rows;
-      });
-    }
+    
   }
 };
 </script>
