@@ -92,7 +92,7 @@
         />
       </el-form-item>
       <!-- <Liandong @placeInfo="getPlace(arguments)"></Liandong> -->
-      <!-- <Area /> -->
+      <Area />
       <el-form-item prop="username">
         <el-input
           v-model="queryParams.username"

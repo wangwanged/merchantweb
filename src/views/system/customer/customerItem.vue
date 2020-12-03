@@ -489,12 +489,10 @@ export default {
       genjinStatus: [],
       //   显示的跟进状态
       showGenjin: "跟进",
-      dict: {
-        //字典
         customerNeedsOptions: [],
         levelOptions: [],
-        resourceOptions: []
-      },
+        resourceOptions: [],
+    
       showDianmian: false, //新签合同按钮中显示店面或区域信息
       location: {
         //地址
@@ -557,7 +555,39 @@ export default {
     },
     // 获取字典
     getdicts(){
-        
+      // 获取客户等级字典
+      this.getDicts("customer_level").then(response => {
+        this.levelOptions = response.data;
+        var a = this.levelOptions.filter(item => {
+          return item.dictValue === this.xiansuoList.level;
+        });
+        this.xiansuoList.level = a[0].dictLabel;
+      });
+      // 获取客户需求字典
+      this.getDicts("sys_user_need").then(response => {
+        this.userneedOptions = response.data;
+        var a = this.userneedOptions.filter(item => {
+          return item.dictValue === this.xiansuoList.customerNeeds;
+        });
+        this.xiansuoList.customerNeeds = a[0].dictLabel;
+      });
+      // 获取中介经验字典
+      this.getDicts("experience").then(response => {
+        this.experienceOptions = response.data;
+        var a = this.experienceOptions.filter(item => {
+          return item.dictValue === this.xiansuoList.experience;
+        });
+        this.xiansuoList.experience = a[0].dictLabel;
+      });
+      // 获取客户来源字典
+      this.getDicts("sys_customer_resource").then(response => {
+        this.experienceOptions = response.data;
+        var a = this.experienceOptions.filter(item => {
+          return item.dictValue === this.xiansuoList.resource;
+        });
+        this.xiansuoList.resource = a[0].dictLabel;
+      });
+    },
     },
     //   写跟进按钮
     goSecond() {

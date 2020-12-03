@@ -64,10 +64,25 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item prop="checkStatus">
+        <el-select
+          v-model="queryParams.checkStatus"
+          placeholder="审核状态"
+          clearablea
+          size="small"
+        >
+          <el-option
+            v-for="dict in checkStatusOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item prop="operation">
         <el-input
-          v-model="queryParams.operation"
-          placeholder="请输入操作"
+          v-model="queryParams.keywords"
+          placeholder="模糊搜索"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -227,6 +242,7 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="公司" align="center" prop="deptName" />
       <el-table-column label="合同编号" align="center" prop="num" width="180">
         <template slot-scope="obj">
           <el-button
@@ -702,8 +718,11 @@ export default {
       produceOptions: [],
       // 生效失效状态字典
       statusOptions: [],
+      // 合同审核状态
+      checkStatusOptions: [],
       // 查询参数
       queryParams: {
+        keywords: null,
         pageNum: 1,
         pageSize: 10,
         num: null,
@@ -715,7 +734,8 @@ export default {
         signDate: null,
         beginDate: null,
         endDate: null,
-        status: null
+        status: null,
+        checkStatus: null
       },
       // 表单参数
       form: {},
@@ -788,6 +808,9 @@ export default {
     this.getDicts("contract_status").then(response => {
       this.statusOptions = response.data;
     });
+    this.getDicts("check_status").then(response => {
+      this.checkStatusOptions = response.data;
+    });
   },
   methods: {
     /** 查询合同列表 */
@@ -795,6 +818,13 @@ export default {
       this.loading = true;
       listContractManager(this.queryParams).then(response => {
         this.contractManagerList = response.rows;
+
+        this.contractManagerList.forEach((item)=>{
+          item.fee = JSON.parse(item.fee)
+          item.fee = Number.parseInt(item.fee.daibanFee) + Number.parseInt(item.fee.guohuoFee) + Number.parseInt(item.fee.systemUseFee) + Number.parseInt(item.fee.yunyingManagerFee)
+            + Number.parseInt(item.fee.systemMaintenanceFee) + Number.parseInt(item.fee.jingyingManagerFee.total)
+          console.log("item.fee", item.fee)
+        })
         this.total = response.total;
         this.loading = false;
       });
@@ -810,6 +840,10 @@ export default {
     // 生效失效状态字典翻译
     statusFormat(row, column) {
       return this.selectDictLabel(this.statusOptions, row.status);
+    },
+    // 审核状态字典翻译
+    checkStatusFormat(row, column) {
+      return this.selectDictLabel(this.checkStatusOptions, row.status);
     },
     // 取消按钮
     cancel() {
@@ -926,7 +960,7 @@ export default {
     },
     // 合同审核
     handleCheck() {
-      var data = { 
+      var data = {
           signDate:this.checkDate,
           id:this.ids[0],
       }
@@ -1025,7 +1059,7 @@ export default {
             }
                  // 调用 callback 返回建议列表的数据,是一个数组类型
             callback(list)
-      });      
+      });
       },
          // 负责人查询
     handleSelect(item) {
@@ -1060,13 +1094,20 @@ export default {
            phone:this.transforphone
        }
        contractTransfor(params).then(response => {
-           this.$message.success("操作成功");       
+           this.$message.success("操作成功");
            this. dialogTransfor = false;
            this.getList();
       }).catch(error=>{
            this.$message.error("操作失败");
       });
     },
+  },
+  computed:{
+    // totalfee: function () {
+    //   console.log(this.fee.daibanFee)
+    //   return  this.fee.daibanFee + this.fee.guohuoFee + this.fee.systemUseFee + this.fee.yunyingManagerFee+ this.fee.jingyingManagerFee.total
+    //     + this.fee.systemMaintenanceFee
+    // }
   }
 };
 </script>
