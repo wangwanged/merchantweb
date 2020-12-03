@@ -34,12 +34,8 @@ module.exports = {
     proxy: {
       // detail: https://cli.vuejs.org/config/#devserver-proxy
       [process.env.VUE_APP_BASE_API]: {      
-<<<<<<< HEAD
         // target: `http://yusnan.natappfree.cc`,
         target: `http://192.168.53.237:8888`,
-=======
-        // target: `http://bbb8qv.natappfree.cc`,
->>>>>>> 6b37bcaef8f5666f07da6b85070a7be261bd69a0
         changeOrigin: true,
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API]: ''
