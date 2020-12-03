@@ -225,7 +225,7 @@
           </el-select>
         </el-form-item>
           <el-form-item label="客户地区">
-          <Liandong @placeInfo='getPlace'></Liandong>
+          <Liandong @placeInfo='getPlace'  :toSon='toplace'></Liandong>
         </el-form-item>
         <el-form-item label="客户公司" >
           <el-input v-model="form.companyName" placeholder="请输入公司" />
@@ -267,9 +267,9 @@
 </template>
 
 <script>
-import { listXiansuo, getXiansuo, delXiansuo, addXiansuo, updateXiansuo, exportXiansuo, transfortoCustomer,importXiansuo} from "@/api/system/xiansuo";
+import {listXiansuo,getXiansuo, delXiansuo, addXiansuo, updateXiansuo, exportXiansuo, transfortoCustomer,importXiansuo} from "@/api/system/xiansuo";
 import Liandong from "@/components/Liandong/liandong.vue";
-import {addCustomer,transforCustomer} from "@/api/system/customer";
+import {listCustomer,addCustomer,transforCustomer} from "@/api/system/customer";
 import { listUser } from "@/api/system/user";
 import inputExcel from '@/views/components/importexcel'
 import { arrAll } from '../../../components/Liandong/cities';
@@ -278,6 +278,12 @@ export default {
   name: "Xiansuo",
   data() {
     return {
+    //  传给省市区
+    toplace:{
+      province:'',
+      city:'',
+      district:""
+    },
     // 客户电话
       customerPhone:[],
     //   所属部门
@@ -331,6 +337,7 @@ export default {
         sysUserId: null,
         createTime: null,
         updateTime: null,
+        status:'0'
       },
       // 表单参数
       form: {},
@@ -367,7 +374,6 @@ export default {
     this.getDicts("customer_level").then(response => {
       this.levelOptions = response.data
     });
-    
   },
   methods: {
     // 表单重置
@@ -403,16 +409,23 @@ export default {
     /** 查询客户线索列表 */
     getList() {
       this.loading = true;
-      listXiansuo(this.form).then(response => {
+      listXiansuo(this.queryParams).then(response => {
         this.xiansuoList = response.rows;
         this.xiansuoList.forEach(item=>{
            item.phone = item.phone.split(',')
         });
-        console.log('this.xiansuoList',this.xiansuoList)
         this.total = response.total;
         this.loading = false;
+        this.$store.commit("updateAlldata", this.customerList);
       });
     },
+    // 省市区赋值
+    toPlace(){
+      this.toplace.province=this.form.province
+      this.toplace.city=this.form.city
+      this.toplace.district=this.form.district
+    },
+    //   获取省市区的地址
     getPlace(i,j,k) {
       this.form.province = i;
       this.form.city = j;
@@ -446,14 +459,18 @@ export default {
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
-    // /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
-      getInfo().then(res=>{
+    // 获取当前负责人和部门
+    getdeptuser(){
+       getInfo().then(res=>{
           this.form.username=res.user.userName
           this.form.transforKeywords=res.user.userName
           this.deptName=res.user.dept.deptName
       })
+    },
+    // /** 新增按钮操作 */
+    handleAdd() {
+      this.reset();
+      this.getdeptuser()
       this.dialog.dialogaddxiansuo = true;
     },
     /** 新增提交按钮 */
@@ -505,13 +522,15 @@ export default {
     },
     // 转成客户按钮
     handletocustomer(){
-        this.reset()
-        this.dialog.dialogtocustomer=true
+        this.reset()  
         var aaa =this.xiansuoList.filter(item=>{
            return item.id===this.ids[0]
         })
         this.form = aaa[0]
         this.userInfo()
+        this.getdeptuser()
+        this.toPlace()
+         this.dialog.dialogtocustomer=true
     },
     // 转成客户提交
     submitTocustomer(){  
@@ -577,6 +596,7 @@ export default {
         this.customerPhone.splice(i+1,1)
         console.log('this.customerPhone',this.customerPhone)
     },
+    // 处理电话号码格式
     handlePhone(){
         this.form.phone = this.customerPhone.toString()
     },
