@@ -599,8 +599,8 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
-        (this.queryParams.inputDateStart = this.inputDate[0]),
-        (this.queryParams.inputDateEnd = this.inputDate[1]);
+        (this.queryParams.inputDateStart = this.inputDate ? this.inputDate[0] : null ),
+        (this.queryParams.inputDateEnd = this.inputDate ? this.inputDate[1] : null);
       this.getList();
     },
     // 多选框选中数据
