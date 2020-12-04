@@ -7,6 +7,31 @@
       v-show="showSearch"
       label-width="68px"
     >
+      <!--部门数据-->
+      <showdept></showdept>
+<!--      <el-col :span="4" :xs="24">-->
+<!--        <div class="head-container">-->
+<!--          <el-input-->
+<!--            v-model="deptName"-->
+<!--            placeholder="请输入部门名称"-->
+<!--            clearable-->
+<!--            size="small"-->
+<!--            prefix-icon="el-icon-search"-->
+<!--            style="margin-bottom: 20px"-->
+<!--          />-->
+<!--        </div>-->
+<!--        <div class="head-container">-->
+<!--          <el-tree-->
+<!--            :data="deptOptions"-->
+<!--            :props="defaultProps"-->
+<!--            :expand-on-click-node="false"-->
+<!--            :filter-node-method="filterNode"-->
+<!--            ref="tree"-->
+<!--            default-expand-all-->
+<!--            @node-click="handleNodeClick"-->
+<!--          />-->
+<!--        </div>-->
+<!--      </el-col>-->
       <el-form-item prop="num">
         <el-input
           v-model="queryParams.num"
@@ -668,16 +693,30 @@ import {
   exportContractManager,
   contractCheck,
   contractRenew,
-  contractTransfor
+  contractTransfor,
 } from "@/api/contract/contractManager";
 import {
   transforCustomer,
 } from "@/api/system/customer";
 import { listUser } from "@/api/system/user";
+import { treeselect } from '@/api/system/dept';
+import showdept from '@/components/DeptShow/index';
 export default {
   name: "ContractManager",
+  components: {
+    showdept
+  },
   data() {
     return {
+      // 部门名称
+      deptName: "",
+      // 部门树选项
+      deptOptions: undefined,
+
+      defaultProps: {
+        children: "children",
+        label: "label"
+      },
     //   关键词
       transforKeywords:'',
     //   转移电话号码
@@ -722,6 +761,7 @@ export default {
       checkStatusOptions: [],
       // 查询参数
       queryParams: {
+        deptId: null,
         keywords: null,
         pageNum: 1,
         pageSize: 10,
@@ -797,8 +837,16 @@ export default {
       }
     };
   },
+  watch: {
+    // 根据名称筛选部门树
+    deptName(val) {
+      this.$refs.tree.filter(val);
+    }
+  },
   created() {
     this.getList();
+    // 获取部门树
+    this.getTreeselect();
     this.getDicts("contract_type").then(response => {
       this.typeOptions = response.data;
     });
@@ -874,6 +922,23 @@ export default {
         remark: null
       };
       this.resetForm("form");
+    },
+
+    /** 查询部门下拉树结构 */
+    getTreeselect() {
+      treeselect().then(response => {
+        this.deptOptions = response.data;
+      });
+    },
+    // 筛选节点
+    filterNode(value, data) {
+      if (!value) return true;
+      return data.label.indexOf(value) !== -1;
+    },
+    // 节点单击事件
+    handleNodeClick(data) {
+      this.queryParams.deptId = data.id;
+      this.getList();
     },
     /** 搜索按钮操作 */
     handleQuery() {
