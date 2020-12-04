@@ -367,6 +367,7 @@ export default {
       title: "",
       // 部门树选项
       deptOptions: undefined,
+
       // 是否显示弹出层
       open: false,
       // 部门名称
@@ -448,7 +449,7 @@ export default {
   },
   watch: {
     // 根据名称筛选部门树
-    deptName(val) { 
+    deptName(val) {
       this.$refs.tree.filter(val);
     }
   },
