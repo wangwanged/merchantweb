@@ -17,7 +17,7 @@
         <el-button size="small" type="primary" @click="dialogNewsign = true"
           >新签合同</el-button
         >
-        <el-button size="small" @click="handleUpdate" type="primary"
+        <el-button size="small" @click="handleUpdate()" type="primary"
           >编辑</el-button
         >
         <el-button size="small" @click="dialogTransfor = true" type="primary"
@@ -123,7 +123,7 @@
           <div class="tab_style fl">
             客户跟进
           </div>
-          <el-button type="primary" class="fr" @click="goSecond"
+          <el-button type="primary" class="fr" @click="goSecond()"
             >写跟进</el-button
           >
         </div>
@@ -150,14 +150,14 @@
           <el-button size="small" type="primary" plain>新签</el-button>
         </el-form-item>
         <el-form-item required label="签约产品">
-          <!-- <el-select v-model="newsigninfo.produce" @change="showdianmian">
+          <el-select v-model="newsigninfo.produce">
             <el-option
               v-for="dict in customerNeedsOptions"
               :key="dict.dictValue"
               :label="dict.dictLabel"
               :value="dict.dictValue"
             />
-          </el-select> -->
+          </el-select>
         </el-form-item>
         <el-form-item required label="合同编号">
           <el-input placeholder="请输入" v-model="newsigninfo.num"></el-input>
@@ -378,7 +378,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="UpdataSubmit">确 定</el-button>
+        <el-button type="primary" @click="UpdataSubmit()">确 定</el-button>
         <el-button @click="dialogTransfor = false">取 消</el-button>
       </div>
     </el-dialog>
@@ -494,9 +494,9 @@ export default {
     //   跟进start
       genjinOptions: [], //跟进状态字典
       levelOptions: [], //客户等级字典
-      userneedOptions: [], //客户需求字典
       experienceOptions: [], //中介经验字典
-      experienceOptions: [], //客户来源字典
+      resourceOptions: [], //客户来源字典
+      customerNeedsOptions:[],  //客户需求字典
     //   跟进end
       showDianmian: false, //新签合同按钮中显示店面或区域信息
       location: {
@@ -578,8 +578,8 @@ export default {
       });
       // 获取客户需求字典
       this.getDicts("sys_user_need").then(response => {
-        this.userneedOptions = response.data;
-        var a = this.userneedOptions.filter(item => {
+        this.customerNeedsOptions = response.data;
+        var a = this.customerNeedsOptions.filter(item => {
           return item.dictValue === this.customerList.customerNeeds;
         });
         this.customerList.customerNeeds = a[0].dictLabel;
@@ -605,17 +605,17 @@ export default {
     //   写跟进按钮
     goSecond() {
       //这是操作子组件的方法
-      this.$refs.follow.dialogfollow = true;
+     this.$refs.follow.handleAdd();
     },
     //   新签合同按钮店面或区域显示控制
-    showdianmian(i) {
-      if (i === "0") {
-        this.showDianmian = true;
-      } else {
-        this.showDianmian = false;
-      }
-      console.log(this.showDianmian);
-    },
+    // showdianmian(i) {
+    //   if (i === "0") {
+    //     this.showDianmian = true;
+    //   } else {
+    //     this.showDianmian = false;
+    //   }
+    //   console.log(this.showDianmian);
+    // },
     
     //   获取省市区的地址
     getPlace(i) {

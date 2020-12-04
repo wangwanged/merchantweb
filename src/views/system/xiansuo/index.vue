@@ -12,10 +12,10 @@
         <el-autocomplete
           class="inline-input"
           v-model="queryParams.keywords"
-          :fetch-suggestions="querySearch(keywords,queryParams.keywords)"
+          :fetch-suggestions="querySearch()"
           placeholder="请选择负责人"
           :trigger-on-focus="false"
-          @select="handleSelect1"
+          @select="handleSelect"
           clearable
         ></el-autocomplete>
       </el-form-item>
@@ -703,7 +703,7 @@ export default {
       });
     },
     // 负责人查询
-    querySearch(name,queryString, callback) {
+    querySearch(queryString, callback) {
       var params = {
           name:queryString
       }
@@ -726,14 +726,6 @@ export default {
       this.queryParams.phone = item
       this.transforphone = item;
       this.userInfo();
-    },
-    handleSelect1(){
-        var item = item.value;
-        var phone = item.substring(0, 11);
-       var a =this.xiansuoList.filter(item=>{
-           return item.phone===phone
-        })
-        console.log('a',a)
     },
     // 获取user用户信息
     userInfo() {
