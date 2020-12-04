@@ -8,7 +8,7 @@
       label-width="68px"
     >
       <!--部门数据-->
-      <showdept></showdept>
+      <showdept :myevent = 'getDeptId' />
 <!--      <el-col :span="4" :xs="24">-->
 <!--        <div class="head-container">-->
 <!--          <el-input-->
@@ -708,6 +708,8 @@ export default {
   },
   data() {
     return {
+      // 部门id
+      deptId: null,
       // 部门名称
       deptName: "",
       // 部门树选项
@@ -861,6 +863,10 @@ export default {
     });
   },
   methods: {
+    getDeptId(i) {
+      console.log("i:",i)
+    },
+
     /** 查询合同列表 */
     getList() {
       this.loading = true;

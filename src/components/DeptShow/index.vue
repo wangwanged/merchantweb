@@ -35,23 +35,26 @@ export default {
   name: "showdept",
   /*props: {
     /!* 编辑器的内容 *!/
-    value: {
+    deptName: {
       type: String,
       default: "",
     },
-    /!* 高度 *!/
-    height: {
-      type: Number,
+    /!* 部门树选项 *!/
+    deptOptions: {
+      type: Object,
       default: null,
     },
     /!* 最小高度 *!/
-    minHeight: {
-      type: Number,
+    defaultProps: {
+      type: Object,
       default: null,
     },
   },*/
+
   data() {
     return {
+      // 部门id
+      deptId: null,
       // 部门名称
       deptName: "",
       // 部门树选项
@@ -75,6 +78,10 @@ export default {
     }
   },
   methods: {
+
+    returnDeptId() {
+      this.$emit('myevent',this.deptId);
+    },
     /** 查询部门下拉树结构 */
     getTreeselect() {
       treeselect().then(response => {
@@ -88,7 +95,8 @@ export default {
     },
     // 节点单击事件
     handleNodeClick(data) {
-      this.queryParams.deptId = data.id;
+      // this.queryParams.deptId = data.id;
+      this.deptId = data.id;
       this.getList();
     },
   },
