@@ -11,25 +11,25 @@
       <el-form-item>
         <el-autocomplete
           class="inline-input"
-          v-model="queryParams.keywords"
-          :fetch-suggestions="querySearch()"
+          v-model="keywords"
+          :fetch-suggestions="querySearch"
           placeholder="请选择负责人"
           :trigger-on-focus="false"
           @select="handleSelect"
           clearable
         ></el-autocomplete>
-      </el-form-item>
-      <el-form-item prop="phone">
-        <el-input
-          v-model="queryParams.phone"
-          placeholder="请输入电话"
+        <!-- <el-input
+          v-model="queryParams.name"
+          placeholder="请输入客户姓名"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
-        />
+        /> -->
       </el-form-item>
-      <!-- <Liandong @placeInfo="getPlace(arguments)"></Liandong> -->
-      <el-form-item prop="sysUserId">
+      <el-form-item>
+          <Liandong class='liandong' @placeInfo="getPlace" :toSon="toplace"></Liandong>
+      </el-form-item>
+      <!-- <el-form-item prop="sysUserId">
         <el-input
           v-model="queryParams.username"
           placeholder="请输入负责人"
@@ -37,22 +37,23 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item prop="createTime">
+      </el-form-item> -->
+       <el-form-item prop="inputDate">
         <el-date-picker
-          clearable
-          size="small"
-          v-model="queryParams.createTime"
-          type="date"
+          class='datepicker'
           value-format="yyyy-MM-dd"
-          placeholder="选择创建时间"
+          placeholder="录入时间"
+          v-model="inputDate"
+          type="daterange"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
         >
         </el-date-picker>
       </el-form-item>
       <el-form-item prop="resource">
         <el-select
           v-model="queryParams.genjinStatus"
-          placeholder="请选择跟进状态"
+          placeholder="跟进状态"
           clearable
           size="small"
         >
@@ -67,7 +68,7 @@
       <el-form-item prop="resource">
         <el-select
           v-model="queryParams.resource"
-          placeholder="请选择线索来源"
+          placeholder="线索来源"
           clearable
           size="small"
         >
@@ -78,17 +79,6 @@
             :value="dict.dictValue"
           />
         </el-select>
-      </el-form-item>
-      <el-form-item prop="updateTime">
-        <el-date-picker
-          clearable
-          size="small"
-          v-model="queryParams.updateTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择最新跟进时间"
-        >
-        </el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button
@@ -286,12 +276,11 @@
           <el-autocomplete
             style="width:100%"
             class="inline-input"
-            v-model="form.transforKeywords"
+            v-model="keywords"
             :fetch-suggestions="querySearch"
             placeholder="请输入内容"
             :trigger-on-focus="false"
             @select="handleSelect"
-            clearable
           ></el-autocomplete>
         </el-form-item>
         <el-form-item label="所属部门" prop="dept">
@@ -380,12 +369,11 @@
           <el-autocomplete
             style="width:100%"
             class="inline-input"
-            v-model="form.transforKeywords"
+            v-model="keywords"
             :fetch-suggestions="querySearch"
             placeholder="请输入内容"
             :trigger-on-focus="false"
             @select="handleSelect"
-            clearable
           ></el-autocomplete>
         </el-form-item>
         <el-form-item label="所属部门" prop="dept">
@@ -425,6 +413,7 @@ export default {
   name: "Xiansuo",
   data() {
     return {
+      keywords:'',
       //  传给省市区
       toplace: {
         province: "",
@@ -441,6 +430,7 @@ export default {
         dialogtocustomer: false,
         dialogaddxiansuo: false
       },
+      inputDate:null,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -486,7 +476,7 @@ export default {
         updateTime: null,
         status: null,
         genjinStatus: null,
-        keywords: null
+        userId:null,
       },
       // 表单参数
       form: {},
@@ -551,9 +541,7 @@ export default {
         dianmianAddress: null,
         status: null,
         experience: null,
-        transforphone: null,
         genjinStatus: null,
-        transforKeywords: null,
       };
       this.resetForm("form");
     },
@@ -580,6 +568,9 @@ export default {
       this.form.province = i;
       this.form.city = j;
       this.form.district = k;
+      this.queryParams.province = i;
+      this.queryParams.city = j;
+      this.queryParams.district = k;
     },
     // 线索来源字典翻译
     resourceFormat(row, column) {
@@ -601,6 +592,8 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
+        (this.queryParams.inputDateStart = this.inputDate[0]),
+        (this.queryParams.inputDateEnd = this.inputDate[1]);
       this.getList();
     },
     // 多选框选中数据
@@ -608,14 +601,6 @@ export default {
       this.ids = selection.map(item => item.id);
       this.single = selection.length !== 1;
       this.multiple = !selection.length;
-    },
-    // 获取当前负责人和部门
-    getdeptuser() {
-      getInfo().then(res => {
-        this.form.username = res.user.userName;
-        this.form.transforKeywords = res.user.userName;
-        this.deptName = res.user.dept.deptName;
-      });
     },
     // /** 新增按钮操作 */
     handleAdd() {
@@ -659,6 +644,14 @@ export default {
       //     }
       //   });
     },
+     // 直接显示当前负责人和部门
+    getdeptuser() {
+      getInfo().then(res => {
+        this.form.username = res.user.userName;
+        this.keywords = res.user.userName;
+        this.deptName = res.user.dept.deptName;
+      });
+    },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
@@ -681,7 +674,6 @@ export default {
         return item.id === this.ids[0];
       });
       this.form = aaa[0];
-      this.userInfo();
       this.getdeptuser();
       this.toPlace();
     //   this.handlePhone();
@@ -705,14 +697,14 @@ export default {
     // 负责人查询
     querySearch(queryString, callback) {
       var params = {
-          name:queryString
+          keywords:queryString
       }
       transforCustomer(params).then(response => {
         var restaurants = response.rows;
         const list = [];
         //封装要显示的数据
         for (let v of restaurants) {
-          list.push({ value: v.phonenumber + " " + v.userName });
+          list.push({ value: v.phonenumber + " " + v.userName, id: v.id});
         }
         // 调用 callback 返回建议列表的数据,是一个数组类型
         callback(list);
@@ -720,29 +712,17 @@ export default {
     },
     // 负责人查询
     handleSelect(item) {
-      var item = item.value;
-      this.form.transforKeywords = item.substring(12);
-      var item = item.substring(0, 11);
-      this.queryParams.phone = item
-      this.transforphone = item;
-      this.userInfo();
-    },
-    // 获取user用户信息
-    userInfo() {
-      listUser({}).then(response => {
-        this.user = response.rows;
-        var a = this.user.filter(item => {
-          if (this.transforphone === item.phonenumber) {
-            return item;
-          }
-        });
-        var b = [];
-        for (var i = 0; i < a.length; i++) {
-          var c = a[i].dept;
-          b.push(c.deptName);
-        }
-        this.deptName = b[0];
-      });
+      this.queryParams.userId=item.id
+      this.form.userId=item.id
+      this.keywords=item.value.substring(12)
+    //  部门随负责人变动
+     listUser({}).then(res=>{
+        var a =res.rows.filter(element => {
+             return element.id===item.id
+         });
+         console.log('res',a)
+         this.deptName=a[0].dept.deptName
+     })
     },
     // 添加电话号码
     addPhone() {
@@ -775,7 +755,25 @@ export default {
 .search .el-select {
   width: 150px;
 }
-.search .el-date-picker {
-  width: 150px;
+.search .el-autocomplete{
+    width: 150px;
+    /deep/  .el-input__inner{
+      height: 32px;
+    }
 }
+.search .datepicker{
+    margin-top:2px;
+    height: 32px;
+    width: 250px;
+    /deep/.el-date-editor--daterange .el-input__inner{
+        width: 150px;
+    }
+}
+.liandong{
+    /deep/ .el-input__inner{
+        width:105px;
+        height: 32px;
+    }
+}
+
 </style>

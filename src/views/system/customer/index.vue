@@ -6,18 +6,14 @@
       :inline="true"
       v-show="showSearch"
       label-width="68px"
+      class='search'
     >
-      <el-form-item prop="companyName">
-        <el-input
-          v-model="queryParams.companyName"
-          placeholder="请输入公司和部门"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item>
+          <Liandong class='liandong' @placeInfo="getPlace" :toSon="toplace"></Liandong>
       </el-form-item>
       <el-form-item prop="inputDate">
         <el-date-picker
+          class='datepicker'
           value-format="yyyy-MM-dd"
           placeholder="录入时间筛选"
           v-model="inputDate"
@@ -27,10 +23,25 @@
         >
         </el-date-picker>
       </el-form-item>
+       <el-form-item prop="resource">
+        <el-select
+          v-model="queryParams.genjinStatus"
+          placeholder="跟进状态"
+          clearable
+          size="small"
+        >
+          <el-option
+            v-for="dict in genjinstatusOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item prop="resource">
         <el-select
           v-model="queryParams.resource"
-          placeholder="请选择客户来源"
+          placeholder="客户来源"
           clearable
           size="small"
         >
@@ -42,20 +53,10 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item prop="name">
-        <el-input
-          v-model="queryParams.name"
-          placeholder="请输入客户名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-
       <el-form-item prop="level">
         <el-select
           v-model="queryParams.level"
-          placeholder="请选择客户等级"
+          placeholder="客户等级"
           clearable
           size="small"
         >
@@ -70,7 +71,7 @@
       <el-form-item prop="customerNeeds">
         <el-select
           v-model="queryParams.customerNeeds"
-          placeholder="请选择客户需求"
+          placeholder="客户需求"
           clearable
           size="small"
         >
@@ -82,21 +83,12 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item prop="phone">
-        <el-input
-          v-model="queryParams.phone"
-          placeholder="请输入客户电话"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <!-- <Liandong @placeInfo="getPlace(arguments)"></Liandong> -->
-      <Area />
+      <!-- <Area /> -->
       <el-form-item prop="username">
         <el-input
           v-model="queryParams.username"
-          placeholder="请输入负责人姓名"
+          placeholder="负责人姓名"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -307,7 +299,7 @@
         <el-form-item label="负责人">
           <el-autocomplete
             class="inline-input"
-            v-model="form.transforKeywords"
+            v-model="keywords"
             :fetch-suggestions="querySearch"
             placeholder="请输入内容"
             :trigger-on-focus="false"
@@ -344,7 +336,7 @@
     <el-dialog title="转移" :visible.sync="dialogTransfor" width="500px">
       <el-autocomplete
         class="inline-input"
-        v-model="form.transforKeywords"
+        v-model="keywords"
         :fetch-suggestions="querySearch"
         placeholder="请输入内容"
         :trigger-on-focus="false"
@@ -373,6 +365,7 @@ import { listUser } from "@/api/system/user";
 import Liandong from "@/components/Liandong/liandong.vue";
 import { area } from "@/components/Liandong/liandong.vue";
 import Area from "@/views/components/area";
+import { getInfo } from "@/api/login";
 export default {
   name: "Customer",
   components: {
@@ -381,6 +374,7 @@ export default {
   },
   data() {
     return {
+      keywords:"",
       //  传给省市区
       toplace: {
         province: "",
@@ -390,10 +384,6 @@ export default {
       userId:null,
       //   所属部门
       deptName: "",
-      // 要转移的电话号码
-      transforphone: "",
-      // 转移关键词
-      transforKeywords: "",
       // 转移弹框
       dialogTransfor: false,
       // 失效弹框
@@ -424,8 +414,10 @@ export default {
       customerNeedsOptions: [],
       // 客户来源字典
       resourceOptions: [],
-      //   筛选时间字典
+      //   跟进天数字典
       customerGenjinOptions: [],
+    //   跟进状态字典
+       genjinstatusOptions:[],
       //   筛选时间index
       customerGenjinnum: [],
       //   选定时间
@@ -477,6 +469,9 @@ export default {
     this.getDicts("sys_customer_resource").then(response => {
       this.resourceOptions = response.data;
     });
+     this.getDicts("customer_genjin").then(response => {
+      this.genjinstatusOptions = response.data;
+    });
     this.getDicts("genjin_days").then(response => {
       this.customerGenjinOptions = response.data;
       var num = this.customerGenjinOptions.map(item => {
@@ -504,7 +499,6 @@ export default {
         city: null,
         district: null,
         resource: null,
-        userId: null,
         username: null,
         luruId: null,
         luruName: null,
@@ -514,8 +508,7 @@ export default {
         inputDate: null,
         updateDate: null,
         experience: null,
-        transforphone: null,
-        transforKeywords: null
+        userId: null,
       };
       this.resetForm("form");
     },
@@ -531,11 +524,10 @@ export default {
     },
     //   转移确定按钮
     handleTransfor(row) {
-
       const ids = row.id || this.ids;
       var data = {
         ids: ids,
-        userId: this.userId
+        userId: this.form.userId
         // phone: this.transforphone
       };
       transforcustomer(data)
@@ -610,14 +602,6 @@ export default {
       var d = dd.getDate() < 10 ? "0" + dd.getDate() : dd.getDate(); //获取当前几号，不足10补0
       return y + "-" + m + "-" + d;
     },
-    // 获取当前负责人和部门
-    getdeptuser() {
-      getInfo().then(res => {
-        this.form.username = res.user.userName;
-        this.form.transforKeywords = res.user.userName;
-        this.deptName = res.user.dept.deptName;
-      });
-    },
     // 省市区赋值
     toPlace() {
       this.toplace.province = this.form.province;
@@ -629,8 +613,18 @@ export default {
       this.form.province = i;
       this.form.city = j;
       this.form.district = k;
+       this.queryParams.province = i;
+      this.queryParams.city = j;
+      this.queryParams.district = k;
     },
-
+      // 直接显示当前负责人和部门
+    getdeptuser() {
+      getInfo().then(res => {
+        this.form.username = res.user.userName;
+        this.keywords = res.user.userName;
+        this.deptName = res.user.dept.deptName;
+      });
+    },
     // 客户等级字典翻译
     levelFormat(row, column) {
       return this.selectDictLabel(this.levelOptions, row.level);
@@ -706,58 +700,39 @@ export default {
         });
     },
     // 负责人查询
-    handleSelect(item) {
-        console.log("item", item)
-        this.reset()
-        this.userId = item.id;
-      var item = item.value;
-      
-      this.form.transforKeywords = item.substring(12);
-    //   item = item.substring(0, 11);
-    //   this.transforphone = item;
-      this.userInfo();
-    },
-    // 负责人查询
     querySearch(queryString, callback) {
-      const keywords = this.form.transforKeywords;
-      
       var params = {
-        keywords: keywords
-      };
-      console.log("aaaaa")
+          keywords:queryString
+      }
       transforCustomer(params).then(response => {
-        // let callbackList = [];
         var restaurants = response.rows;
-        console.log("restaurants", restaurants)
         const list = [];
         //封装要显示的数据
         for (let v of restaurants) {
-            console.log("v", v)
           list.push({ value: v.phonenumber + " " + v.userName, id: v.id});
-        //   callbackList.push({ value: v.id})
         }
-        
         // 调用 callback 返回建议列表的数据,是一个数组类型
         callback(list);
       });
     },
-    // 获取user用户信息
-    userInfo() {
-      listUser({}).then(response => {
-        this.user = response.rows;
-        var a = this.user.filter(item => {
-          if (this.transforphone === item.phonenumber) {
-            return item;
-          }
-        });
-        var b = [];
-        for (var i = 0; i < a.length; i++) {
-          var c = a[i].dept;
-          b.push(c.deptName);
-        }
-        this.deptName = b[0];
-      });
-    }
+    // 负责人查询
+    handleSelect(item) {     
+      this.reset()
+      this.form = {}
+      this.form.userId == 10
+      console.log("item", item)
+      console.log('this.form.form',this.form)
+      this.form.userId=item.id
+      this.keywords=item.value.substring(12)
+    //  部门随负责人变动
+     listUser({}).then(res=>{
+        var a =res.rows.filter(element => {
+             return element.id===item.id
+         });
+         console.log('res',a)
+         this.deptName=a[0].dept.deptName
+     })
+    },
   }
 };
 </script>
@@ -773,4 +748,34 @@ export default {
 // /deep/ .avue-form__menu{
 //     display:none
 // }
+.search .el-input {
+  width: 150px;
+}
+.search .el-select {
+  width: 150px;
+}
+// .search .el-autocomplete{
+//     width: 150px;
+//     /deep/  .el-input__inner{
+//       height: 32px;
+//     }
+// }
+.search .datepicker{
+    margin-top:2px;
+    height: 32px;
+    width: 250px;
+    /deep/.el-date-editor--daterange .el-input__inner{
+        width: 150px;
+    }
+}
+.search .el-date-picker{
+    height: 32px;
+    width: 150px;
+}
+.liandong{
+    /deep/ .el-input__inner{
+        width:105px;
+        height: 32px;
+    }
+}
 </style>

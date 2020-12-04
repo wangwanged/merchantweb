@@ -129,7 +129,6 @@
         </div>
         <Follow ref="follow" :tofollow='customerList'></Follow>
       </div>
-      
     </div>
     <!-- 新签合同弹框 -->
     <el-dialog title="新签合同" :visible.sync="dialogNewsign" width="40%">
@@ -602,11 +601,6 @@ export default {
       });
     },
     },
-    //   写跟进按钮
-    goSecond() {
-      //这是操作子组件的方法
-     this.$refs.follow.handleAdd();
-    },
     //   新签合同按钮店面或区域显示控制
     // showdianmian(i) {
     //   if (i === "0") {
@@ -719,9 +713,13 @@ export default {
       //   }
       //   return arr;
     },
+      //   写跟进按钮
+    goSecond() {
+      //这是操作follow子组件的方法
+      this.$refs.follow.handleAdd();
+    },
 }
 </script>
-
 <style lang="scss" scoped>
 .circle {
   width: 34px;
