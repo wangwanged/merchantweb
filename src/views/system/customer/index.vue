@@ -117,7 +117,6 @@
         >
       </div>
     </el-form>
-
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -214,7 +213,7 @@
       />
       <el-table-column label="负责人姓名" align="center" prop="username" />
       <el-table-column label="录入人" align="center" prop="luruName" />
-      <el-table-column label="中介经验" align="center" prop="experience" />
+      <el-table-column label="中介经验" align="center" prop="experience" :formatter="experienceFormat" />
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column
         label="创建时间"
@@ -276,7 +275,15 @@
           <el-input v-model="form.companyName" placeholder="请输入公司和部门" />
         </el-form-item>
         <el-form-item label="中介经验">
-          <el-input v-model="form.experience" placeholder="请输入中介经验" />
+          <!-- <el-input v-model="form.experience" placeholder="请输入中介经验" /> -->
+           <el-select v-model="form.experience" placeholder="请选择客户来源">
+            <el-option
+              v-for="dict in experienceOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="客户来源">
           <el-select v-model="form.resource" placeholder="请选择客户来源">
@@ -418,6 +425,8 @@ export default {
       customerGenjinOptions: [],
     //   跟进状态字典
        genjinstatusOptions:[],
+    //    中介经验字典
+     experienceOptions:[],
       //   筛选时间index
       customerGenjinnum: [],
       //   选定时间
@@ -471,6 +480,10 @@ export default {
     });
      this.getDicts("customer_genjin").then(response => {
       this.genjinstatusOptions = response.data;
+    });
+    // 中介经验
+     this.getDicts("experience").then(response => {
+      this.experienceOptions = response.data;
     });
     this.getDicts("genjin_days").then(response => {
       this.customerGenjinOptions = response.data;
@@ -637,6 +650,10 @@ export default {
     resourceFormat(row, column) {
       return this.selectDictLabel(this.resourceOptions, row.resource);
     },
+    // 中介经验字典翻译
+    experienceFormat(row, column) {
+      return this.selectDictLabel(this.experienceOptions, row.resource);
+    },
     // 取消按钮
     cancel() {
       this.open = false;
@@ -718,10 +735,6 @@ export default {
     // 负责人查询
     handleSelect(item) {     
       this.reset()
-      this.form = {}
-      this.form.userId == 10
-      console.log("item", item)
-      console.log('this.form.form',this.form)
       this.form.userId=item.id
       this.keywords=item.value.substring(12)
     //  部门随负责人变动

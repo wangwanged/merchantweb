@@ -200,6 +200,7 @@
       :visible.sync="dialog.dialogaddxiansuo"
       width="650px"
       append-to-body
+      genjinStatus
     >
       <el-form
         ref="form"
@@ -297,6 +298,7 @@
       title="转成客户"
       :visible.sync="dialog.dialogtocustomer"
       width="650px"
+      :close-on-click-modal='false'
     >
       <el-form
         ref="form"
@@ -501,18 +503,23 @@ export default {
   },
   created() {
     this.getList();
+    // 客户来源字典
     this.getDicts("sys_customer_resource").then(response => {
       this.resourceOptions = response.data;
     });
+    // 中介经验字典
     this.getDicts("experience").then(response => {
       this.experienceOptions = response.data;
     });
+    // 客户需求字典
     this.getDicts("sys_user_need").then(response => {
       this.userneedOptions = response.data;
     });
+    // 客户等级字典
     this.getDicts("customer_level").then(response => {
       this.levelOptions = response.data;
     });
+    // 中介经验字典
     this.getDicts("customer_genjin").then(response => {
       this.statusOptions = response.data;
     });
