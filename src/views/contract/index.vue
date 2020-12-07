@@ -8,7 +8,7 @@
       label-width="68px"
     >
       <!--部门数据-->
-      <showdept @myevent = 'getDeptId' />
+      <showdept @myevent = 'getDeptId' @keyup.enter.native="handleQuery"/>
 <!--      <el-col :span="4" :xs="24">-->
 <!--        <div class="head-container">-->
 <!--          <el-input-->
