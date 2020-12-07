@@ -11,3 +11,5 @@ module.exports = {
     }
   }
 }
+
+const wsBaseUrl = "wss://immediate.sosozhaofang.com/WebSocket";

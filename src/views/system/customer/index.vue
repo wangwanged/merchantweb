@@ -9,7 +9,7 @@
       class='search'
     >
       <el-form-item>
-          <Liandong class='liandong' @placeInfo="getPlace" :toSon="toplace"></Liandong>
+          <Area class='liandong' @placeInfo="getPlace" :toSon="toplace"/>
       </el-form-item>
       <el-form-item prop="inputDate">
         <el-date-picker
@@ -83,8 +83,7 @@
           />
         </el-select>
       </el-form-item>
-      <!-- <Liandong @placeInfo="getPlace(arguments)"></Liandong> -->
-      <!-- <Area /> -->
+       <!-- <Area  @placeInfo="getPlace" :toSon="toplace"/> -->
       <el-form-item prop="username">
         <el-input
           v-model="queryParams.username"
@@ -117,7 +116,6 @@
         >
       </div>
     </el-form>
-
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -214,7 +212,7 @@
       />
       <el-table-column label="负责人姓名" align="center" prop="username" />
       <el-table-column label="录入人" align="center" prop="luruName" />
-      <el-table-column label="中介经验" align="center" prop="experience" />
+      <el-table-column label="中介经验" align="center" prop="experience" :formatter="experienceFormat" />
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column
         label="创建时间"
@@ -270,13 +268,21 @@
           </el-select>
         </el-form-item>
         <el-form-item label="客户地区">
-          <Liandong @placeInfo="getPlace" :toSon="toplace"></Liandong>
+             <Area  @placeInfo="getPlace" :toSon="toplace"/>
         </el-form-item>
         <el-form-item label="客户公司">
           <el-input v-model="form.companyName" placeholder="请输入公司和部门" />
         </el-form-item>
         <el-form-item label="中介经验">
-          <el-input v-model="form.experience" placeholder="请输入中介经验" />
+          <!-- <el-input v-model="form.experience" placeholder="请输入中介经验" /> -->
+           <el-select v-model="form.experience" placeholder="请选择客户来源">
+            <el-option
+              v-for="dict in experienceOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="客户来源">
           <el-select v-model="form.resource" placeholder="请选择客户来源">
@@ -291,11 +297,6 @@
         <el-form-item label="备注">
           <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
-        <!-- <el-form-item label="负责人" prop="username">
-          <template slot-scope="scope">
-            <el-input v-model='scope.row.username'></el-input>
-        </template>
-        </el-form-item> -->
         <el-form-item label="负责人">
           <el-autocomplete
             class="inline-input"
@@ -362,16 +363,9 @@ import {
   transforcustomer
 } from "@/api/system/customer";
 import { listUser } from "@/api/system/user";
-import Liandong from "@/components/Liandong/liandong.vue";
-import { area } from "@/components/Liandong/liandong.vue";
-import Area from "@/views/components/area";
 import { getInfo } from "@/api/login";
 export default {
   name: "Customer",
-  components: {
-    Liandong,
-    Area
-  },
   data() {
     return {
       keywords:"",
@@ -418,6 +412,8 @@ export default {
       customerGenjinOptions: [],
     //   跟进状态字典
        genjinstatusOptions:[],
+    //    中介经验字典
+     experienceOptions:[],
       //   筛选时间index
       customerGenjinnum: [],
       //   选定时间
@@ -472,6 +468,10 @@ export default {
      this.getDicts("customer_genjin").then(response => {
       this.genjinstatusOptions = response.data;
     });
+    // 中介经验
+     this.getDicts("experience").then(response => {
+      this.experienceOptions = response.data;
+    });
     this.getDicts("genjin_days").then(response => {
       this.customerGenjinOptions = response.data;
       var num = this.customerGenjinOptions.map(item => {
@@ -482,6 +482,7 @@ export default {
         return Number(item);
       });
       this.customerGenjinnum = num;
+      console.log(this.customerGenjinnum)
     });
   },
   methods: {
@@ -519,7 +520,7 @@ export default {
         this.customerList = response.rows;
         this.total = response.total;
         this.loading = false;
-        this.$store.commit("updateAlldata", this.customerList);
+        // this.$store.commit("updateAlldata", this.customerList);
       });
     },
     //   转移确定按钮
@@ -584,9 +585,9 @@ export default {
     //   15,30,60时间段数据获取
     getTimeRange(i) {
       this.queryParams.pageNum = 1;
-      (this.queryParams.inputDateStart = this.getBeforeDate(
-        -this.customerGenjinnum[i + 1]
-      )),
+    //   (this.queryParams.inputDateStart = this.getBeforeDate(
+    //     -this.customerGenjinnum[i + 1]
+    //   )),
         (this.queryParams.inputDateEnd = this.getBeforeDate(
           -this.customerGenjinnum[i]
         )),
@@ -637,6 +638,10 @@ export default {
     resourceFormat(row, column) {
       return this.selectDictLabel(this.resourceOptions, row.resource);
     },
+    // 中介经验字典翻译
+    experienceFormat(row, column) {
+      return this.selectDictLabel(this.experienceOptions, row.resource);
+    },
     // 取消按钮
     cancel() {
       this.open = false;
@@ -663,25 +668,15 @@ export default {
       this.title = "添加我的客户";
       this.getdeptuser();
     },
-    /** 提交按钮 */
+    /** 新增提交按钮 */
     submitForm() {
-         this.form.status = "1";
+        this.form.status = "1";
       this.$refs["form"].validate(valid => {
         addCustomer(this.form).then(response => {
           this.msgSuccess("新增成功");
           this.open = false;
           this.getList();
         });
-        // if (valid) {
-        //   if (this.form.id != null) {
-        //     updateCustomer(this.form).then(response => {
-        //       this.msgSuccess("修改成功");
-        //       this.open = false;
-        //       this.getList();
-        //     });
-        //   } else {
-        //   }
-        // }
       });
     },
     /** 导出按钮操作 */
@@ -718,10 +713,6 @@ export default {
     // 负责人查询
     handleSelect(item) {     
       this.reset()
-      this.form = {}
-      this.form.userId == 10
-      console.log("item", item)
-      console.log('this.form.form',this.form)
       this.form.userId=item.id
       this.keywords=item.value.substring(12)
     //  部门随负责人变动
@@ -737,29 +728,12 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-// /deep/ .el-input--suffix{
-//    width: 140px;
-// };
-// /deep/ .el-range-editor--medium{
-//     width: 230px;
-//     height: 32px;
-//     padding:0px;
-// };
-// /deep/ .avue-form__menu{
-//     display:none
-// }
 .search .el-input {
   width: 150px;
 }
 .search .el-select {
   width: 150px;
 }
-// .search .el-autocomplete{
-//     width: 150px;
-//     /deep/  .el-input__inner{
-//       height: 32px;
-//     }
-// }
 .search .datepicker{
     margin-top:2px;
     height: 32px;

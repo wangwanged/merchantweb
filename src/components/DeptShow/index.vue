@@ -2,8 +2,7 @@
   <!--部门数据-->
   <el-col :span="4" :xs="24">
     <div class="head-container">
-      <el-input
-        v-model="deptName"
+      <el-input @focus="treeShow = true" @blur="treeShow = false" v-model="deptName"
         placeholder="请输入部门名称"
         clearable
         size="small"
@@ -11,8 +10,10 @@
         style="margin-bottom: 20px"
       />
     </div>
-    <div class="head-container">
+<!--    @focus="treeShow = true" @blur="treeShow = false"   v-show="treeShow === true"-->
+    <div class="head-container " style="float:left;">
       <el-tree
+        v-show="treeShow === true"
         :data="deptOptions"
         :props="defaultProps"
         :expand-on-click-node="false"
@@ -35,25 +36,29 @@ export default {
   name: "showdept",
   /*props: {
     /!* 编辑器的内容 *!/
-    value: {
+    deptName: {
       type: String,
       default: "",
     },
-    /!* 高度 *!/
-    height: {
-      type: Number,
+    /!* 部门树选项 *!/
+    deptOptions: {
+      type: Object,
       default: null,
     },
     /!* 最小高度 *!/
-    minHeight: {
-      type: Number,
+    defaultProps: {
+      type: Object,
       default: null,
     },
   },*/
+
   data() {
     return {
+      treeShow: "false",
+      // 部门id
+      deptId: null,
       // 部门名称
-      deptName: "",
+      deptName: null,
       // 部门树选项
       deptOptions: undefined,
 
@@ -75,6 +80,10 @@ export default {
     }
   },
   methods: {
+
+    returnDeptId() {
+      this.$emit('myevent',this.deptId);
+    },
     /** 查询部门下拉树结构 */
     getTreeselect() {
       treeselect().then(response => {
@@ -88,8 +97,10 @@ export default {
     },
     // 节点单击事件
     handleNodeClick(data) {
-      this.queryParams.deptId = data.id;
-      this.getList();
+      // this.queryParams.deptId = data.id;
+      this.deptId = data.id;
+      this.deptName = data.label;
+      this.returnDeptId();
     },
   },
 };

@@ -9,35 +9,33 @@
       label-width="68px"
     >
       <el-form-item>
-        <el-autocomplete
-          class="inline-input"
-          v-model="keywords"
-          :fetch-suggestions="querySearch"
-          placeholder="请选择负责人"
-          :trigger-on-focus="false"
-          @select="handleSelect"
-          clearable
-        ></el-autocomplete>
-        <!-- <el-input
-          v-model="queryParams.name"
-          placeholder="请输入客户姓名"
+           <el-select
+          v-model="queryParams.resource"
+          placeholder="线索来源"
           clearable
           size="small"
-          @keyup.enter.native="handleQuery"
-        /> -->
+        >
+          <el-option-group label='负责人'>
+               <el-option
+            v-for="dict in resourceOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+          </el-option-group>
+           <el-option-group label='部门'>
+               <el-option
+            v-for="dict in resourceOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+          </el-option-group>
+        </el-select>
       </el-form-item>
       <el-form-item>
-          <Liandong class='liandong' @placeInfo="getPlace" :toSon="toplace"></Liandong>
+          <Area class='liandong' @placeInfo="getPlace" :toSon="toplace"/>
       </el-form-item>
-      <!-- <el-form-item prop="sysUserId">
-        <el-input
-          v-model="queryParams.username"
-          placeholder="请输入负责人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
        <el-form-item prop="inputDate">
         <el-date-picker
           class='datepicker'
@@ -72,7 +70,7 @@
           clearable
           size="small"
         >
-          <el-option
+              <el-option
             v-for="dict in resourceOptions"
             :key="dict.dictValue"
             :label="dict.dictLabel"
@@ -200,6 +198,7 @@
       :visible.sync="dialog.dialogaddxiansuo"
       width="650px"
       append-to-body
+      genjinStatus
     >
       <el-form
         ref="form"
@@ -238,7 +237,7 @@
           </div>
         </el-form-item>
         <el-form-item label="客户地区">
-          <Liandong @placeInfo="getPlace"></Liandong>
+           <Area @placeInfo="getPlace" :toSon="toplace"/>
         </el-form-item>
         <el-form-item label="客户公司" prop="companyName">
           <el-input v-model="form.companyName" placeholder="请输入公司和部门" />
@@ -297,6 +296,7 @@
       title="转成客户"
       :visible.sync="dialog.dialogtocustomer"
       width="650px"
+      :close-on-click-modal='false'
     >
       <el-form
         ref="form"
@@ -340,7 +340,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="客户地区">
-          <Liandong @placeInfo="getPlace" :toSon="toplace"></Liandong>
+          <Area @placeInfo="getPlace" :toSon="toplace"/>
         </el-form-item>
         <el-form-item label="客户公司">
           <el-input v-model="form.companyName" placeholder="请输入公司" />
@@ -399,7 +399,7 @@ import {
   transfortoCustomer,
   importXiansuo
 } from "@/api/system/xiansuo";
-import Liandong from "@/components/Liandong/liandong.vue";
+import Area from "@/views/components/area/liandong.vue";
 import {
   listCustomer,
   addCustomer,
@@ -407,7 +407,6 @@ import {
 } from "@/api/system/customer";
 import { listUser } from "@/api/system/user";
 import inputExcel from "@/views/components/importexcel";
-import { arrAll } from "../../../components/Liandong/cities";
 import { getInfo } from "@/api/login";
 export default {
   name: "Xiansuo",
@@ -496,23 +495,28 @@ export default {
     };
   },
   components: {
-    Liandong,
+    Area,
     "input-excel": inputExcel
   },
   created() {
     this.getList();
+    // 客户来源字典
     this.getDicts("sys_customer_resource").then(response => {
       this.resourceOptions = response.data;
     });
+    // 中介经验字典
     this.getDicts("experience").then(response => {
       this.experienceOptions = response.data;
     });
+    // 客户需求字典
     this.getDicts("sys_user_need").then(response => {
       this.userneedOptions = response.data;
     });
+    // 客户等级字典
     this.getDicts("customer_level").then(response => {
       this.levelOptions = response.data;
     });
+    // 中介经验字典
     this.getDicts("customer_genjin").then(response => {
       this.statusOptions = response.data;
     });
