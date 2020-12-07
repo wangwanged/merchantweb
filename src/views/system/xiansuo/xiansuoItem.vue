@@ -122,7 +122,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="客户地区">
-          <Liandong @placeInfo="getPlace" :toSon="toplace"></Liandong>
+          <Area @placeInfo="getPlace" :toSon="toplace"/>
         </el-form-item>
         <el-form-item label="客户公司">
           <el-input v-model="form.companyName"></el-input>
@@ -172,7 +172,7 @@ import { updateCustomer } from "@/api/system/customer";
 import Follow from "@/views/components/Sosoitem/follow.vue";
 import { transforcustomer, transforCustomer } from "@/api/system/customer";
 import { listUser } from "@/api/system/user";
-import Liandong from "@/components/Liandong/liandong.vue";
+import Area from "@/views/components/area/liandong.vue";
 import { getInfo } from "@/api/login";
 export default {
   data() {
@@ -217,7 +217,7 @@ export default {
     document.querySelector("body").removeAttribute("style");
   },
   components: {
-    Liandong,
+    Area,
     Follow
   },
   created() {

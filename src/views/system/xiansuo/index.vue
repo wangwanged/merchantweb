@@ -30,7 +30,7 @@
             :label="dict.dictLabel"
             :value="dict.dictValue"
           />
-          </el-option-group>    
+          </el-option-group>
         </el-select>
         <!-- <el-autocomplete
           class="inline-input"
@@ -50,7 +50,7 @@
         /> -->
       </el-form-item>
       <el-form-item>
-          <Liandong class='liandong' @placeInfo="getPlace" :toSon="toplace"></Liandong>
+          <!-- <Liandong class='liandong' @placeInfo="getPlace" :toSon="toplace"></Liandong> -->
       </el-form-item>
       <!-- <el-form-item prop="sysUserId">
         <el-input
@@ -424,7 +424,7 @@ import {
   transfortoCustomer,
   importXiansuo
 } from "@/api/system/xiansuo";
-import Liandong from "@/components/Liandong/liandong.vue";
+import Area from "@/views/components/area/liandong.vue";
 import {
   listCustomer,
   addCustomer,
@@ -432,7 +432,6 @@ import {
 } from "@/api/system/customer";
 import { listUser } from "@/api/system/user";
 import inputExcel from "@/views/components/importexcel";
-import { arrAll } from "../../../components/Liandong/cities";
 import { getInfo } from "@/api/login";
 export default {
   name: "Xiansuo",
@@ -521,7 +520,7 @@ export default {
     };
   },
   components: {
-    Liandong,
+    Area,
     "input-excel": inputExcel
   },
   created() {

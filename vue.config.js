@@ -117,3 +117,7 @@ module.exports = {
       )
   }
 }
+//七牛云图片的地址。
+const imgBaseUrl = "http://img.cdn.my012.com/";
+const mapKey = "XmyjYVhns2v89LpukAkkvQ9VxSiNcjv0";
+export { imgBaseUrl, mapKey, wsBaseUrl};

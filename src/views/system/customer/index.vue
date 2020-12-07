@@ -9,7 +9,8 @@
       class='search'
     >
       <el-form-item>
-          <Liandong class='liandong' @placeInfo="getPlace" :toSon="toplace"></Liandong>
+          <Area class='liandong' @placeInfo="getPlace" :toSon="toplace"/>
+          <!-- <Area class='liandong' @placeInfo="getPlace" :toSon="toplace"></Area> -->
       </el-form-item>
       <el-form-item prop="inputDate">
         <el-date-picker
@@ -269,7 +270,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="客户地区">
-          <Liandong @placeInfo="getPlace" :toSon="toplace"></Liandong>
+             <!-- <Area  @placeInfo="getPlace" :toSon="toplace"/> -->
         </el-form-item>
         <el-form-item label="客户公司">
           <el-input v-model="form.companyName" placeholder="请输入公司和部门" />
@@ -369,16 +370,13 @@ import {
   transforcustomer
 } from "@/api/system/customer";
 import { listUser } from "@/api/system/user";
-import Liandong from "@/components/Liandong/liandong.vue";
-import { area } from "@/components/Liandong/liandong.vue";
-import Area from "@/views/components/area";
+// import Area from "@/views/components/area/liandong.vue";
 import { getInfo } from "@/api/login";
 export default {
   name: "Customer",
-  components: {
-    Liandong,
-    Area
-  },
+//   components: {
+//     Area
+//   },
   data() {
     return {
       keywords:"",

@@ -128,8 +128,8 @@
       </div>
     </div>
     <!-- 新签合同弹框 -->
-    <el-dialog title="新签合同" :visible.sync="dialogNewsign" width="40%">
-      <el-form label-position="left" label-width="100px">
+    <el-dialog title="新签合同" :visible.sync="dialogNewsign" width="650px">
+      <el-form label-position="left" label-width="120px">
         <div style="font-size:20px;font-weight:700;margin-bottom:20px">
           客户信息
         </div>
@@ -409,7 +409,7 @@
 </template>
 
 <script>
-import Liandong from "@/components/Liandong/liandong.vue";
+import Area from "@/views/components/area/liandong.vue";
 import Follow from "@/views/components/Sosoitem/follow";
 import {
   listCustomer,
@@ -502,7 +502,7 @@ export default {
   },
   components: {
     Follow,
-    Liandong
+    Area
   },
   mounted() {
     document
@@ -537,7 +537,31 @@ export default {
         remark: null,
         status: "0",
         inputDate: null,
-        updateDate: null
+        updateDate: null,
+        
+        num: null, //合同编号，手动录入
+        customerName: null, //客户username
+        customerId:null, //客户id
+        customerPhone: null, //客户手机号
+        type: null, //合同类型
+        produce: null, //产品类型
+        dianmianName: null, // 店面名称
+        dianmianNum: null, // 店面数量
+        guarantee: null, // 保证金
+        operation: null,
+        status: null, //合同状态
+        managerId:null, //负责人id
+        manager:null, // 负责人username
+        signDate:null, //签约日期
+        checkDate: null, //审核日期
+        beginDate: null,
+        endDate: null,
+        dianmianAddress: null,
+        dianmianCity: null,
+        dianmianDistrict: null,
+        dianmianLatitude: null,
+        dianmianLongitude: null,
+        dianmianProvince: null
       };
       this.resetForm("form");
     },
@@ -620,48 +644,9 @@ export default {
         this.reset()
         this.dialogNewsign=true
         this.form=this.customerList
-    //   var fee = {};
-    //   fee.lvyue = this.fee.lvyue;
-    //   fee.yunyingManage = this.fee.yunyingManage;
-    //   fee.systemUse = this.fee.systemUse;
-    //   fee.systemGuard = this.fee.systemGuard;
-    //   fee.guohu = this.fee.guohu;
-    //   fee.daiban = this.fee.daiban;
-    //   var data = {
-    //     fee: fee,
-    //     num: this.newsigninfo.num, //合同编号，手动录入
-    //     customerName: this.newsigninfo.customerName, //客户username
-    //     customerId: this.$route.query.id, //客户id
-    //     customerPhone: this.newsigninfo.customerPhone, //客户手机号
-    //     type: this.newsigninfo.type, //合同类型
-    //     produce: this.newsigninfo.produce, //产品类型
-    //     dianmianName: this.newsigninfo.dianmianName, // 店面名称
-    //     dianmianNum: this.newsigninfo.dianmianNum, // 店面数量
-    //     guarantee: this.newsigninfo.guarantee, // 保证金
-    //     operation: this.newsigninfo.operation,
-    //     status: this.newsigninfo.status, //合同状态
-    //     managerId: this.newsigninfo.managerId, //负责人id
-    //     manager: this.newsigninfo.manager, // 负责人username
-    //     signDate: this.newsigninfo.signDate, //签约日期
-    //     checkDate: this.newsigninfo.checkDate, //审核日期
-    //     beginDate: this.newsigninfo.beginDate,
-    //     endDate: this.newsigninfo.endDate,
-    //     remark: this.newsigninfo.remark,
-    //     dianmianAddress: this.newsigninfo.dianmianAddress,
-    //     dianmianCity: this.newsigninfo.dianmianCity,
-    //     dianmianDistrict: this.newsigninfo.dianmianDistrict,
-    //     dianmianLatitude: this.newsigninfo.dianmianLatitude,
-    //     dianmianLongitude: this.newsigninfo.dianmianLongitude,
-    //     dianmianProvince: this.newsigninfo.dianmianProvince
-    //   };
-      //   this.newsigninfo.fee = JSON.stringify(this.newsigninfo.fee);
-    //   newSignContrast(data)
-    //     .then(response => {
-    //       this.$message.success("操作成功");
-    //     })
-    //     .catch(error => {
-    //       this.$message.error("操作失败");
-    //     });
+        this.form.signDate=new Date()
+        this.form.beginDate=new Date()
+        this.form.endDate=new Date()
     },
     // 点击编辑按钮
     handleUpdate() {
