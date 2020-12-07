@@ -122,7 +122,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="客户地区">
-          <Area @placeInfo="getPlace" :toSon="toplace"/>
+          <Area  @placeInfo="getPlace" :toSon="toplace"/>
         </el-form-item>
         <el-form-item label="客户公司">
           <el-input v-model="form.companyName"></el-input>

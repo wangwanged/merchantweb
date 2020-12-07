@@ -32,35 +32,10 @@
           />
           </el-option-group>
         </el-select>
-        <!-- <el-autocomplete
-          class="inline-input"
-          v-model="keywords"
-          :fetch-suggestions="querySearch"
-          placeholder="请选择负责人"
-          :trigger-on-focus="false"
-          @select="handleSelect"
-          clearable
-        ></el-autocomplete> -->
-        <!-- <el-input
-          v-model="queryParams.name"
-          placeholder="请输入客户姓名"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        /> -->
       </el-form-item>
       <el-form-item>
-          <!-- <Liandong class='liandong' @placeInfo="getPlace" :toSon="toplace"></Liandong> -->
+          <Area class='liandong' @placeInfo="getPlace" :toSon="toplace"/>
       </el-form-item>
-      <!-- <el-form-item prop="sysUserId">
-        <el-input
-          v-model="queryParams.username"
-          placeholder="请输入负责人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
        <el-form-item prop="inputDate">
         <el-date-picker
           class='datepicker'
@@ -262,7 +237,7 @@
           </div>
         </el-form-item>
         <el-form-item label="客户地区">
-          <Liandong @placeInfo="getPlace"></Liandong>
+           <Area @placeInfo="getPlace" :toSon="toplace"/>
         </el-form-item>
         <el-form-item label="客户公司" prop="companyName">
           <el-input v-model="form.companyName" placeholder="请输入公司和部门" />
@@ -365,7 +340,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="客户地区">
-          <Liandong @placeInfo="getPlace" :toSon="toplace"></Liandong>
+          <Area @placeInfo="getPlace" :toSon="toplace"/>
         </el-form-item>
         <el-form-item label="客户公司">
           <el-input v-model="form.companyName" placeholder="请输入公司" />

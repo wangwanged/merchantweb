@@ -188,58 +188,28 @@
         <div style="font-size:20px;font-weight:700;margin-bottom:20px">
           店面/区域信息
         </div>
-        <div v-if="showDianmian">
+        <!-- <div v-if="showDianmian"> -->
           <el-form-item required label="店面名称">
             <el-input
               v-model="form.dianmianName"
               placeholder="请输入"
             ></el-input>
           </el-form-item>
-          <el-form-item required label="所属省">
-            <el-input
-              v-model="form.dianmianProvince"
-              placeholder="请输入"
-            ></el-input>
+          <el-form-item required label="所属区域">
+            <Area  @placeInfo="getPlace" :toSon="toplace"/>
           </el-form-item>
-          <el-form-item required label="所属市">
-            <el-input
-              v-model="form.dianmianCity"
-              placeholder="请输入"
-            ></el-input>
-          </el-form-item>
-          <el-form-item required label="所属区">
-            <el-input
-              v-model="form.dianmianDistrict"
-              placeholder="请输入"
-            ></el-input>
-          </el-form-item>
-        </div>
-        <div v-else>
+        <!-- </div> -->
+        <!-- <div v-else>
           <el-form-item required label="店面名称">
             <el-input
               v-model="form.dianmianName"
               placeholder="请输入"
             ></el-input>
           </el-form-item>
-          <el-form-item required label="所属省">
-            <el-input
-              v-model="form.dianmianProvince"
-              placeholder="请输入"
-            ></el-input>
+           <el-form-item required label="所属区域">
+            <Area  @placeInfo="getPlace" :toSon="toplace"/>
           </el-form-item>
-          <el-form-item required label="所属市">
-            <el-input
-              v-model="form.dianmianCity"
-              placeholder="请输入"
-            ></el-input>
-          </el-form-item>
-          <el-form-item required label="所属区">
-            <el-input
-              v-model="form.dianmianDistrict"
-              placeholder="请输入"
-            ></el-input>
-          </el-form-item>
-        </div>
+        </div> -->
         <el-form-item required label="详细地址">
           <el-input
             v-model="form.dianmianAddress"
@@ -300,7 +270,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogNewsign = false">取 消</el-button>
-        <el-button type="primary" >保存</el-button>
+        <el-button type="primary" @click='submitcontract'>保存</el-button>
       </span>
     </el-dialog>
     <!-- 编辑我的客户 -->
@@ -338,14 +308,7 @@
           </el-select>
         </el-form-item>
         <el-form-item required label="客户地区">
-          <!-- <avue-form v-model="location" :option="option">
-            <template slot="cascader3Type" slot-scope="{ node, data }">
-              <span>{{ (data || {}).label }}</span>
-              <span v-if="!node.isLeaf">
-                ({{ ((data || {}).children || []).length }})
-              </span>
-            </template>
-          </avue-form> -->
+          <Area  @placeInfo="getPlace" :toSon="toplace"/>
         </el-form-item>
         <el-form-item required label="客户公司">
           <el-input v-model="form.companyName" placeholder="请输入公司和部门" />
@@ -357,10 +320,24 @@
           />
         </el-form-item>
         <el-form-item required label="中介经验">
-          <el-input v-model="form.experience" placeholder="请输入中介经验" />
+           <el-select
+            style="width: 100%"
+            v-model="form.experience"
+            placeholder="请选择中介经验"
+          >
+            <el-option
+              v-for="dict in experienceOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item required label="客户来源">
-          <el-select v-model="form.resource" placeholder="请选择客户来源">
+             <el-select
+            v-model="form.resource"
+            placeholder="请选择客户来源"
+          >
             <el-option
               v-for="dict in resourceOptions"
               :key="dict.dictValue"
@@ -409,8 +386,6 @@
 </template>
 
 <script>
-import Area from "@/views/components/area/liandong.vue";
-import Follow from "@/views/components/Sosoitem/follow";
 import {
   listCustomer,
   getCustomer,
@@ -422,10 +397,17 @@ import {
   invalidCustomer,
   newSignContrast
 } from "@/api/system/customer";
-import { getContractInfo } from "@/api/contract/contractManager";
+import { getContractInfo,addContractManager } from "@/api/contract/contractManager";
+import Follow from "@/views/components/Sosoitem/follow.vue";
 export default {
   data() {
     return {
+        //  传给省市区
+      toplace: {
+        province: "",
+        city: "",
+        district: ""
+      },
       fee: {
         lvyue: "",
         yunyingManage: "",
@@ -502,7 +484,6 @@ export default {
   },
   components: {
     Follow,
-    Area
   },
   mounted() {
     document
@@ -556,7 +537,6 @@ export default {
         checkDate: null, //审核日期
         beginDate: null,
         endDate: null,
-        dianmianAddress: null,
         dianmianCity: null,
         dianmianDistrict: null,
         dianmianLatitude: null,
@@ -613,8 +593,8 @@ export default {
       });
       // 获取客户来源字典
       this.getDicts("sys_customer_resource").then(response => {
-        this.experienceOptions = response.data;
-        var a = this.experienceOptions.filter(item => {
+        this.resourceOptions = response.data;
+        var a = this.resourceOptions.filter(item => {
           return item.dictValue === this.customerList.resource;
         });
         this.customerList.resource = a[0].dictLabel;
@@ -629,24 +609,33 @@ export default {
     //   }
     //   console.log(this.showDianmian);
     // },
-    
-    //   获取省市区的地址
-    getPlace(i) {
-      this.queryParams.province = i[0];
-      this.queryParams.city = i[1];
-      this.queryParams.district = i[2];
-      this.form.province = i[0];
-      this.form.city = i[1];
-      this.form.district = i[2];
+    // 获取省市区
+   getPlace(i, j, k) {
+      this.form.province = i;
+      this.form.city = j;
+      this.form.district = k;
+    },
+     // 省市区赋值
+    toPlace() {
+      this.toplace.province = this.form.province;
+      this.toplace.city = this.form.city;
+      this.toplace.district = this.form.district;
     },
     // 新签合同按钮操作
     handlecontrast() {
         this.reset()
         this.dialogNewsign=true
-        this.form=this.customerList
+        this.form.name=this.customerList.name
+        this.form.phone=this.customerList.phone
         this.form.signDate=new Date()
         this.form.beginDate=new Date()
         this.form.endDate=new Date()
+    },
+    // 合同确定按钮
+    submitcontract(){
+        addContractManager(this.form).then(res=>{
+            console.log(res)
+        })
     },
     // 点击编辑按钮
     handleUpdate() {

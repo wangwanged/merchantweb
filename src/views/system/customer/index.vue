@@ -10,7 +10,6 @@
     >
       <el-form-item>
           <Area class='liandong' @placeInfo="getPlace" :toSon="toplace"/>
-          <!-- <Area class='liandong' @placeInfo="getPlace" :toSon="toplace"></Area> -->
       </el-form-item>
       <el-form-item prop="inputDate">
         <el-date-picker
@@ -84,8 +83,7 @@
           />
         </el-select>
       </el-form-item>
-      <!-- <Liandong @placeInfo="getPlace(arguments)"></Liandong> -->
-      <!-- <Area /> -->
+       <!-- <Area  @placeInfo="getPlace" :toSon="toplace"/> -->
       <el-form-item prop="username">
         <el-input
           v-model="queryParams.username"
@@ -270,7 +268,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="客户地区">
-             <!-- <Area  @placeInfo="getPlace" :toSon="toplace"/> -->
+             <Area  @placeInfo="getPlace" :toSon="toplace"/>
         </el-form-item>
         <el-form-item label="客户公司">
           <el-input v-model="form.companyName" placeholder="请输入公司和部门" />
@@ -299,11 +297,6 @@
         <el-form-item label="备注">
           <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
-        <!-- <el-form-item label="负责人" prop="username">
-          <template slot-scope="scope">
-            <el-input v-model='scope.row.username'></el-input>
-        </template>
-        </el-form-item> -->
         <el-form-item label="负责人">
           <el-autocomplete
             class="inline-input"
@@ -370,13 +363,9 @@ import {
   transforcustomer
 } from "@/api/system/customer";
 import { listUser } from "@/api/system/user";
-// import Area from "@/views/components/area/liandong.vue";
 import { getInfo } from "@/api/login";
 export default {
   name: "Customer",
-//   components: {
-//     Area
-//   },
   data() {
     return {
       keywords:"",
@@ -739,29 +728,12 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-// /deep/ .el-input--suffix{
-//    width: 140px;
-// };
-// /deep/ .el-range-editor--medium{
-//     width: 230px;
-//     height: 32px;
-//     padding:0px;
-// };
-// /deep/ .avue-form__menu{
-//     display:none
-// }
 .search .el-input {
   width: 150px;
 }
 .search .el-select {
   width: 150px;
 }
-// .search .el-autocomplete{
-//     width: 150px;
-//     /deep/  .el-input__inner{
-//       height: 32px;
-//     }
-// }
 .search .datepicker{
     margin-top:2px;
     height: 32px;

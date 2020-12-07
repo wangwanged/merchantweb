@@ -70,8 +70,8 @@ Vue.prototype.$echarts = echarts;
 import GeminiScrollbar from 'vue-gemini-scrollbar'
 Vue.use(GeminiScrollbar)
 
-import Global from '@/views/components/index.js'
-Vue.use(Global);
+import mycomponents from '@/views/components/index.js'
+Vue.use(mycomponents);
 
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium' // set element-ui default size
