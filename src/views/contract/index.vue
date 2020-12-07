@@ -863,8 +863,9 @@ export default {
     });
   },
   methods: {
-    getDeptId(i) {
-      console.log("i:",i)
+    getDeptId(deptId) {
+      this.queryParams.deptId = deptId;
+      console.log("deptId:",deptId)
     },
 
     /** 查询合同列表 */
