@@ -97,7 +97,8 @@ export default {
     handleNodeClick(data) {
       // this.queryParams.deptId = data.id;
       this.deptId = data.id;
-      this.getList();
+      this.deptName = data.label;
+      this.returnDeptId();
     },
   },
 };
