@@ -495,6 +495,7 @@ export default {
         return Number(item);
       });
       this.customerGenjinnum = num;
+      console.log(this.customerGenjinnum)
     });
   },
   methods: {
@@ -532,7 +533,7 @@ export default {
         this.customerList = response.rows;
         this.total = response.total;
         this.loading = false;
-        this.$store.commit("updateAlldata", this.customerList);
+        // this.$store.commit("updateAlldata", this.customerList);
       });
     },
     //   转移确定按钮
@@ -597,9 +598,9 @@ export default {
     //   15,30,60时间段数据获取
     getTimeRange(i) {
       this.queryParams.pageNum = 1;
-      (this.queryParams.inputDateStart = this.getBeforeDate(
-        -this.customerGenjinnum[i + 1]
-      )),
+    //   (this.queryParams.inputDateStart = this.getBeforeDate(
+    //     -this.customerGenjinnum[i + 1]
+    //   )),
         (this.queryParams.inputDateEnd = this.getBeforeDate(
           -this.customerGenjinnum[i]
         )),
@@ -680,25 +681,15 @@ export default {
       this.title = "添加我的客户";
       this.getdeptuser();
     },
-    /** 提交按钮 */
+    /** 新增提交按钮 */
     submitForm() {
-         this.form.status = "1";
+        this.form.status = "1";
       this.$refs["form"].validate(valid => {
         addCustomer(this.form).then(response => {
           this.msgSuccess("新增成功");
           this.open = false;
           this.getList();
         });
-        // if (valid) {
-        //   if (this.form.id != null) {
-        //     updateCustomer(this.form).then(response => {
-        //       this.msgSuccess("修改成功");
-        //       this.open = false;
-        //       this.getList();
-        //     });
-        //   } else {
-        //   }
-        // }
       });
     },
     /** 导出按钮操作 */

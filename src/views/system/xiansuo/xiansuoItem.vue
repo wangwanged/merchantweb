@@ -87,10 +87,10 @@
     <!-- 转成客户dialog弹出 -->
     <el-dialog title="转成客户" :visible.sync="dialogrollout" width="650px">
       <el-form :model="form" label-position="left" label-width="80px">
-        <el-form-item label="客户姓名" prop="name">
+        <el-form-item required label="客户姓名" prop="name">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item label="客户电话" prop="name">
+        <el-form-item required label="客户电话" prop="name">
           <el-input v-model="form.phone"></el-input>
         </el-form-item>
         <el-form-item label="客户等级">

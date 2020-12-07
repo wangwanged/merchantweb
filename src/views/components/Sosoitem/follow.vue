@@ -1,6 +1,7 @@
 <template>
+  
   <section>
-    <GeminiScrollbar
+  <GeminiScrollbar
       class="my-scroll-bar">
     <div class="noinfo" v-if="genjinList.length === 0">当前没有跟进信息</div>
     <div
@@ -199,7 +200,7 @@ export default {
 }
 .noinfo {
   width: 100%;
-  height: 1000px;
+  height: 750px;
   background-color: #fff;
   text-align: center;
   padding-top: 20px;
@@ -213,5 +214,8 @@ export default {
   }
 .el-button{
   margin:0 3px
+}
+.my-scroll-bar{
+   height: 750px;
 }
 </style>

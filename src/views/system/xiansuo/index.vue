@@ -9,7 +9,30 @@
       label-width="68px"
     >
       <el-form-item>
-        <el-autocomplete
+           <el-select
+          v-model="queryParams.resource"
+          placeholder="线索来源"
+          clearable
+          size="small"
+        >
+          <el-option-group label='负责人'>
+               <el-option
+            v-for="dict in resourceOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+          </el-option-group>
+           <el-option-group label='部门'>
+               <el-option
+            v-for="dict in resourceOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+          </el-option-group>    
+        </el-select>
+        <!-- <el-autocomplete
           class="inline-input"
           v-model="keywords"
           :fetch-suggestions="querySearch"
@@ -17,7 +40,7 @@
           :trigger-on-focus="false"
           @select="handleSelect"
           clearable
-        ></el-autocomplete>
+        ></el-autocomplete> -->
         <!-- <el-input
           v-model="queryParams.name"
           placeholder="请输入客户姓名"
@@ -72,7 +95,7 @@
           clearable
           size="small"
         >
-          <el-option
+              <el-option
             v-for="dict in resourceOptions"
             :key="dict.dictValue"
             :label="dict.dictLabel"
