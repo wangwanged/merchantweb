@@ -2,8 +2,7 @@
   <!--部门数据-->
   <el-col :span="4" :xs="24">
     <div class="head-container">
-      <el-input
-        v-model="deptName"
+      <el-input @focus="treeShow = true" @blur="treeShow = false" v-model="deptName"
         placeholder="请输入部门名称"
         clearable
         size="small"
@@ -11,8 +10,10 @@
         style="margin-bottom: 20px"
       />
     </div>
-    <div class="head-container">
+<!--    @focus="treeShow = true" @blur="treeShow = false"   v-show="treeShow === true"-->
+    <div class="head-container " style="float:left;">
       <el-tree
+        v-show="treeShow === true"
         :data="deptOptions"
         :props="defaultProps"
         :expand-on-click-node="false"
@@ -53,10 +54,11 @@ export default {
 
   data() {
     return {
+      treeShow: "false",
       // 部门id
       deptId: null,
       // 部门名称
-      deptName: "",
+      deptName: null,
       // 部门树选项
       deptOptions: undefined,
 

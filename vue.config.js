@@ -33,7 +33,7 @@ module.exports = {
     open: true,
     proxy: {
       // detail: https://cli.vuejs.org/config/#devserver-proxy
-      [process.env.VUE_APP_BASE_API]: {      
+      [process.env.VUE_APP_BASE_API]: {
         // target: `http://yusnan.natappfree.cc`,
         target: `http://192.168.53.237:8888`,
         changeOrigin: true,
@@ -117,7 +117,4 @@ module.exports = {
       )
   }
 }
-//七牛云图片的地址。
-const imgBaseUrl = "http://img.cdn.my012.com/";
-const mapKey = "XmyjYVhns2v89LpukAkkvQ9VxSiNcjv0";
-export { imgBaseUrl, mapKey, wsBaseUrl};
+
