@@ -1,7 +1,7 @@
 <template>
   <!--部门数据-->
 
-  <el-form-item prop="num">
+  <el-form-item prop="deptName">
     <el-input @focus="treeShow = true" @blur="setTreeFalse" v-model="deptName"
               placeholder="请输入部门名称"
               clearable

@@ -62,15 +62,13 @@
         <div v-if="contractList.checkStatus === '2'"></div>
       </div>
       <div class="header_bottom">
-        <el-button type="primary" plain size="small">{{
-          contractList.produce
-        }}</el-button>
+        <el-button type="primary" plain size="small">{{this.dict.produceTypeLabel}}</el-button>
         <el-button
           type="primary"
           plain
           size="small"
           style="margin-right:15px"
-          >{{ contractList.type }}</el-button
+          >{{ this.dict.contractTypeLabel }}</el-button
         >
         <span style="font-size:13px">负责人：{{ contractList.manager }}</span>
       </div>
@@ -93,7 +91,7 @@
                   </p>
                   <p class="main_content_name">
                     <span class="main_content_firstname">合同类型：</span>
-                    <el-button size="small">{{ contractList.type }}</el-button>
+                    <el-button size="small" >{{this.dict.contractTypeLabel }}</el-button>
                   </p>
                   <el-table border :data="relatedList" style="width: 100%">
                     <el-table-column
@@ -105,6 +103,7 @@
                     <el-table-column
                       prop="type"
                       label="合同类型"
+                      :formatter="contractTypeFormat"
                       min-width="70"
                     >
                     </el-table-column>
@@ -683,10 +682,10 @@
           </el-form-item>
           <div class="main_title">签约信息</div>
           <el-form-item required label="合同类型">
-            <el-button size="small">{{ contentRenew.type }}</el-button>
+            <el-button size="small">{{ dict.contractTypeLabel  }}</el-button>
           </el-form-item>
           <el-form-item required label="签约产品">
-            <el-input v-model="contentRenew.produce" disabled></el-input>
+            <el-input v-model="dict.produceTypeLabel" disabled></el-input>
           </el-form-item>
           <el-form-item required label="关联合同">
             <el-input v-model="contentRenew.rootNum" disabled></el-input>
@@ -989,6 +988,7 @@ import {
 } from "@/api/dianmian/dianmianManager";
 import { addFeeManager } from "@/api/fee/feeManager";
 import { getInfo } from "@/api/login.js";
+import { getDicts } from '@/api/system/dict/data'
 export default {
   data() {
     return {
@@ -1023,10 +1023,18 @@ export default {
       checkStatus: "",
       OperlogList: [], //日志列表
       dict: {
+        // 字典
         checkOptions: [],
-        produceOptions: []
+        statusOptions: [],
+        contractTypeOptions:[],  //合同类型字典
+        produceTypeOptions:[],  //产品类型字典
+
+        checkLabel: '',
+        statusLabel: '',
+        contractTypeLabel: '',
+        produceTypeLabel: '',
       },
-      loading: true
+      loading: true,
     };
   },
   mounted() {
@@ -1052,6 +1060,8 @@ export default {
         // customerName: JSON.parse(
         //   JSON.stringify(this.contractList.customerName)
         // ),
+        customerNum: this.contractList.customerNum,
+        customerName: this.contractList.customerName,
         customerPhone: this.contractList.customerPhone,
         type: this.contractList.type,
         produce: this.contractList.produce,
@@ -1092,13 +1102,57 @@ export default {
       this.getAttachment
     );
     this.getcontractOperlog();
-    this.getDicts("sys_user_need").then(response => {
-      this.dict.produceOptions = response.data;
+    /*this.getDicts("sys_user_need").then(response => {
+      this.dict.produceTypeOptions = response.data;
     });
+    this.getDicts("contract_type").then(response => {
+      this.dict.contractTypeOptions = response.data;
+    });*/
+    this.getdicts();
   },
   methods: {
+    // 获取字典
+    getdicts(){
+      // 获取产品类型字典
+      this.getDicts("sys_user_need").then(response => {
+        this.dict.produceTypeOptions = response.data;
+        var a = this.dict.produceTypeOptions.filter(item => {
+          return item.dictValue === this.contractList.produce;
+        });
+        this.dict.produceTypeLabel = a[0].dictLabel;
+      });
+      // 获取审核状态字典
+      this.getDicts("check_status").then(response => {
+        this.dict.checkOptions = response.data;
+        var a = this.dict.checkOptions.filter(item => {
+          return item.dictValue === this.contractList.checkStatus;
+        });
+        this.dict.checkLabel = a[0].dictLabel;
+      });
+      // 获取合同类型字典
+      this.getDicts("contract_type").then(response => {
+        this.dict.contractTypeOptions = response.data;
+        var a = this.dict.contractTypeOptions.filter(item => {
+          return item.dictValue === this.contractList.type;
+        });
+        this.dict.contractTypeLabel = a[0].dictLabel;
+      });
+      // 获取合同状态字典
+      this.getDicts("contract_status").then(response => {
+        this.dict.statusOptions = response.data;
+        var a = this.dict.statusOptions.filter(item => {
+          return item.dictValue === this.contractList.status;
+        });
+        this.dict.statusOptions= a[0].dictLabel;
+      });
+    },
+
     produceFormat(row, column) {
-      return this.selectDictLabel(this.dict.produceOptions, row.produce);
+      return this.selectDictLabel(this.dict.produceTypeOptions, row.produce);
+    },
+    // 生效失效状态字典翻译
+    contractTypeFormat(row, column) {
+      return this.selectDictLabel(this.dict.contractTypeOptions, row.type);
     },
     // 表单重置
     reset() {
@@ -1172,7 +1226,6 @@ export default {
         deptId: null,
         diandongId: null,
         diandongName: this.addshop.diandongName,
-        diandongName: this.addshop.diandongName,
         district: this.addshop.district,
         id: null,
         keywords: "",
@@ -1223,6 +1276,7 @@ export default {
         .then(res => {
           this.$message.success("操作成功");
           this.dialog.dialogcheck = false;
+          this.getList();
         })
         .catch(error => {
           this.$message.error("操作失败");

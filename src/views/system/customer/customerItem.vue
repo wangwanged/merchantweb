@@ -42,17 +42,16 @@
         <div class="main_content_top">
           <p class="main_content_name">
             <span class="main_content_firstname">客户等级：</span>
-            <span>{{level}}({{ customerList.level}})</span>
+            <span>{{level + '(' + customerList.level + ')'}}</span>
           </p>
           <p class="main_content_name">
             <span class="main_content_firstname">客户需求：</span>
-            <span>{{ customerList.customerNeeds }}</span>
+            <span >{{ customerList.customerNeeds }}</span>
           </p>
           <p class="main_content_name">
             <span class="main_content_firstname">地区：</span>
             <span
-              >{{ customerList.province }} {{ customerList.city }}
-              {{ customerList.district }}</span
+              >{{ customerList.province + ' ' + customerList.city + ' ' + customerList.district}}</span
             >
           </p>
           <p class="main_content_name">
@@ -562,8 +561,8 @@ export default {
         var a = this.genjinOptions.filter(item => {
           return item.dictValue === this.customerList.genjinStatus;
         });
-        this.customerList.genjinStatus = a[0].dictLabel;
-        this.level=a[0].dictValue
+        console.log("aaaa:", a)
+        this.customerList.genjinStatus = a ? a[0].dictLabel : null;
       });
       // 获取客户等级字典
       this.getDicts("customer_level").then(response => {
@@ -571,7 +570,8 @@ export default {
         var a = this.levelOptions.filter(item => {
           return item.dictValue === this.customerList.level;
         });
-        this.customerList.level = a[0].dictLabel;
+        this.level=a[0].dictValue
+        this.customerList.level = a ? a[0].dictLabel : null;
       });
       // 获取客户需求字典
       this.getDicts("sys_user_need").then(response => {
@@ -579,7 +579,7 @@ export default {
         var a = this.customerNeedsOptions.filter(item => {
           return item.dictValue === this.customerList.customerNeeds;
         });
-        this.customerList.customerNeeds = a[0].dictLabel;
+        this.customerList.customerNeeds =  a ? a[0].dictLabel : null;
       });
       // 获取中介经验字典
       this.getDicts("experience").then(response => {
@@ -587,7 +587,7 @@ export default {
         var a = this.experienceOptions.filter(item => {
           return item.dictValue === this.customerList.experience;
         });
-        this.customerList.experience = a[0].dictLabel;
+        this.customerList.experience =  a ? a[0].dictLabel : null;
       });
       // 获取客户来源字典
       this.getDicts("sys_customer_resource").then(response => {
@@ -595,7 +595,7 @@ export default {
         var a = this.resourceOptions.filter(item => {
           return item.dictValue === this.customerList.resource;
         });
-        this.customerList.resource = a[0].dictLabel;
+        this.customerList.resource =  a ? a[0].dictLabel : null;
       });
     },
      //   新签合同按钮店面或区域显示控制

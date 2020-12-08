@@ -76,7 +76,7 @@ Vue.use(mycomponents);
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium' // set element-ui default size
 })
-
+Element.Dialog.props.closeOnClickModal.default = false;
 Vue.config.productionTip = false
 
 new Vue({
