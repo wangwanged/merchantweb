@@ -9,39 +9,20 @@
     >
       <!--部门数据-->
       <showdept @myevent = 'getDeptId' @keyup.enter.native="handleQuery"/>
-<!--      <el-col :span="4" :xs="24">-->
-<!--        <div class="head-container">-->
-<!--          <el-input-->
-<!--            v-model="deptName"-->
-<!--            placeholder="请输入部门名称"-->
-<!--            clearable-->
-<!--            size="small"-->
-<!--            prefix-icon="el-icon-search"-->
-<!--            style="margin-bottom: 20px"-->
-<!--          />-->
-<!--        </div>-->
-<!--        <div class="head-container">-->
-<!--          <el-tree-->
-<!--            :data="deptOptions"-->
-<!--            :props="defaultProps"-->
-<!--            :expand-on-click-node="false"-->
-<!--            :filter-node-method="filterNode"-->
-<!--            ref="tree"-->
-<!--            default-expand-all-->
-<!--            @node-click="handleNodeClick"-->
-<!--          />-->
-<!--        </div>-->
-<!--      </el-col>-->
-      <el-form-item prop="num">
-        <el-input
-          v-model="queryParams.num"
-          placeholder="请输入合同编号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item prop="customerName">
+     <!-- <el-form-item>
+        <Area class='liandong' @placeInfo="getPlace" :toSon="toplace"/>
+      </el-form-item>-->
+      <!-- 客户姓名、手机号、合同编号放到了模糊搜索 -->
+      <!--<el-form-item prop="num">
+      <el-input
+      v-model="queryParams.num"
+      placeholder="请输入合同编号"
+      clearable
+      size="small"
+      @keyup.enter.native="handleQuery"
+      />
+      </el-form-item>-->
+      <!--<el-form-item prop="customerName">
         <el-input
           v-model="queryParams.customerName"
           placeholder="请输入客户姓名"
@@ -58,7 +39,7 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item prop="type">
         <el-select
           v-model="queryParams.type"
@@ -1179,6 +1160,22 @@ export default {
            this.$message.error("操作失败");
       });
     },
+
+  },
+  // 省市区赋值
+  toPlace() {
+    this.toplace.province = this.form.province
+    this.toplace.city = this.form.city
+    this.toplace.district = this.form.district
+  },
+  //   获取省市区的地址
+  getPlace(i, j, k) {
+    this.form.province = i
+    this.form.city = j
+    this.form.district = k
+    this.queryParams.province = i
+    this.queryParams.city = j
+    this.queryParams.district = k
   },
   computed:{
     // totalfee: function () {
