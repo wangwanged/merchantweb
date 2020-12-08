@@ -40,9 +40,9 @@ export default {
       arr: arrAll,
       cityArr: [],
       districtArr: [],
-      prov: "",
-      city: "",
-      district: ""
+      prov: null,
+      city: null,
+      district: null
     };
   },
   props:{

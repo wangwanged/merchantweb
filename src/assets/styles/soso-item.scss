@@ -33,7 +33,7 @@
 }
 .main_left{
     float: left;
-    width: 60%; 
+    width: 60%;
     margin-right:1%;
 }
 .main_right{
@@ -75,16 +75,36 @@
     margin:30px 15px
 }
 .el-dialog .el-input {
-    width: 100% 
+    width: 100%
 }
 .el-dialog .el-select{
-    width: 100% 
+    width: 100%
 }
 .el-dialog .el-autocomplete {
     width: 100%;
 }
- .el-form {
+.el-form {
   margin: 0 20px;
+}
+.search .el-input {
+  width: 150px;
+}
+.search .el-select {
+  width: 150px;
+}
+.search .datepicker {
+  margin-top: 2px;
+  height: 32px;
+  width: 250px;
+
+  /deep/ .el-date-editor--daterange .el-input__inner {
+    width: 150px;
+  }
+}
+
+.search .el-date-picker {
+  height: 32px;
+  width: 150px;
 }
 .my-scroll-bar{
    height: 700px;
