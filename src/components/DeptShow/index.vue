@@ -1,17 +1,15 @@
 <template>
   <!--部门数据-->
-  <el-col :span="4" :xs="24">
-    <div class="head-container">
-      <el-input @focus="treeShow = true" @blur="treeShow = false" v-model="deptName"
-        placeholder="请输入部门名称"
-        clearable
-        size="small"
-        prefix-icon="el-icon-search"
-        style="margin-bottom: 20px"
-      />
-    </div>
-<!--    @focus="treeShow = true" @blur="treeShow = false"   v-show="treeShow === true"-->
-    <div class="head-container " style="float:left;">
+
+  <el-form-item prop="num">
+    <el-input @focus="treeShow = true" @blur="setTreeFalse" v-model="deptName"
+              placeholder="请输入部门名称"
+              clearable
+              size="small"
+              prefix-icon="el-icon-search"
+              style="margin-bottom: 20px"
+    />
+    <div class="head-container " style="float:left;" >
       <el-tree
         v-show="treeShow === true"
         :data="deptOptions"
@@ -23,7 +21,9 @@
         @node-click="handleNodeClick"
       />
     </div>
-  </el-col>
+  </el-form-item>
+
+
 </template>
 
 <script>
@@ -80,7 +80,11 @@ export default {
     }
   },
   methods: {
-
+    setTreeFalse () {
+      setTimeout(() => {
+        this.treeShow = 'false'
+      },100)
+    },
     returnDeptId() {
       this.$emit('myevent',this.deptId);
     },
