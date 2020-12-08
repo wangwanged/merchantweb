@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+
     <div class="header">
       <div class="header_top">
         <span class="title_name fl">{{ customerList.name }}</span>
@@ -31,7 +32,7 @@
         <span>{{ customerList.phonenumber }}</span>
       </div>
     </div>
-    <div class="main">    
+    <div class="main">
       <div class="main_left">
         <div class="tab_style">
           客户信息
@@ -258,10 +259,10 @@
           type="textarea"
           v-model="form.remark"
         ></el-input>
-      <Manager @toFather='getManager'/>
+      <Manager ref="showmanager" @toFather='getManager'/>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogNewsign = false">取 消</el-button>
+        <el-button ref="button" @click="dialogNewsign = false">取 消</el-button>
         <el-button type="primary" @click='submitcontract'>保存</el-button>
       </span>
     </el-dialog>
@@ -373,7 +374,7 @@
         <el-button @click="dialogeInvalid = false">取 消</el-button>
       </div>
     </el-dialog>
-    <el-button @click='handlecontrast'>aaa</el-button>
+    <el-button @click='getdeptuser()'>aaa</el-button>
   </div>
 </template>
 
@@ -395,6 +396,7 @@ import { getInfo } from "@/api/login";
 export default {
   data() {
     return {
+      deptName:"",  //当前部门
         //  传给省市区
       toplace: {
         province: "",
@@ -439,7 +441,7 @@ export default {
       //   转移信息
       transforinfo: {
         transforlist: [], //   转移获取信息
-        keywords: "" //   关键字
+        keywords: ""   //   关键字
       },
       // 详情编辑弹框
       dialogedit: false,
@@ -469,10 +471,6 @@ export default {
       customerNeedsOptions:[],  //客户需求字典
     //   跟进end
       showDianmian: false, //新签合同按钮中显示店面或区域信息
-      location: {
-        //地址
-        cascader4: ["110000", "110100", "110101"]
-      }
     };
   },
   components: {
@@ -489,7 +487,16 @@ export default {
   created() {
     this.getList();
   },
+  computed:{
+
+  },
   methods: {
+    // 显示当前负责人和部门
+    getdeptuser() {
+      this.$nextTick().then(()=>{
+        this.$refs.showmanager.showdeptuser();
+      })
+    },
     reset() {
       this.form = {
         id: null,
@@ -512,7 +519,6 @@ export default {
         status: "0",
         inputDate: null,
         updateDate: null,
-        
         num: null, //合同编号，手动录入
         customerName: null, //客户username
         customerId:null, //客户id
@@ -523,7 +529,6 @@ export default {
         dianmianNum: null, // 店面数量
         guarantee: null, // 保证金
         operation: null,
-        status: null, //合同状态
         managerId:null, //负责人id
         manager:null, // 负责人username
         signDate:null, //签约日期
@@ -616,6 +621,7 @@ export default {
     },
     // 新签合同按钮操作
     handlecontrast() {
+        this.getdeptuser()
         this.reset()
         this.dialogNewsign=true
         this.form.name=this.customerList.name
@@ -623,7 +629,6 @@ export default {
         this.form.signDate=new Date()
         this.form.beginDate=new Date()
         this.form.endDate=new Date()
-        this.getdeptuser()
     },
     // 合同确定按钮
     submitcontract(){
@@ -685,17 +690,11 @@ export default {
       //这是操作follow子组件的方法
       this.$refs.follow.handleAdd();
     },
-      // 直接显示当前负责人和部门
-    getdeptuser() {
-      getInfo().then(res => {
-        this.form.username = res.user.userName;
-        this.keywords = res.user.userName;
-        this.deptName = res.user.dept.deptName;
-      });
-    },
+
     // 选择负责人和部门
     getManager(value){
-       this.userId=value
+       this.form.userId=value
+      console.log(value)
     }
    },
 }
