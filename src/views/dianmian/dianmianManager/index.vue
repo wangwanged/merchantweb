@@ -211,7 +211,21 @@
           <span>{{ parseTime(scope.row.openDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="对应合同" align="center" prop="contractnum" />
+      <el-table-column label="对应合同" align="center" prop="contractNum" width="180">
+          <template slot-scope="obj">
+          <el-button
+            @click="
+              $router.push({
+                path: '/contract/contractItem',
+                query: { id: obj.row.id }
+              })
+            "
+            size="small"
+            type="text"
+            >{{ obj.row.contractNum }}</el-button
+          >
+        </template>
+      </el-table-column>
       <el-table-column label="店面类型" align="center" prop="type" :formatter="typeFormat" />
       <el-table-column label="授权区域" align="center" prop="area" />
       <el-table-column label="客户姓名" align="center" prop="diandongName" />

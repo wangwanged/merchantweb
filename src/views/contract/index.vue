@@ -282,7 +282,7 @@
         label="签约日期"
         align="center"
         prop="signDate"
-        width="180"
+        width="100"
       >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.signDate, "{y}-{m}-{d}") }}</span>
@@ -292,18 +292,24 @@
         label="合同开始日期"
         align="center"
         prop="beginDate"
-        width="180"
+        width="100"
       >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.beginDate, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="合同结束日期" align="center" prop="endDate" />
+      <el-table-column label="合同结束日期" align="center" prop="endDate" width="100"/>
       <el-table-column
         label="合同状态"
         align="center"
         prop="status"
         :formatter="statusFormat"
+      />
+      <el-table-column
+        label="审核状态"
+        align="center"
+        prop="checkStatus"
+        :formatter="checkStatusFormat"
       />
       <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
