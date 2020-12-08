@@ -6,6 +6,7 @@
       :inline="true"
       v-show="showSearch"
       label-width="68px"
+      class="search"
     >
       <!--部门数据-->
       <showdept @myevent = 'getDeptId' @keyup.enter.native="handleQuery"/>
@@ -94,38 +95,32 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item prop="checkStatus">
+        <el-select
+          v-model="typeTimeValue"
+          placeholder="时间类型"
+          clearablea
+          size="small"
+        >
+            <el-option
+              v-for="dict in typeTimeOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+        </el-select>
+      </el-form-item>
       <el-form-item prop="signDate">
         <el-date-picker
-          clearable
-          size="small"
-          style="width: 200px"
-          v-model="queryParams.signDate"
-          type="date"
+          class='datepicker'
           value-format="yyyy-MM-dd"
-          placeholder="选择签约日期"
+          placeholder="录入时间"
+          v-model="TimeValue"
+          type="daterange"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
         >
         </el-date-picker>
-      </el-form-item>
-      <el-form-item prop="beginDate">
-        <el-date-picker
-          clearable
-          size="small"
-          style="width: 200px"
-          v-model="queryParams.beginDate"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择合同开始日期"
-        >
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item prop="endDate">
-        <el-input
-          v-model="queryParams.endDate"
-          placeholder="请输入合同结束日期"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
       </el-form-item>
       <el-form-item prop="status">
         <el-select
@@ -149,9 +144,6 @@
           size="mini"
           @click="handleQuery"
           >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
         >
       </el-form-item>
     </el-form>
@@ -689,6 +681,11 @@ export default {
   },
   data() {
     return {
+
+      // 时间字段
+      TimeValue:null,
+      // 时间类型
+      typeTimeValue:null,
       // 部门id
       deptId: null,
       // 部门名称
@@ -742,8 +739,19 @@ export default {
       statusOptions: [],
       // 合同审核状态
       checkStatusOptions: [],
+      // 时间类型字典
+      typeTimeOptions:[],
       // 查询参数
       queryParams: {
+        // to back时间的值
+        signDateStart: null,
+        signDateEnd: null,
+        checkDateStart: null,
+        checkDateEnd: null,
+        beginDateStart: null,
+        beginDateEnd: null,
+        endDateStart: null,
+        endDateEnd: null,
         deptId: null,
         keywords: null,
         pageNum: 1,
@@ -754,11 +762,12 @@ export default {
         type: null,
         produce: null,
         operation: null,
-        signDate: null,
-        beginDate: null,
-        endDate: null,
+        // signDate: null,
+        // beginDate: null,
+        // endDate: null,
+        TimeValue:null,
         status: null,
-        checkStatus: null
+        checkStatus: null,
       },
       // 表单参数
       form: {},
@@ -824,7 +833,46 @@ export default {
     // 根据名称筛选部门树
     deptName(val) {
       this.$refs.tree.filter(val);
-    }
+    },
+    TimeValue(){
+      console.log("typeTimeValue1", this.typeTimeValue)
+      this.resetQuaramDate()
+      // Object.keys(this.queryParams).forEach(key=>{this.queryParams[key]=''})
+      if(this.typeTimeValue==='0'){
+        this.queryParams.signDateStart = this.TimeValue ? this.TimeValue[0] : null
+        this.queryParams.signDateEnd = this.TimeValue ? this.TimeValue[1] : null
+      }else if(this.typeTimeValue ==='3'){
+        this.queryParams.checkDateStart = this.TimeValue ? this.TimeValue[0] : null
+        this.queryParams.checkDateEnd = this.TimeValue ? this.TimeValue[1] : null
+      }else if(this.typeTimeValue ==='1'){
+        this.queryParams.beginDateStart = this.TimeValue ? this.TimeValue[0] : null
+        this.queryParams.beginDateEnd = this.TimeValue ? this.TimeValue[1] : null
+      }else{
+        this.queryParams.endDateStart = this.TimeValue ? this.TimeValue[0] : null
+        this.queryParams.endDateEnd = this.TimeValue ? this.TimeValue[1] : null
+      }
+      console.log(this.TimeValue)
+    },
+    typeTimeValue(){
+      console.log("typeTimeValue2", this.typeTimeValue)
+      // Object.keys(this.queryParams).forEach(key=>{this.queryParams[key]=''})
+      this.resetQuaramDate()
+
+      if(this.typeTimeValue==='0'){
+        this.queryParams.signDateStart = this.TimeValue ? this.TimeValue[0] : null
+        this.queryParams.signDateEnd = this.TimeValue ? this.TimeValue[1] : null
+      }else if(this.typeTimeValue ==='3'){
+        this.queryParams.checkDateStart = this.TimeValue ? this.TimeValue[0] : null
+        this.queryParams.checkDateEnd = this.TimeValue ? this.TimeValue[1] : null
+      }else if(this.typeTimeValue ==='1'){
+        this.queryParams.beginDateStart = this.TimeValue ? this.TimeValue[0] : null
+        this.queryParams.beginDateEnd = this.TimeValue ? this.TimeValue[1] : null
+      }else{
+        this.queryParams.endDateStart = this.TimeValue ? this.TimeValue[0] : null
+        this.queryParams.endDateEnd = this.TimeValue ? this.TimeValue[1] : null
+      }
+      console.log(this.TimeValue)
+    },
   },
   created() {
     this.getList();
@@ -841,6 +889,9 @@ export default {
     });
     this.getDicts("check_status").then(response => {
       this.checkStatusOptions = response.data;
+    });
+    this.getDicts("sys_type_time").then(response => {
+      this.typeTimeOptions = response.data;
     });
   },
   methods: {
@@ -912,6 +963,16 @@ export default {
       this.resetForm("form");
     },
 
+    resetQuaramDate() {
+        this.queryParams.signDateStart= null,
+        this.queryParams.signDateEnd= null,
+        this.queryParams.checkDateStart= null,
+        this.queryParams.checkDateEnd= null,
+        this.queryParams.beginDateStart= null,
+        this.queryParams.beginDateEnd= null,
+        this.queryParams.endDateStart= null,
+        this.queryParams.endDateEnd= null
+    },
     /** 查询部门下拉树结构 */
     getTreeselect() {
       treeselect().then(response => {
@@ -932,11 +993,6 @@ export default {
     handleQuery() {
       this.queryParams.pageNum = 1;
       this.getList();
-    },
-    /** 重置按钮操作 */
-    resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
     },
     // 多选框选中数据
     handleSelectionChange(selection) {

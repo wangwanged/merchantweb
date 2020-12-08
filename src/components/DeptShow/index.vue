@@ -1,29 +1,27 @@
 <template>
-  <!--部门数据-->
-
-  <el-form-item prop="deptName">
-    <el-input @focus="treeShow = true" @blur="setTreeFalse" v-model="deptName"
-              placeholder="请输入部门名称"
-              clearable
-              size="small"
-              prefix-icon="el-icon-search"
-              style="margin-bottom: 20px"
-    />
-    <div class="head-container " style="float:left;" >
-      <el-tree
-        v-show="treeShow === true"
-        :data="deptOptions"
-        :props="defaultProps"
-        :expand-on-click-node="false"
-        :filter-node-method="filterNode"
-        ref="tree"
-        default-expand-all
-        @node-click="handleNodeClick"
+  <span style="position: relative">
+     <el-form-item prop="num">
+      <el-input @focus="treeShow = true" @blur="setTreeFalse" v-model="deptName"
+                placeholder="部门名称"
+                clearable
+                size="small"
+                prefix-icon="el-icon-search"
+                style="margin-bottom: 20px"
       />
-    </div>
-  </el-form-item>
-
-
+      <div class='el-scrollbar__view el-select-dropdown__list' >
+        <el-tree
+          v-show="treeShow === true"
+          :data="deptOptions"
+          :props="defaultProps"
+          :expand-on-click-node="false"
+          :filter-node-method="filterNode"
+          ref="tree"
+          default-expand-all
+          @node-click="handleNodeClick"
+        />
+      </div>
+    </el-form-item>
+  </span>
 </template>
 
 <script>
@@ -68,11 +66,9 @@ export default {
       },
     };
   },
-
   created() {
     this.getTreeselect();
   },
-
   watch: {
     // 根据名称筛选部门树
     deptName(val) {
@@ -109,3 +105,14 @@ export default {
   },
 };
 </script>
+<style lang="less" scoped>
+  .el-input{
+    width: 150px;
+  }
+  .el-tree{
+    z-index:10;
+    position: absolute;
+    width: 150px;
+  }
+
+</style>

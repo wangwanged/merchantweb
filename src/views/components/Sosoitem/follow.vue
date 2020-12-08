@@ -1,5 +1,5 @@
 <template>
-  
+
   <section>
   <GeminiScrollbar
       class="my-scroll-bar">
@@ -21,10 +21,10 @@
         {{ item.content }}
       </p>
       <p class="main_content_name__placeholder">
-        <el-image
-          :src="image"
-          style="width: 120px; height: 70px;margin-right:20px"
-        ></el-image>
+<!--        <el-image-->
+<!--          :src="image"-->
+<!--          style="width: 120px; height: 70px;margin-right:20px"-->
+<!--        ></el-image>-->
       </p>
       <div class="line_between"></div>
     </div>
@@ -59,30 +59,21 @@
             >
           </div>
         </el-form-item>
-        <!-- 图片上传 -->
-        <!-- <UpImg
-          :value="value"
-          :show="true"
-          @update="update"
-          :imgType="imgType"
-        ></UpImg> -->
+        <el-form-item>
+          <UpImage/>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="cancel">取 消</el-button>
         <el-button type="primary" @click="submitAdd">保存</el-button>
       </span>
     </el-dialog>
-    
+
   </section>
 </template>
 <script>
-import UpImg from "@/views/components/upload-image/upImgs.vue";
 import { getGenjin, addGenjin, uploadImg } from "@/api/system/customer";
-import { UploadImgs } from "@/views/components/upload-image/index.vue";
 export default {
-  components: {
-    UpImg
-  },
   props: ["tofollow"],
   data() {
     return {
@@ -90,7 +81,8 @@ export default {
       id: this.$route.query.id, //   当前客户数据id
       genjinList: [], //   跟进列表
       genjinStatus: [], //跟进状态字典
-      form:{}  //表单数据
+      form:{},  //表单数据
+      image:  null,
     };
   },
   created() {
