@@ -1,22 +1,22 @@
 <template>
   <div>
-    <el-form-item label="客户电话" prop="phone">
+    <el-form-item label="客户电话" >
       <el-input
         style="width: 90%"
-        v-model="phone[0]"
+        v-model="phoneadd"
         placeholder="请输入客户电话"
       />
       <i
         class="el-icon-circle-plus"
         style="font-size: 30px; margin-left: 10px"
-        @click="addPhone()"
+        @click="addPhone"
       ></i>
     </el-form-item>
     <el-form-item>
-      <div v-for="(item, index) in phone" :key="index">
+      <div v-for="(item, index) in phonedecrease" :key="index">
         <el-input
           style="width: 90%"
-          v-model="phone[index + 1]"
+          v-model="phonedecrease[index]"
           placeholder="请输入客户电话"
         />
         <i
@@ -33,26 +33,39 @@
 export default {
   data() {
     return {
-      phone: [],
+      phoneadd: '',
+      phonedecrease:[]
     };
+  },
+  watch:{
+    // phoneadd(value){
+    //   console.log('phoneadd',value)
+    // },
+    // phonedecrease(value){
+    //   console.log('phonedecrease',value)
+    // }
   },
   methods: {
     // 添加电话号码
     addPhone() {
-      this.phone.push("");
+      this.phonedecrease.push('');
     },
     // 删除电话号码
     decreasePhone(i) {
-      this.phone.splice(i + 1, 1);
-      console.log("this.phone", this.phone);
+      this.phonedecrease.splice(i , 1);
     },
     // 处理电话号码格式
     handlePhone() {
-      this.form.phone = this.phone.toString();
+      this.stringPhone=this.phonedecrease.toString()
+      console.log('this.phonedecrease',this.phonedecrease)
+    },
+    toFather(){
+      this.$emit('phone',this.phoneadd)
     },
   },
 };
 </script>
 
 <style lang='less' scoped>
+
 </style>

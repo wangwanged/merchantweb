@@ -78,7 +78,6 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item> <cascater/></el-form-item>
       <el-form-item>
         <el-button
           type="primary"
@@ -524,7 +523,6 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        id: null,
         name: null,
         phone: null,
         companyId: null,
@@ -654,16 +652,16 @@ export default {
     },
     // 转成客户按钮
     handletocustomer() {
+      this.dialog.dialogtocustomer = true;
       this.reset();
       var aaa = this.xiansuoList.filter(item => {
         return item.id === this.ids[0];
       });
       this.form = aaa[0];
+      this.form.ids =  this.ids
       this.getdeptuser();
       this.toPlace();
-    //   this.handlePhone();
       this.form.phone=this.form.phone.toString()
-      this.dialog.dialogtocustomer = true;
     },
     // 转成客户提交
     submitTocustomer() {

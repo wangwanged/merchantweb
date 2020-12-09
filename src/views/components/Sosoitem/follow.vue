@@ -60,7 +60,7 @@
           </div>
         </el-form-item>
         <el-form-item>
-          <UpImage1/>
+          <UpImage1 @update="update"/>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -72,6 +72,8 @@
 </template>
 <script>
 import { getGenjin, addGenjin} from "@/api/system/customer";
+import * as qiniu from "qiniu-js";
+import configData from "@/config/index.js";
 export default {
   props: ["tofollow"],
   data() {
@@ -82,6 +84,7 @@ export default {
       genjinStatus: [], //跟进状态字典
       form:{},  //表单数据
       image:  null,
+      imgs:[],
     };
   },
   created() {
@@ -114,27 +117,23 @@ export default {
       this.reset();
       this.dialogfollow = false;
     },
+
     update() {
-      console.log(this.value);
-      let imagesArr = [];
+      let imagesArr = []
       imagesArr = this.value.map(item => {
         return {
           is_head: item.is_head,
           image_url: item.image_url,
           image_type: item.image_type
-        };
-      });
-      this.info.headImg = imagesArr.find(item => {
-        return item.is_head == 1;
+        }
       })
-        ? imagesArr.find(item => {
-            return item.is_head == 1;
-          }).image_url
-        : null;
-      this.info.images = this.value ? JSON.stringify(imagesArr) : "";
-    },
-    getValue() {
-      this.$refs.uploadEle.getValue();
+      this.info.headImg = imagesArr.find(item => {
+        return item.is_head == 1
+      }) ? imagesArr.find(item => {
+        return item.is_head == 1
+      }).image_url : null;
+      this.imgs = this.value ? JSON.stringify(imagesArr) : '';
+      console.log(this.imgs)
     },
     // 获取跟进数据
     getList() {

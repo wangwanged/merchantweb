@@ -252,7 +252,30 @@
           <el-input v-model="form.name" placeholder="请输入"/>
         </el-form-item>
         <el-form-item label="客户电话" prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入客户电话"/>
+          <el-input
+            style="width: 90%"
+            v-model="phoneadd"
+            placeholder="请输入客户电话"
+          />
+          <i
+            class="el-icon-circle-plus"
+            style="font-size: 30px; margin-left: 10px"
+            @click="addPhone"
+          ></i>
+        </el-form-item>
+        <el-form-item>
+          <div v-for="(item, index) in phonedecrease" :key="index">
+            <el-input
+              style="width: 90%"
+              v-model="phonedecrease[index]"
+              placeholder="请输入客户电话"
+            />
+            <i
+              class="el-icon-remove"
+              style="font-size: 30px; margin-left: 10px"
+              @click="decreasePhone(index)"
+            ></i>
+          </div>
         </el-form-item>
         <el-form-item label="客户等级">
           <el-select v-model="form.level" placeholder="请选择客户等级">
@@ -376,6 +399,8 @@ export default {
   name: 'Customer',
   data() {
     return {
+      phoneadd: '',
+      phonedecrease:[],
       keywords: '',
       //  传给省市区
       toplace: {
@@ -677,6 +702,7 @@ export default {
     },
     /** 新增提交按钮 */
     submitForm() {
+      this.handlePhone()
       this.form.status = '1'
       this.$refs['form'].validate(valid => {
         addCustomer(this.form).then(response => {
@@ -730,7 +756,21 @@ export default {
         console.log('res', a)
         this.deptName = a[0].dept.deptName
       })
-    }
+    },
+    // 添加电话号码
+    addPhone() {
+      this.phonedecrease.push('');
+    },
+    // 删除电话号码
+    decreasePhone(i) {
+      this.phonedecrease.splice(i , 1);
+    },
+    // 处理电话号码格式
+    handlePhone() {
+      this.phonedecrease=this.phonedecrease.toString()
+      console.log('this.phonedecrease',this.phonedecrease)
+      // this.stringPhone=
+    },
   }
 }
 </script>
