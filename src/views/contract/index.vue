@@ -885,7 +885,7 @@ export default {
     },
     // 审核状态字典翻译
     checkStatusFormat(row, column) {
-      return this.selectDictLabel(this.checkStatusOptions, row.status);
+      return this.selectDictLabel(this.checkStatusOptions, row.checkStatus);
     },
     // 取消按钮
     cancel() {
