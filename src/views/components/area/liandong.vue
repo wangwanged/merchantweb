@@ -70,28 +70,41 @@ export default {
     prov: {
       // 表格数据刷新后需清空之前查看的订单详情内容
       handler: function(newVal, oldVal) {
-        this.updateCity();
-        this.updateDistrict();
+        if(newVal==='请选择'||newVal===''||newVal===null){
+          this.prov=null
+          this.city=null
+          this.district=null
+          this.cityArr=null
+          this.districtArr=null
+        } else {
+          this.updateCity();
+          this.updateDistrict();
+        }
         this.toFather()
-        // if(newVal==='请选择'){
-        //   newVal=null
-        //   this.city=null
-        //   this.district=null
-        // }
       },
       deep: true,
     },
     city: {
       // 表格数据刷新后需清空之前查看的订单详情内容
       handler: function(newVal, oldVal) {
-        this.updateDistrict();
+        if(newVal==='请选择'||newVal===''||newVal===null){
+          this.city=null
+          this.district=null
+          this.districtArr=null
+        } else {
+          this.updateDistrict();
+        }
         this.toFather()
+
       },
       deep: true
     },
     district: {
       // 表格数据刷新后需清空之前查看的订单详情内容
-      handler: function(newVal, oldVal)  {
+      handler: function(newVal, oldVal) {
+        if(newVal==='请选择'||newVal===''||newVal===null) {
+          this.district=null
+        }
         this.toFather()
       },
       deep: true
@@ -105,13 +118,12 @@ export default {
       this.district=this.toSon.district
     },
     toFather() {
-      this.$emit("placeInfo", this.prov, this.city, this.district);
-      console.log('this.prov=null',this.prov)
-      console.log('this.city=null',this.city)
-      console.log('this.district=null',this.district)
+      console.log("call to father")
+      this.$emit("place-info", this.prov, this.city, this.district);
+      console.log("afer emit")
     },
     clearpro(){
-      // console.log('this.prov',this.prov)
+      // console.log('this.prov11111',this.prov)
       // if(this.prov===''){
       //   this.city=null
       //   this.district=null

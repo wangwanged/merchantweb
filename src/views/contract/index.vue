@@ -10,37 +10,6 @@
     >
       <!--部门数据-->
       <showdept @myevent = 'getDeptId' @keyup.enter.native="handleQuery"/>
-     <!-- <el-form-item>
-        <Area class='liandong' @placeInfo="getPlace" :toSon="toplace"/>
-      </el-form-item>-->
-      <!-- 客户姓名、手机号、合同编号放到了模糊搜索 -->
-      <!--<el-form-item prop="num">
-      <el-input
-      v-model="queryParams.num"
-      placeholder="请输入合同编号"
-      clearable
-      size="small"
-      @keyup.enter.native="handleQuery"
-      />
-      </el-form-item>-->
-      <!--<el-form-item prop="customerName">
-        <el-input
-          v-model="queryParams.customerName"
-          placeholder="请输入客户姓名"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item prop="customerPhone">
-        <el-input
-          v-model="queryParams.customerPhone"
-          placeholder="请输入客户手机号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
       <el-form-item prop="type">
         <el-select
           v-model="queryParams.type"

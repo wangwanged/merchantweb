@@ -81,7 +81,7 @@
             >写跟进</el-button
           >
         </div>
-             <Follow ref="follow" :tofollow="xiansuoList"></Follow>    
+             <Follow ref="follow" :tofollow="xiansuoList"></Follow>
       </div>
     </div>
     <!-- 转成客户dialog弹出 -->
@@ -122,7 +122,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="客户地区">
-          <Area  @placeInfo="getPlace" :toSon="toplace"/>
+          <Area  @place-info="getPlace" :toSon="toplace"/>
         </el-form-item>
         <el-form-item label="客户公司">
           <el-input v-model="form.companyName"></el-input>

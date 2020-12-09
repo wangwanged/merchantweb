@@ -34,7 +34,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-          <Area class='liandong' @placeInfo="getPlace" :toSon="toplace"/>
+          <Area class='liandong' @place-info="getPlace" :toSon="toplace"/>
       </el-form-item>
        <el-form-item prop="inputDate">
         <el-date-picker
@@ -237,7 +237,7 @@
           </div>
         </el-form-item>
         <el-form-item label="客户地区">
-           <Area @placeInfo="getPlace" :toSon="toplace"/>
+           <Area @place-info="getPlace" :toSon="toplace"/>
         </el-form-item>
         <el-form-item label="客户公司" prop="companyName">
           <el-input v-model="form.companyName" placeholder="请输入公司和部门" />
@@ -340,7 +340,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="客户地区">
-          <Area @placeInfo="getPlace" :toSon="toplace"/>
+          <Area @place-info="getPlace" :toSon="toplace"/>
         </el-form-item>
         <el-form-item label="客户公司">
           <el-input v-model="form.companyName" placeholder="请输入公司" />

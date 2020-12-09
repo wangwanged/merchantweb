@@ -8,8 +8,18 @@
       label-width="68px"
       class='search'
     >
+      <showdept @myevent = 'getDeptId' @keyup.enter.native="handleQuery"/>
+      <el-form-item prop="username">
+        <el-input
+          v-model="queryParams.username"
+          placeholder="负责人姓名"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item>
-        <Area class='liandong' @placeInfo="getPlace" :toSon="toplace"/>
+        <Area class='liandong' @place-info="getPlace" :toSon="toplace"/>
       </el-form-item>
       <el-form-item prop="inputDate">
         <el-date-picker
@@ -18,8 +28,8 @@
           placeholder="录入时间筛选"
           v-model="inputDate"
           type="daterange"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
+          start-placeholder="录入开始日期"
+          end-placeholder="录入结束日期"
         >
         </el-date-picker>
       </el-form-item>
@@ -83,17 +93,16 @@
           />
         </el-select>
       </el-form-item>
-      <!-- <Area  @placeInfo="getPlace" :toSon="toplace"/> -->
       <el-form-item prop="username">
         <el-input
-          v-model="queryParams.username"
-          placeholder="负责人姓名"
+          v-model="queryParams.keywords"
+          placeholder="客户模糊搜索"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-
+      <!-- <Area  @place-info="getPlace" :toSon="toplace"/> -->
       <el-form-item>
         <el-button
           type="primary"
@@ -175,7 +184,7 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="id" align="center" prop="id"/>
+      <el-table-column label="公司" align="center" prop="deptName"/>
       <el-table-column label="客户名称" align="center">
         <template slot-scope="obj">
           <el-button
@@ -298,7 +307,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="客户地区">
-          <Area @placeInfo="getPlace" :toSon="toplace"/>
+          <Area @place-info="getPlace" :toSon="toplace"/>
         </el-form-item>
         <el-form-item label="客户公司">
           <el-input v-model="form.companyName" placeholder="请输入公司和部门"/>
@@ -394,8 +403,12 @@ import {
 } from '@/api/system/customer'
 import { listUser } from '@/api/system/user'
 import { getInfo } from '@/api/login'
+import showdept from '@/components/DeptShow/index';
 
 export default {
+  components:{
+    showdept
+  },
   name: 'Customer',
   data() {
     return {
@@ -453,6 +466,7 @@ export default {
       inputDate: [],
       // 查询参数
       queryParams: {
+        deptId: null,
         pageNum: 1,
         pageSize: 10,
         name: null,
@@ -467,7 +481,8 @@ export default {
         resource: null,
         username: null,
         inputDateStart: null,
-        inputDateEnd: null
+        inputDateEnd: null,
+        keywords: null
       },
       // 表单参数
       form: {},
@@ -519,6 +534,10 @@ export default {
     })
   },
   methods: {
+    getDeptId(deptId) {
+      this.queryParams.deptId = deptId;
+      console.log("deptId:",deptId)
+    },
     // 表单重置
     reset() {
       this.form = {
@@ -643,6 +662,9 @@ export default {
     },
     //   获取省市区的地址
     getPlace(i, j, k) {
+      console.log("iiiiiii", i)
+      console.log("jjjjjj",j)
+      console.log("kkkkkk",k)
       this.form.province = i
       this.form.city = j
       this.form.district = k
