@@ -1,7 +1,7 @@
 <template>
   <span>
     <el-form-item style="width:30%">
-      <el-select  clearable v-model="prov" placeholder="请选择省">
+      <el-select @clear="clearpro"  clearable v-model="prov" placeholder="请选择省">
         <el-option
           v-for="(item, index) of arr"
           :key="index"
@@ -11,12 +11,11 @@
       </el-select>
     </el-form-item>
     <el-form-item style="width:30%">
-      <el-select clearable  v-model="city" placeholder="请选择市">
+      <el-select @clear="clearcity" clearable  v-model="city" placeholder="请选择市">
         <el-option
           v-for="(item, index) of cityArr"
           :key="index"
           :value="item.name"
-
         ></el-option>
       </el-select>
     </el-form-item>
@@ -26,7 +25,6 @@
           v-for="(item, index) of districtArr"
           :key="index"
           :value="item.name"
-
         ></el-option>
       </el-select>
     </el-form-item>
@@ -34,6 +32,7 @@
 </template>
 <script>
 import { arrAll } from "./cities.js";
+import log from '@/views/monitor/job/log'
 export default {
   data() {
     return {
@@ -53,25 +52,47 @@ export default {
     this.showPlace()
   },
   watch: {
+//     prov(newVal,oldval){
+//       console.log("watch prov")
+//       console.log("newVal", newVal)
+//       console.log("oldval", oldval)
+//
+//       this.updateCity();
+//       this.updateDistrict();
+//       // if(newVal==='请选择'){
+//       //   newVal=null
+//       //   this.prov = null
+//       //   this.city=null
+//       //   this.district=null
+//       // }
+// },
+
     prov: {
       // 表格数据刷新后需清空之前查看的订单详情内容
       handler: function(newVal, oldVal) {
         this.updateCity();
         this.updateDistrict();
+        this.toFather()
+        // if(newVal==='请选择'){
+        //   newVal=null
+        //   this.city=null
+        //   this.district=null
+        // }
       },
-      deep: true
+      deep: true,
     },
     city: {
       // 表格数据刷新后需清空之前查看的订单详情内容
       handler: function(newVal, oldVal) {
         this.updateDistrict();
+        this.toFather()
       },
       deep: true
     },
     district: {
       // 表格数据刷新后需清空之前查看的订单详情内容
       handler: function(newVal, oldVal)  {
-          this.toFather()
+        this.toFather()
       },
       deep: true
     }
@@ -85,6 +106,33 @@ export default {
     },
     toFather() {
       this.$emit("placeInfo", this.prov, this.city, this.district);
+      console.log('this.prov=null',this.prov)
+      console.log('this.city=null',this.city)
+      console.log('this.district=null',this.district)
+    },
+    clearpro(){
+      // console.log('this.prov',this.prov)
+      // if(this.prov===''){
+      //   this.city=null
+      //   this.district=null
+      // }
+        this.prov=null
+        this.city=null
+        this.district=null
+        this.toFather()
+       // if(this.prov==='请选择'){
+       //   this.prov=null
+       //   this.city=null
+       //   this.district=null
+       // }
+       // if(this.city==='null'){
+       //   this.city=null
+       //   this.district=null
+       // }
+    },
+    clearcity(){
+      this.district=null
+      this.toFather()
     },
     updateCity() {
       for (var i in this.arr) {
@@ -94,31 +142,35 @@ export default {
           break;
         }
       }
-      this.city = this.cityArr[1].name;
+      this.city = this.cityArr[1]? this.cityArr[1].name:null;
     },
     updateDistrict() {
       for (var i in this.cityArr) {
         var obj = this.cityArr[i];
+        // console.log("this.cityArr:", this.cityArr)
         if (obj.name == this.city) {
+          // console.log("this.city", this.city)
           this.districtArr = obj.sub;
+          // console.log('this.districtArr',this.districtArr)
           break;
         }
       }
-      if (
-        this.districtArr &&
-        this.districtArr.length > 0 &&
-        this.districtArr[1].name
-      ) {
-        this.district = this.districtArr[1].name;
-      } else {
-        this.district = "";
-      }
+      this.district = this.districtArr[1]? this.districtArr[1].name:null;
+      // if (
+      //   this.districtArr &&
+      //   this.districtArr.length > 0 &&
+      //   this.districtArr[1].name
+      // ) {
+      //   this.district = this.districtArr[1]?this.districtArr[1].name:null;
+      // } else {
+      //   this.district = "";
+      // }
     }
   }
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .el-select {
   height: 32px;
 }

@@ -1,276 +1,108 @@
 <template>
-  <div class="upImg_box">
-    <div v-for="(item,index) in value" :key="item.id" class="show_img_box">
-      <div class="showImg">
-        <img :src="baseUrl + item.url" alt="图片" />
-        <div class="mask">
-<!--          <Icon v-if="onlyShow" type="ios-eye-outline" color="red" size="24" @click.native="handleView(baseUrl + item.url)"></Icon>-->
-<!--          <Icon v-else type="md-trash" @click.native="delImg(index)" size="24" color="red"></Icon>-->
-          <i v-if="onlyShow" class="el-icon-circle-plus-outline" color="red" size="24" @click.native="handleView(baseUrl + item.url)"></i>
-          <i v-else class="el-icon-remove-outline"  @click.native="delImg(index)" size="24" color="red"></i>
-        </div>
+  <div class="upload-info">
+    <div>
+      <el-upload
+        class="upload-pic"
+        :action="domain"
+        :data="QiniuData"
+        :on-remove="handleRemove"
+        :on-error="uploadError"
+        :on-success="uploadSuccess"
+        :before-remove="beforeRemove"
+        :before-upload="beforeAvatarUpload"
+        :limit="3"
+        multiple
+        :on-exceed="handleExceed"
+        :file-list="fileList"
+      >
+        <el-button size="small" type="primary">选择图片</el-button>
+      </el-upload>
+      <div>
+        <img class="pic-box" :src="uploadPicUrl" v-if="uploadPicUrl">
       </div>
-      <Input class="img_describe" v-model="item.name" v-if="imgName" />
     </div>
-    <div v-show="!onlyShow" class="up_btn" :id="'up_btn' + curPageId"></div>
-    <input type="file" ref="inputFile" accept="image/*" multiple class="inputFile" :id="curPageId" />
-<!--    <Modal title="图片展示" v-model="visible">-->
-<!--      <img :src="showImg" style="width: 100%" />-->
-<!--    </Modal>-->
-    <el-dialog title="图片展示" :visible.sync="visible">
-      <img :src="showImg" style="width: 100%" />-->
-    </el-dialog>
+    <div>
+      <el-button type="primary" :loading="loading" @click="handleSubmit">提交</el-button>
+      <el-button type="info" plain >取消</el-button>
+    </div>
   </div>
 </template>
-<script>
-import * as qiniu from "qiniu-js";
-import { imgBaseUrl } from "@/config.js";
-import {getToken} from '@/utils/auth.js'
-import { rejects } from "assert";
-export default {
-  props: {
-    value: {
-      type: Array,
-      default: function() {
-        return [];
-      }
-    },
-    type: {
-      type: String,
-      required: true
-    },
-    imgName: {
-      type: Boolean,
-      default: false
-    },
-    onlyShow: {
-      type: Boolean,
-      default: false
-    },
 
-    strictMode: {
-      type: Boolean,
-      default: true
-    } // 用于58平台的发布。
-  },
+<script>
+import $axios from 'axios'
+export default {
   data() {
     return {
-      appendData: {
-        type: this.type
-      }, // 上传图片额外的参数。
-      filePicker: ["jpg", "jpeg", "png"], // 上传图片的类型。
-      header: {},
-      showImg: "",
-      visible: false,
-      curPageId: "",
-      imgUrl: "",
-      baseUrl: imgBaseUrl
+      loading: false,
+      QiniuData: {
+        key: "", //图片名字处理
+        token: "" ,//七牛云token
+        data:{}
+      },
+      domain: "http://upload.qiniup.com", // 七牛云的上传地址（华东区）
+      qiniuaddr: "http://image.********.cn", // 七牛云的图片外链地址 七牛云空间的外链地址
+      uploadPicUrl: "", //提交到后台图片地址
+      fileList: []
     };
   },
-  created() {
-    this.curPageId = this._uid;
-    this.header.CITY = localStorage.getItem("cityName");
-    this.header.ACCESS_TOKEN = sessionStorage.getItem("token");
-  },
   mounted() {
-    this.getToken();
-    const self = this;
-    const input = document.getElementById(this.curPageId);
-    document.getElementById("up_btn" + this.curPageId).addEventListener(
-      "click",
-      function() {
-        input.click();
-      },
-      false
-    );
-    // 图片需要关联到58，而58的要求是 图片不超过10M 尺寸不小于600 * 600;
-    input.addEventListener(
-      "change",
-      function() {
-        Array.from(input.files).forEach(item => {
-          if (self.strictMode) {
-            self.checkImg(item)
-              .then(() => {
-                self.upImg(item);
-              })
-              .catch(error => {
-                self.$Message.error(error);
-              });
-          } else {
-            self.upImg(item);
-          }
-        });
-      },
-      false
-    );
+    this.getQiniuToken();
   },
   methods: {
-    getToken() {
-      // this.$get("picture/image/getToken").then(res => {
-      //   if (res) {
-      //     this.token = res.msg;
-      //   }
-      // });
+    handleRemove(file, fileList) {
+      this.uploadPicUrl = "";
     },
-    checkImg(file) {
-      const Max_size = 10 * 1024 * 1024;
-      return new Promise((resolve, rejects) => {
-        if (file.size > Max_size) {
-          rejects(
-            `您上传的图片${file.name}尺寸超过10M,请修改后再次上传`
-          );
-        }
-        this.checkWidthAndLength(file)
-          .then(() => {
-            resolve();
-          })
-          .catch(error => {
-            rejects(
-              `请确保您上传图片的宽最小为600px,高最小为600px`
-            );
-          });
+    handleExceed(files, fileList) {
+      this.$message.warning(
+        `当前限制选择 3 张图片，如需更换，请删除上一张图片在重新选择！`
+      );
+    },
+    beforeAvatarUpload(file) {   //图片上传之前的方法
+      // const isPNG = file.type === "image/png";
+      // const isJPEG = file.type === "image/jpeg";
+      // const isJPG = file.type === "image/jpg";
+      // const isLt2M = file.size / 1024 / 1024 < 2;
+
+      // if (!isPNG && !isJPEG && !isJPG) {
+      //   this.$message.error("上传头像图片只能是 jpg、png、jpeg 格式!");
+      //   return false;
+      // }
+      // if (!isLt2M) {
+      //   this.$message.error("上传头像图片大小不能超过 2MB!");
+      //   return false;
+      // }
+      this.QiniuData.data = file;
+      this.QiniuData.key = `${file.name}`;
+      console.log(this.QiniuData.key)
+    },
+    uploadSuccess(response, file, fileList) {  //图片上传成功的方法
+      console.log(fileList);
+      console.log(response);
+      console.log(file);
+      this.uploadPicUrl = `${this.qiniuaddr}/${response.key}`;
+    },
+    uploadError(err, file, fileList) {    //图片上传失败时调用
+      this.$message({
+        message: "上传出错，请重试！",
+        type: "error",
+        center: true
       });
     },
-    checkWidthAndLength(file) {
-      const Max_width = 600;
-      const Max_height = 600;
-      return new Promise((resolve, rejects) => {
-        var reader = new FileReader();
-        reader.onload = function(e) {
-          var data = e.target.result;
-          //加载图片获取图片真实宽度和高度
-          var image = new Image();
-          image.onload = function() {
-            var width = image.width;
-            var height = image.height;
-            const isAllow =
-              width >= Max_width && height >= Max_height;
-            if (isAllow) {
-              resolve();
-            } else {
-              rejects();
-            }
-          };
-          image.src = data;
-        };
-        reader.readAsDataURL(file);
+    beforeRemove(file, fileList) {
+      // return this.$confirm(`确定移除 ${ file.name }？`);
+    },
+    //提交数据到后台
+    handleSubmit() {
+
+    },
+    //请求后台拿七牛云token
+    async getQiniuToken() {  //token
+      let uploadtoken = await $axios("http://192.168.53.237:8889/image/getToken", {
+        method: "get",
       });
+      console.log('uploadtoken',uploadtoken);
+      this.QiniuData.token= uploadtoken.data.msg
     },
-    //图片上传成功
-    upImgSuccess(url, file, uid) {
-      this.value.push({
-        url: url,
-        name: file.name,
-        id: file.uid
-      });
-    },
-    upImg(file) {
-      //
-      // 上传图片。
-      const d = new Date();
-      var time = d.getTime() + parseInt(Math.random() * 1000);
-      var observable;
-      if (this.token) {
-        observable = qiniu.upload(file, time, this.token);
-      } else {
-        this.$Message.error("上传失败!");
-        return;
-      }
-      var self = this;
-      var observer = {
-        next(res) {},
-        error(err) {
-          self.$Message.error("上传失败");
-        },
-        complete(res) {
-          //+"?"+"imageView2/0/format/jpg/interlace/1/q/75|imageslim"
-          self.imgUrl = res.key;
-          self.upImgSuccess(self.imgUrl, file, time);
-        }
-      };
-      var subscription = observable.subscribe(observer); // 上传开始
-    },
-    // 删除图片
-    delImg(index) {
-      this.value.splice(index, 1);
-    },
-    handleView(url) {
-      this.showImg = url;
-      this.visible = true;
-    }
   }
 };
 </script>
-<style lang="scss" scoped>
-.up_btn {
-  border: 1px solid #ccc;
-  width: 160px;
-  height: 110px;
-  border-radius: 4px;
-  cursor: pointer;
-  background-image: url("img/upImg.png");
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-.show_img_box {
-  width: 160px;
-  display: inline-block;
-
-  > .showImg {
-    height: 110px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    position: relative;
-    cursor: pointer;
-
-    img {
-      width: 100%;
-      height: 100%;
-    }
-
-    &:hover .mask {
-      display: block;
-    }
-  }
-
-  > .img_describe {
-    margin-top: 8px;
-  }
-}
-
-.img_describe /deep/ .ivu-input {
-  text-align: center;
-}
-
-.upImg_box {
-  display: flex;
-  align-items: flex-start;
-  min-height: 400px;
-  flex-wrap: wrap;
-
-  > div {
-    margin: 10px 0.5em 0;
-  }
-}
-
-.upImg_box /deep/ .ivu-upload {
-  display: inline-block;
-}
-
-.mask {
-  display: none;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(50, 50, 50, 0.3);
-  line-height: 110px;
-  text-align: center;
-}
-
-.inputFile {
-  opacity: 0;
-}
-</style>

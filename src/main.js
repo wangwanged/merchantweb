@@ -73,6 +73,9 @@ Vue.use(GeminiScrollbar)
 import mycomponents from '@/views/components/index.js'
 Vue.use(mycomponents);
 
+import iView from 'iview'
+Vue.use(iView);
+
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium' // set element-ui default size
 })

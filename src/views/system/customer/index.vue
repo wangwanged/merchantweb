@@ -735,33 +735,4 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.search .el-input {
-  width: 150px;
-}
-
-.search .el-select {
-  width: 150px;
-}
-
-.search .datepicker {
-  margin-top: 2px;
-  height: 32px;
-  width: 250px;
-
-  /deep/ .el-date-editor--daterange .el-input__inner {
-    width: 150px;
-  }
-}
-
-.search .el-date-picker {
-  height: 32px;
-  width: 150px;
-}
-
-.liandong {
-  /deep/ .el-input__inner {
-    width: 105px;
-    height: 32px;
-  }
-}
 </style>

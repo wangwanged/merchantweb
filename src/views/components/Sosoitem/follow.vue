@@ -60,7 +60,7 @@
           </div>
         </el-form-item>
         <el-form-item>
-          <UpImage/>
+          <UpImage1/>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -68,11 +68,10 @@
         <el-button type="primary" @click="submitAdd">保存</el-button>
       </span>
     </el-dialog>
-
   </section>
 </template>
 <script>
-import { getGenjin, addGenjin, uploadImg } from "@/api/system/customer";
+import { getGenjin, addGenjin} from "@/api/system/customer";
 export default {
   props: ["tofollow"],
   data() {

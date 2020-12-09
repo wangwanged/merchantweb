@@ -78,6 +78,7 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item> <cascater/></el-form-item>
       <el-form-item>
         <el-button
           type="primary"
@@ -111,7 +112,7 @@
         </el-col>
         <!-- 导入线索 -->
         <el-col :span="1.5">
-          <input-excel @getResult="getMyExcelData"></input-excel>
+<!--          <input-excel @getResult="getMyExcelData"></input-excel>-->
         </el-col>
         <el-col :span="1.5">
           <el-button
@@ -389,6 +390,7 @@
 </template>
 
 <script>
+import cascater from '@/views/components/area/cascater'
 import {
   listXiansuo,
   getXiansuo,
@@ -399,14 +401,12 @@ import {
   transfortoCustomer,
   importXiansuo
 } from "@/api/system/xiansuo";
-import Area from "@/views/components/area/liandong.vue";
 import {
   listCustomer,
   addCustomer,
   transforCustomer
 } from "@/api/system/customer";
 import { listUser } from "@/api/system/user";
-import inputExcel from "@/views/components/importexcel";
 import { getInfo } from "@/api/login";
 export default {
   name: "Xiansuo",
@@ -494,9 +494,8 @@ export default {
       }
     };
   },
-  components: {
-    Area,
-    "input-excel": inputExcel
+  components:{
+    cascater
   },
   created() {
     this.getList();
@@ -629,24 +628,6 @@ export default {
             });
         }
       });
-
-      //   this.$refs["form"].validate(valid => {
-      //     if (valid) {
-      //       if (this.form.id != null) {
-      //         updateXiansuo(this.form).then(response => {
-      //           this.msgSuccess("修改成功");
-      //           this.open = false;
-      //           this.getList();
-      //         });
-      //       } else {
-      //         addXiansuo(this.form).then(response => {
-      //           this.msgSuccess("新增成功");
-      //           this.open = false;
-      //           this.getList();
-      //         });
-      //       }
-      //     }
-      //   });
     },
      // 直接显示当前负责人和部门
     getdeptuser() {
@@ -753,31 +734,10 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.search .el-input {
-  width: 150px;
-}
-.search .el-select {
-  width: 150px;
-}
-.search .el-autocomplete{
-    width: 150px;
-    /deep/  .el-input__inner{
-      height: 32px;
-    }
-}
-.search .datepicker{
-    margin-top:2px;
-    height: 32px;
-    width: 250px;
-    /deep/.el-date-editor--daterange .el-input__inner{
-        width: 150px;
-    }
-}
-.liandong{
-    /deep/ .el-input__inner{
-        width:105px;
-        height: 32px;
-    }
-}
-
+//.search .liandong{
+//    /deep/ .el-input__inner{
+//        width:115px;
+//        height: 32px;
+//    }
+//}
 </style>

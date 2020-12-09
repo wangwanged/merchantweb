@@ -1,7 +1,10 @@
 export var arrAll = [{
-        name: "选择省份",
+        name: "请选择",
         sub: [{
-            name: "请选择"
+            name: "请选择",
+            sub: [{
+            name: "请选择",
+          }],
         }],
         type: 1
     },
