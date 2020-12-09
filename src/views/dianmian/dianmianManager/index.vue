@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item prop="diandongId">
+      <!-- <el-form-item prop="diandongId">
         <el-input
           v-model="queryParams.diandongId"
           placeholder="请输入店东id"
@@ -9,8 +9,8 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item prop="diandongName">
+      </el-form-item> -->
+      <!-- <el-form-item prop="diandongName">
         <el-input
           v-model="queryParams.diandongName"
           placeholder="请输入店东姓名"
@@ -18,8 +18,8 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item  prop="diandongPhone">
+      </el-form-item> -->
+      <!-- <el-form-item  prop="diandongPhone">
         <el-input
           v-model="queryParams.diandongPhone"
           placeholder="请输入店东电话"
@@ -27,7 +27,7 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item prop="companyId">
         <el-input
           v-model="queryParams.companyId"
@@ -37,7 +37,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item prop="name">
+      <!-- <el-form-item prop="name">
         <el-input
           v-model="queryParams.name"
           placeholder="请输入门店名称"
@@ -45,7 +45,7 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择门店状态" clearable size="small">
           <el-option
@@ -110,7 +110,7 @@
           placeholder="选择开店日期">
         </el-date-picker>
       </el-form-item>
-      <el-form-item prop="contractnum">
+      <!-- <el-form-item prop="contractnum">
         <el-input
           v-model="queryParams.contractnum"
           placeholder="请输入合同编号"
@@ -118,7 +118,7 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item prop="type">
         <el-select v-model="queryParams.type" placeholder="请选择店面类型" clearable size="small">
           <el-option
