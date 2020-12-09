@@ -501,7 +501,7 @@ export default {
   created() {
     this.getList();
     // 客户来源字典
-    this.getDicts("sys_customer_resource").then(response => {
+    this.getDicts("sys_xiansuo_resource").then(response => {
       this.resourceOptions = response.data;
     });
     // 中介经验字典

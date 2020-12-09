@@ -42,11 +42,11 @@
         <div class="main_content_top">
           <p class="main_content_name">
             <span class="main_content_firstname">客户等级：</span>
-            <span>{{level + '(' + customerList.level + ')'}}</span>
+            <span>{{level + '(' + editinfo.level + ')'}}</span>
           </p>
           <p class="main_content_name">
             <span class="main_content_firstname">客户需求：</span>
-            <span >{{ customerList.customerNeeds }}</span>
+            <span >{{ editinfo.customerNeeds }}</span>
           </p>
           <p class="main_content_name">
             <span class="main_content_firstname">地区：</span>
@@ -64,11 +64,11 @@
           </p>
           <p class="main_content_name">
             <span class="main_content_firstname">中介经验：</span>
-            <span>{{ customerList.experience }}</span>
+            <span>{{ editinfo.experience }}</span>
           </p>
           <p class="main_content_name">
             <span class="main_content_firstname">客户来源：</span>
-            <span>{{ customerList.resource }}</span>
+            <span>{{ editinfo.resource }}</span>
           </p>
           <p class="main_content_name">
             <span class="main_content_firstname">备注：</span>
@@ -561,8 +561,7 @@ export default {
         var a = this.genjinOptions.filter(item => {
           return item.dictValue === this.customerList.genjinStatus;
         });
-        console.log("aaaa:", a)
-        this.customerList.genjinStatus = a ? a[0].dictLabel : null;
+        this.editinfo.genjinStatus = a ? a[0].dictLabel : null;
       });
       // 获取客户等级字典
       this.getDicts("customer_level").then(response => {
@@ -571,7 +570,7 @@ export default {
           return item.dictValue === this.customerList.level;
         });
         this.level=a[0].dictValue
-        this.customerList.level = a ? a[0].dictLabel : null;
+        this.editinfo.level = a ? a[0].dictLabel : null;
       });
       // 获取客户需求字典
       this.getDicts("sys_user_need").then(response => {
@@ -579,7 +578,7 @@ export default {
         var a = this.customerNeedsOptions.filter(item => {
           return item.dictValue === this.customerList.customerNeeds;
         });
-        this.customerList.customerNeeds =  a ? a[0].dictLabel : null;
+        this.editinfo.customerNeeds =  a ? a[0].dictLabel : null;
       });
       // 获取中介经验字典
       this.getDicts("experience").then(response => {
@@ -587,7 +586,7 @@ export default {
         var a = this.experienceOptions.filter(item => {
           return item.dictValue === this.customerList.experience;
         });
-        this.customerList.experience =  a ? a[0].dictLabel : null;
+        this.editinfo.experience =  a ? a[0].dictLabel : null;
       });
       // 获取客户来源字典
       this.getDicts("sys_customer_resource").then(response => {
@@ -595,7 +594,7 @@ export default {
         var a = this.resourceOptions.filter(item => {
           return item.dictValue === this.customerList.resource;
         });
-        this.customerList.resource =  a ? a[0].dictLabel : null;
+        this.editinfo.resource =  a ? a[0].dictLabel : null;
       });
     },
      //   新签合同按钮店面或区域显示控制
@@ -640,9 +639,7 @@ export default {
     handleUpdate() {
       this.dialogedit = true;
       this.reset();
-      getCustomer(this.id).then(response => {
-        this.form = response.data;
-      });
+      this.form=this.customerList
       this.toPlace();
     },
     // 编辑按钮提交
@@ -675,26 +672,15 @@ export default {
       transforCustomer(this.transforinfo.keywords).then(response => {
         this.transforinfo.transforlist = response.rows;
       });
-      //   var len = list.length;
-      //   var arr = [];
-      //   for (var i = 0; i < len; i++) {
-      //     //如果字符串中不包含目标字符会返回-1
-      //     if (list[i].indexOf(keyWord) >= 0) {
-      //       arr.push(list[i]);
-      //     }
-      //   }
-      //   return arr;
     },
       //   写跟进按钮
     goSecond() {
       //这是操作follow子组件的方法
       this.$refs.follow.handleAdd();
     },
-
     // 选择负责人和部门
     getManager(value){
        this.form.userId=value
-      console.log(value)
     }
    },
 }
