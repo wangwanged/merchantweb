@@ -1,14 +1,15 @@
 <template>
   <span style="position: relative">
-     <el-form-item prop="num">
+     <el-form-item prop="num" >
       <el-input @focus="treeShow = true" @blur="setTreeFalse" v-model="deptName"
+                @clear="resetDeptId"
                 placeholder="部门名称"
                 clearable
                 size="small"
                 prefix-icon="el-icon-search"
                 style="margin-bottom: 20px"
       />
-      <div class='el-scrollbar__view el-select-dropdown__list' >
+      <div class='el-scrollbar__view el-select-dropdown__list' @mouseleave="setIsSetTreeTrue">
         <el-tree
           v-show="treeShow === true"
           :data="deptOptions"
@@ -17,6 +18,8 @@
           :filter-node-method="filterNode"
           ref="tree"
           default-expand-all
+          @node-expand="setIsSetTreeFalse"
+          @node-collapse="setIsSetTreeFalse"
           @node-click="handleNodeClick"
         />
       </div>
@@ -52,7 +55,8 @@ export default {
 
   data() {
     return {
-      treeShow: "false",
+      isSetTreeFalse : 'true',
+      treeShow: "true",
       // 部门id
       deptId: null,
       // 部门名称
@@ -76,10 +80,27 @@ export default {
     }
   },
   methods: {
-    setTreeFalse () {
+    setIsSetTreeFalse() {
+      this.isSetTreeFalse = 'false'
+      console.log("isSetTreeFalse1",this.isSetTreeFalse)
+    },
+    setIsSetTreeTrue() {
+      this.isSetTreeFalse = 'true'
+      this.setTreeFalse()
+      console.log("isSetTreeFalse2",this.isSetTreeFalse)
+    },
+    resetDeptId() {
+      this.deptId='';
+      this.returnDeptId();
+    },
+    setTreeFalse() {
       setTimeout(() => {
-        this.treeShow = 'false'
-      },100)
+        console.log("aaaaaaaaaa")
+        if (this.isSetTreeFalse !== 'false') {
+          console.log("blur:",this.isSetTreeFalse)
+          this.treeShow = 'false'
+        }
+      },500)
     },
     returnDeptId() {
       this.$emit('myevent',this.deptId);
