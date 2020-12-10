@@ -34,7 +34,8 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-          <Area class='liandong' @place-info="getPlace" :toSon="toplace"/>
+        <Area class='liandong' @place-info="getPlace" :toSon="toplace"></Area>
+
       </el-form-item>
        <el-form-item prop="inputDate">
         <el-date-picker
@@ -210,28 +211,28 @@
         <el-form-item label="客户姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入客户姓名" />
         </el-form-item>
-        <el-form-item label="客户电话" prop="phone">
+        <el-form-item label="客户电话" >
           <el-input
-            style="width:90%"
-            v-model="customerPhone[0]"
+            style="width: 90%"
+            v-model="phoneadd"
             placeholder="请输入客户电话"
           />
           <i
             class="el-icon-circle-plus"
-            style="font-size:30px;margin-left:10px;"
-            @click="addPhone()"
+            style="font-size: 30px; margin-left: 10px"
+            @click="addPhone"
           ></i>
         </el-form-item>
         <el-form-item>
-          <div v-for="(item, index) in customerPhone" :key="index">
+          <div v-for="(item, index) in phonedecrease" :key="index">
             <el-input
-              style="width:90%"
-              v-model="customerPhone[index + 1]"
+              style="width: 90%"
+              v-model="phonedecrease[index]"
               placeholder="请输入客户电话"
             />
             <i
               class="el-icon-remove"
-              style="font-size:30px;margin-left:10px;"
+              style="font-size: 30px; margin-left: 10px"
               @click="decreasePhone(index)"
             ></i>
           </div>
@@ -340,7 +341,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="客户地区">
-          <Area @place-info="getPlace" :toSon="toplace"/>
+          <Area class='liandong' @place-info="getPlace" :toSon="toplace"/>
         </el-form-item>
         <el-form-item label="客户公司">
           <el-input v-model="form.companyName" placeholder="请输入公司" />
@@ -387,7 +388,6 @@
     </el-dialog>
   </div>
 </template>
-
 <script>
 import cascater from '@/views/components/area/cascater'
 import {
@@ -411,6 +411,8 @@ export default {
   name: "Xiansuo",
   data() {
     return {
+      phoneadd: '',
+      phonedecrease:[],
       keywords:'',
       //  传给省市区
       toplace: {
@@ -658,6 +660,7 @@ export default {
         return item.id === this.ids[0];
       });
       this.form = aaa[0];
+      console.log("formformformformformform", this.form)
       this.form.ids =  this.ids
       this.getdeptuser();
       this.toPlace();
@@ -708,21 +711,22 @@ export default {
      })
     },
     // 添加电话号码
+    // 添加电话号码
     addPhone() {
-      this.customerPhone.push("");
+      this.phonedecrease.push('');
     },
     // 删除电话号码
     decreasePhone(i) {
-      this.customerPhone.splice(i + 1, 1);
-      console.log("this.customerPhone", this.customerPhone);
+      this.phonedecrease.splice(i , 1);
+      console.log('phonedecrease',this.phonedecrease)
     },
     // 处理电话号码格式
     handlePhone() {
-      this.form.phone = this.customerPhone.toString();
+      this.form.phone=this.phoneadd+","+this.phonedecrease.toString()
+      console.log('this.form.phone',this.form.phone)
     },
     // 导入数据
     getMyExcelData(data) {
-      console.log("import", data);
       var data = data;
       importXiansuo(data).then(res => {
         console.log(res);

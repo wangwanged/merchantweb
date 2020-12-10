@@ -90,8 +90,31 @@
         <el-form-item required label="客户姓名" prop="name">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item required label="客户电话" prop="name">
-          <el-input v-model="form.phone"></el-input>
+        <el-form-item label="客户电话" >
+          <el-input
+            style="width: 90%"
+            v-model="phoneadd"
+            placeholder="请输入客户电话"
+          />
+          <i
+            class="el-icon-circle-plus"
+            style="font-size: 30px; margin-left: 10px"
+            @click="addPhone"
+          ></i>
+        </el-form-item>
+        <el-form-item>
+          <div v-for="(item, index) in phonedecrease" :key="index">
+            <el-input
+              style="width: 90%"
+              v-model="phonedecrease[index]"
+              placeholder="请输入客户电话"
+            />
+            <i
+              class="el-icon-remove"
+              style="font-size: 30px; margin-left: 10px"
+              @click="decreasePhone(index)"
+            ></i>
+          </div>
         </el-form-item>
         <el-form-item label="客户等级">
           <el-select

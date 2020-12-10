@@ -412,8 +412,7 @@ export default {
   name: 'Customer',
   data() {
     return {
-      phoneadd: '',
-      phonedecrease:[],
+
       keywords: '',
       //  传给省市区
       toplace: {
@@ -779,20 +778,7 @@ export default {
         this.deptName = a[0].dept.deptName
       })
     },
-    // 添加电话号码
-    addPhone() {
-      this.phonedecrease.push('');
-    },
-    // 删除电话号码
-    decreasePhone(i) {
-      this.phonedecrease.splice(i , 1);
-    },
-    // 处理电话号码格式
-    handlePhone() {
-      this.phonedecrease=this.phonedecrease.toString()
-      console.log('this.phonedecrease',this.phonedecrease)
-      // this.stringPhone=
-    },
+
   }
 }
 </script>
