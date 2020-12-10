@@ -1,21 +1,17 @@
 const state = {
     // 线索
   xiansuo:{
-     dialogTransfor:false,
-     dialogAddXiansuo:false,
-     dialogExport:false
+     dialogTransfor:false,   //转至客户弹框
+     dialogAddXiansuo:false,  //新增线索弹框
+     dialogExport:false,  //线索导出弹框
+     xiansuoList:[],  //index页线索list
  }
-
-
-
 }
-
 const mutations = {
-   updateAlldata(state,payload){
-      state.customerList=payload
+   allXiansuoData(state,payload){
+      state.xiansuo.xiansuoList=payload.xiansuoList
    }
 }
-
 const actions = {
 
 }

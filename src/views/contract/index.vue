@@ -308,8 +308,8 @@
     />
 
     <!-- 添加或修改合同对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-dialog :title="title" :visible.sync="open" width="650px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px" label-position="left">
         <el-form-item label="合同编号" prop="num">
           <el-input v-model="form.num" placeholder="请输入合同编号" />
         </el-form-item>
@@ -403,6 +403,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <Fee/>
         <el-form-item label="备注信息" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注信息" />
         </el-form-item>
@@ -630,7 +631,6 @@
     </el-dialog>
   </div>
 </template>
-
 <script>
 import {
   listContractManager,
@@ -1172,9 +1172,10 @@ export default {
     },
      //   转移确定按钮
     handleTransfor() {
-       var id = this.ids;
+       var ids = this.ids;
+       console.log('ids',ids)
        var params = {
-           ids:id,
+           ids:ids,
            phone:this.transforphone
        }
        contractTransfor(params).then(response => {
@@ -1185,7 +1186,6 @@ export default {
            this.$message.error("操作失败");
       });
     },
-
   },
   // 省市区赋值
   toPlace() {

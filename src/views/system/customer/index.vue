@@ -248,7 +248,7 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-    <!-- 添加或编辑我的客户对话框 -->
+    <!-- 新增或编辑我的客户对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="650px" append-to-body>
       <el-form
         ref="form"
@@ -260,32 +260,35 @@
         <el-form-item label="客户姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入"/>
         </el-form-item>
-        <el-form-item label="客户电话" prop="phone">
-          <el-input
-            style="width: 90%"
-            v-model="phoneadd"
-            placeholder="请输入客户电话"
-          />
-          <i
-            class="el-icon-circle-plus"
-            style="font-size: 30px; margin-left: 10px"
-            @click="addPhone"
-          ></i>
+        <el-form-item label="客户电话" prop="name">
+          <el-input v-model="form.phone" placeholder="请输入"/>
         </el-form-item>
-        <el-form-item>
-          <div v-for="(item, index) in phonedecrease" :key="index">
-            <el-input
-              style="width: 90%"
-              v-model="phonedecrease[index]"
-              placeholder="请输入客户电话"
-            />
-            <i
-              class="el-icon-remove"
-              style="font-size: 30px; margin-left: 10px"
-              @click="decreasePhone(index)"
-            ></i>
-          </div>
-        </el-form-item>
+<!--        <el-form-item label="客户电话" prop="phone">-->
+<!--          <el-input-->
+<!--            style="width: 90%"-->
+<!--            v-model="phoneadd"-->
+<!--            placeholder="请输入客户电话"-->
+<!--          />-->
+<!--          <i-->
+<!--            class="el-icon-circle-plus"-->
+<!--            style="font-size: 30px; margin-left: 10px"-->
+<!--            @click="addPhone"-->
+<!--          ></i>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item>-->
+<!--          <div v-for="(item, index) in phonedecrease" :key="index">-->
+<!--            <el-input-->
+<!--              style="width: 90%"-->
+<!--              v-model="phonedecrease[index]"-->
+<!--              placeholder="请输入客户电话"-->
+<!--            />-->
+<!--            <i-->
+<!--              class="el-icon-remove"-->
+<!--              style="font-size: 30px; margin-left: 10px"-->
+<!--              @click="decreasePhone(index)"-->
+<!--            ></i>-->
+<!--          </div>-->
+<!--        </el-form-item>-->
         <el-form-item label="客户等级">
           <el-select v-model="form.level" placeholder="请选择客户等级">
             <el-option
@@ -723,7 +726,7 @@ export default {
     },
     /** 新增提交按钮 */
     submitForm() {
-      this.handlePhone()
+      // this.handlePhone()
       this.form.status = '1'
       this.$refs['form'].validate(valid => {
         addCustomer(this.form).then(response => {

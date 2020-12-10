@@ -6,7 +6,7 @@ import tagsView from './modules/tagsView'
 import permission from './modules/permission'
 import settings from './modules/settings'
 import getters from './getters'
-import sosoitem from './modules/Soso'
+import Soso from './modules/Soso'
 
 Vue.use(Vuex)
 
@@ -17,7 +17,7 @@ const store = new Vuex.Store({
     tagsView,
     permission,
     settings,
-    sosoitem
+    Soso
   },
   getters
 })
