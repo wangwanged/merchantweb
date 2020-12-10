@@ -656,7 +656,7 @@ export default {
   },
   data() {
     return {
-
+      transferManagerId: null,
       // 时间字段
       TimeValue:null,
       // 时间类型
@@ -1139,7 +1139,8 @@ export default {
            const list = []
              //封装要显示的数据
            for (let v of restaurants) {
-            list.push({ value: v.phonenumber + " " + v.userName})
+             console.log("vvvvvvvvv", v)
+            list.push({ value: v.phonenumber + " " + v.userName, id: v.id})
             }
                  // 调用 callback 返回建议列表的数据,是一个数组类型
             callback(list)
@@ -1148,10 +1149,9 @@ export default {
          // 负责人查询
     handleSelect(item) {
         console.log(item)
-        var item = item.value
-        item=item.substring(0,11);
-        this.transforphone=item
-        this.userInfo()
+        this.transferManagerId = item.id
+
+        // this.userInfo()
       },
     // 获取user用户信息
     userInfo() {
@@ -1173,13 +1173,12 @@ export default {
      //   转移确定按钮
     handleTransfor() {
        var ids = this.ids;
-       console.log('ids',ids)
-       var data = {
-         ids:ids,
-         userId: this.form.userId
-           // phone:this.transforphone
+       var params = {
+           ids: ids,
+           managerId: this.transferManagerId
        }
-       contractTransfor(data).then(response => {
+       console.log("params", params)
+       contractTransfor(params).then(response => {
            this.$message.success("操作成功");
            this. dialogTransfor = false;
            this.getList();

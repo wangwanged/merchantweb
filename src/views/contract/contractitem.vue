@@ -68,7 +68,7 @@
           plain
           size="small"
           style="margin-right:15px"
-          >{{ this.dict.contractTypeLabel }}</el-button
+          >{{ dict.contractTypeLabel }}</el-button
         >
         <span style="font-size:13px">负责人：{{ contractList.manager }}</span>
       </div>
@@ -91,7 +91,7 @@
                   </p>
                   <p class="main_content_name">
                     <span class="main_content_firstname">合同类型：</span>
-                    <el-button size="small" >{{this.dict.contractTypeLabel }}</el-button>
+                    <el-button size="small" >{{dict.contractTypeLabel }}</el-button>
                   </p>
                   <el-table border :data="relatedList" style="width: 100%">
                     <el-table-column
@@ -199,8 +199,8 @@
                   </p>
                   <div class="main_title">系统信息</div>
                   <p class="main_content_name">
-                    <span class="main_content_firstname">备注信息：</span>
-                    <span>xxx</span>
+                    <span class="main_content_firstname">创建人：</span>
+                    <span>{{ contractList.createBy }}</span>
                   </p>
                   <p class="main_content_name">
                     <span class="main_content_firstname">负责人：</span>
@@ -623,11 +623,7 @@
         </el-tabs>
       </div>
       <!-- 审核弹框 -->
-      <el-dialog
-        title="合同审核"
-        width="30%"
-        :visible.sync="dialog.dialogcheck"
-      >
+      <el-dialog title="合同审核" :visible.sync="dialog.dialogcheck" width="500px">
         <tr>
           <td><i class="el-icon-message-solid" style="font-size:70px"></i></td>
           <td>
@@ -637,11 +633,37 @@
             </p>
           </td>
         </tr>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="dialog.dialogcheck = false">取 消</el-button>
+        <el-date-picker
+          value-format="yyyy-MM-dd"
+          v-model="contractList.checkDate"
+          type="date"
+          placeholder="选择日期">
+        </el-date-picker>
+        <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="handlecheck">确 定</el-button>
-        </span>
+          <el-button @click="dialog.dialogcheck = false">取 消</el-button>
+        </div>
       </el-dialog>
+      <!-- 审核弹框 -->
+<!--            <el-dialog-->
+<!--        title="合同审核"-->
+<!--        width="30%"-->
+<!--        :visible.sync="dialog.dialogcheck"-->
+<!--      >-->
+<!--        <tr>-->
+<!--          <td><i class="el-icon-message-solid" style="font-size:70px"></i></td>-->
+<!--          <td>-->
+<!--            <strong>确认要审核合同吗？</strong>-->
+<!--            <p>-->
+<!--              合同审核后将无法进行编辑、转移、失效操作！-->
+<!--            </p>-->
+<!--          </td>-->
+<!--        </tr>-->
+<!--        <span slot="footer" class="dialog-footer">-->
+<!--          <el-button @click="dialog.dialogcheck = false">取 消</el-button>-->
+<!--          <el-button type="primary" @click="handlecheck">确 定</el-button>-->
+<!--        </span>-->
+<!--      </el-dialog>-->
 
       <!-- 反审核弹框 -->
       <el-dialog
@@ -1120,15 +1142,15 @@ export default {
         var a = this.dict.produceTypeOptions.filter(item => {
           return item.dictValue === this.contractList.produce;
         });
-        this.dict.produceTypeLabel = a[0].dictLabel;
+        this.dict.produceTypeLabel = a[0] ? a[0].dictLabel : null;
       });
-      // 获取审核状态字典
+      // 获取审核状态字
       this.getDicts("check_status").then(response => {
         this.dict.checkOptions = response.data;
         var a = this.dict.checkOptions.filter(item => {
           return item.dictValue === this.contractList.checkStatus;
         });
-        this.dict.checkLabel = a[0].dictLabel;
+        this.dict.checkLabel = a[0] ? a[0].dictLabel : null;
       });
       // 获取合同类型字典
       this.getDicts("contract_type").then(response => {
@@ -1136,7 +1158,7 @@ export default {
         var a = this.dict.contractTypeOptions.filter(item => {
           return item.dictValue === this.contractList.type;
         });
-        this.dict.contractTypeLabel = a[0].dictLabel;
+        this.dict.contractTypeLabel = a[0] ? a[0].dictLabel : null;
       });
       // 获取合同状态字典
       this.getDicts("contract_status").then(response => {
@@ -1144,7 +1166,7 @@ export default {
         var a = this.dict.statusOptions.filter(item => {
           return item.dictValue === this.contractList.status;
         });
-        this.dict.statusOptions= a[0].dictLabel;
+        this.dict.statusOptions= a[0] ? a[0].dictLabel : null;
       });
     },
 

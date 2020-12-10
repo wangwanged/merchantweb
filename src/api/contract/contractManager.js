@@ -156,7 +156,7 @@ export function getAttachmentinfo(params) {
 // 合同转移
 export function contractTransfor(data) {
   return request({
-    url: '/contract/contractManager/transfer',
+    url: '/contract/contractManager/transfer/ids',
     method: 'post',
     data
   })

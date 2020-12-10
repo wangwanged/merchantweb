@@ -576,6 +576,7 @@ export default {
         dianmianLatitude: null,
         dianmianLongitude: null,
         dianmianProvince: null,
+        createBy: null,
         fee: {}
       }
       this.resetForm('form')
@@ -674,6 +675,7 @@ export default {
       this.form.managerId = this.customerList.userId
       this.form.manager = this.customerList.username
       this.form.customerNum = this.customerList.num
+      this.form.creatBy = this.customerList.username
       this.form.fee = JSON.stringify(this.fee)
       this.form.signDate = parseTime(new Date(), '{y}-{m}-{d}')
       this.form.beginDate = parseTime(new Date(), '{y}-{m}-{d}')
