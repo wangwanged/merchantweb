@@ -3,8 +3,8 @@
     <div class="header">
       <div class="header_top">
         <span class="title_name">{{ xiansuoList.name }}</span>
-        <el-button size="small" type="primary" plain>{{
-          xiansuoList.genjinStatus
+        <el-button v-if="this.dict.genjinStatusLable" size="small" type="primary" plain>{{
+            this.dict.genjinStatusLable
         }}</el-button>
         <el-button size="small" @click="handletocustomer" type="primary"
           >转成客户</el-button
@@ -43,11 +43,11 @@
             </p>
             <p class="main_content_name">
               <span class="main_content_firstname">中介经验：</span>
-              <span>{{ xiansuoList.experience }}</span>
+              <span>{{ this.dict.experienceLable }}</span>
             </p>
             <p class="main_content_name">
               <span class="main_content_firstname">客户来源：</span>
-              <span>{{ xiansuoList.resource }}</span>
+              <span>{{ this.dict.resourceLable }}</span>
             </p>
             <p class="main_content_name">
               <span class="main_content_firstname">备注：</span>
@@ -197,13 +197,19 @@ export default {
       levelOptions: [], //客户等级字典
       userneedOptions: [], //客户需求字典
       experienceOptions: [], //中介经验字典
-      experienceOptions: [], //客户来源字典
       //   字典end
       showGenjin: "跟进",
       form: {},
       filter: {
         value: "",
         label: ""
+      },
+      dict: {
+        genjinStatusLable: null,
+        levelLable: null,
+        needLable: null,
+        experienceLable: null,
+        resourceLable: null
       }
     };
   },
@@ -255,7 +261,6 @@ export default {
         updateTime: null,
         userId: null,
         username: null,
-        experience: null,
         transforphone: null,
         transforKeywords: null,
         genjinStatus: null
@@ -277,7 +282,7 @@ export default {
         var a = this.genjinOptions.filter(item => {
           return item.dictValue === this.xiansuoList.genjinStatus;
         });
-        this.xiansuoList.genjinStatus = a[0].dictLabel;
+        this.dict.genjinStatusLable = a[0].dictLabel;
       });
       // 获取客户等级字典
       this.getDicts("customer_level").then(response => {
@@ -285,7 +290,7 @@ export default {
         var a = this.levelOptions.filter(item => {
           return item.dictValue === this.xiansuoList.level;
         });
-        this.xiansuoList.level = a[0].dictLabel;
+        this.dict.levelLable = a[0].dictLabel;
       });
       // 获取客户需求字典
       this.getDicts("sys_user_need").then(response => {
@@ -293,7 +298,7 @@ export default {
         var a = this.userneedOptions.filter(item => {
           return item.dictValue === this.xiansuoList.customerNeeds;
         });
-        this.xiansuoList.customerNeeds = a[0].dictLabel;
+        this.dict.needLable = a[0].dictLabel;
       });
       // 获取中介经验字典
       this.getDicts("experience").then(response => {
@@ -301,7 +306,7 @@ export default {
         var a = this.experienceOptions.filter(item => {
           return item.dictValue === this.xiansuoList.experience;
         });
-        this.xiansuoList.experience = a[0].dictLabel;
+        this.dict.experienceLable = a[0].dictLabel;
       });
       // 获取客户来源字典
       this.getDicts("sys_customer_resource").then(response => {
@@ -309,7 +314,7 @@ export default {
         var a = this.experienceOptions.filter(item => {
           return item.dictValue === this.xiansuoList.resource;
         });
-        this.xiansuoList.resource = a[0].dictLabel;
+        this.dict.resourceLable = a[0].dictLabel;
       });
     },
     // 客户等级字典

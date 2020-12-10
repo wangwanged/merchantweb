@@ -49,11 +49,11 @@
           <div class="main_content_top">
             <p class="main_content_name">
               <span class="main_content_firstname">客户等级：</span>
-              <span>{{ level + '(' + editinfo.level + ')' }}</span>
+              <span>{{ level + '(' + dict.levelLable + ')' }}</span>
             </p>
             <p class="main_content_name">
               <span class="main_content_firstname">客户需求：</span>
-              <span>{{ editinfo.customerNeeds }}</span>
+              <span>{{ dict.needLable }}</span>
             </p>
             <p class="main_content_name">
               <span class="main_content_firstname">地区：</span>
@@ -71,11 +71,11 @@
             </p>
             <p class="main_content_name">
               <span class="main_content_firstname">中介经验：</span>
-              <span>{{ editinfo.experience }}</span>
+              <span>{{ dict.experienceLable }}</span>
             </p>
             <p class="main_content_name">
               <span class="main_content_firstname">客户来源：</span>
-              <span>{{ editinfo.resource }}</span>
+              <span>{{ dict.resourceLable }}</span>
             </p>
             <p class="main_content_name">
               <span class="main_content_firstname">备注：</span>
@@ -156,7 +156,7 @@
         <el-form-item required label="签约产品">
           <el-select v-model="form.produce">
             <el-option
-              v-for="dict in customerNeedsOptions"
+              v-for="dict in this.customerNeedsOptions"
               :key="dict.dictValue"
               :label="dict.dictLabel"
               :value="dict.dictValue"
@@ -196,46 +196,46 @@
         <div style="font-size:20px;font-weight:700;margin-bottom:20px">
           店面/区域信息
         </div>
-        <!-- <div v-if="showDianmian"> -->
-        <el-form-item required label="店面名称">
-          <el-input
-            v-model="form.dianmianName"
-            placeholder="请输入"
-          ></el-input>
-        </el-form-item>
-        <el-form-item required label="所属区域">
-          <Area @place-info="getPlace" :toSon="toplace"/>
-        </el-form-item>
-        <!-- </div> -->
-        <!-- <div v-else>
+        <div>
           <el-form-item required label="店面名称">
             <el-input
               v-model="form.dianmianName"
               placeholder="请输入"
             ></el-input>
           </el-form-item>
-           <el-form-item required label="所属区域">
-            <Area  @place-info="getPlace" :toSon="toplace"/>
+          <el-form-item required label="所属区域">
+            <Area @place-info="getPlace" :toSon="toplace"/>
           </el-form-item>
-        </div> -->
-        <el-form-item required label="详细地址">
-          <el-input
-            v-model="form.dianmianAddress"
-            placeholder="请输入"
-          ></el-input>
-        </el-form-item>
-        <el-form-item required label="店面经度">
-          <el-input
-            placeholder="请输入"
-            v-model="form.dianmianLongitude"
-          ></el-input>
-        </el-form-item>
-        <el-form-item required label="店面纬度">
-          <el-input
-            v-model="form.dianmianLatitide"
-            placeholder="请输入"
-          ></el-input>
-        </el-form-item>
+          <el-form-item required label="详细地址" v-show="this.form.produce===0">
+            <el-input
+              v-model="form.dianmianAddress"
+              placeholder="请输入"
+            ></el-input>
+          </el-form-item>
+          <el-form-item required label="店面经度" v-show="this.form.produce===0">
+            <el-input
+              placeholder="请输入"
+              v-model="form.dianmianLongitude"
+            ></el-input>
+          </el-form-item>
+          <el-form-item required label="店面纬度" v-show="this.form.produce===0">
+            <el-input
+              v-model="form.dianmianLatitide"
+              placeholder="请输入"
+            ></el-input>
+          </el-form-item>
+        </div>
+        <!--<div v-else>
+          <el-form-item required label="区域名称">
+            <el-input
+              v-model="form.dianmianName"
+              placeholder="请输入"
+            ></el-input>
+          </el-form-item>
+          <el-form-item required label="所属区域">
+            <Area @place-info="getPlace" :toSon="toplace"/>
+          </el-form-item>
+        </div>-->
         <div style="font-size:20px;font-weight:700;margin-bottom:20px">
           费用信息
         </div>
@@ -495,7 +495,14 @@ export default {
       customerNeedsOptions: [],  //客户需求字典
       contractTypeOptions: [], //合同类型字典
       //   跟进end
-      showDianmian: false //新签合同按钮中显示店面或区域信息
+      showDianmian: false, //新签合同按钮中显示店面或区域信息
+      dict: {
+        genjinStatusLable: null,
+        levelLable: null,
+        needLable: null,
+        experienceLable: null,
+        resourceLable: null
+      }
     }
   },
   components: {
@@ -592,7 +599,7 @@ export default {
         var a = this.genjinOptions.filter(item => {
           return item.dictValue === this.customerList.genjinStatus
         })
-        this.editinfo.genjinStatus = a ? a[0].dictLabel : null
+        this.dict.genjinStatusLable = a[0] ? a[0].dictLabel : null
       })
       // 获取客户等级字典
       this.getDicts('customer_level').then(response => {
@@ -600,8 +607,8 @@ export default {
         var a = this.levelOptions.filter(item => {
           return item.dictValue === this.customerList.level
         })
-        this.level = a[0].dictValue
-        this.editinfo.level = a ? a[0].dictLabel : null
+        this.level = a[0] ? a[0].dictValue : null
+        this.dict.levelLable = a[0] ? a[0].dictLabel : null
       })
       // 获取客户需求字典
       this.getDicts('sys_user_need').then(response => {
@@ -609,7 +616,7 @@ export default {
         var a = this.customerNeedsOptions.filter(item => {
           return item.dictValue === this.customerList.customerNeeds
         })
-        this.editinfo.customerNeeds = a ? a[0].dictLabel : null
+        this.dict.needLable = a[0] ? a[0].dictLabel : null
       })
       // 获取中介经验字典
       this.getDicts('experience').then(response => {
@@ -617,7 +624,7 @@ export default {
         var a = this.experienceOptions.filter(item => {
           return item.dictValue === this.customerList.experience
         })
-        this.editinfo.experience = a ? a[0].dictLabel : null
+        this.dict.experienceLable = a[0] ? a[0].dictLabel : null
       })
       // 获取客户来源字典
       this.getDicts('sys_customer_resource').then(response => {
@@ -625,7 +632,7 @@ export default {
         var a = this.resourceOptions.filter(item => {
           return item.dictValue === this.customerList.resource
         })
-        this.editinfo.resource = a ? a[0].dictLabel : null
+        this.dict.resourceLable = a[0] ? a[0].dictLabel : null
       })
       this.getDicts('contract_type').then(response => {
         this.contractTypeOptions = response.data
