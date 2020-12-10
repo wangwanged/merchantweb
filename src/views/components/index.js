@@ -11,5 +11,5 @@ export default (Vue)=>{
    Vue.component('UpImage', UpImage)
    Vue.component('UpImage1', UpImage1)
    Vue.component('Phone', Phone)
-  Vue.component('Fee', Fee)
+   Vue.component('Fee', Fee)
 }

@@ -155,7 +155,7 @@
           type="primary"
           size="mini"
           :disabled="multiple"
-          @click="dialogTransfor = true"
+          @click="opendialogTransfor"
           v-hasPermi="['system:customer:remove']"
         >转移
         </el-button
@@ -339,19 +339,7 @@
         <el-form-item label="备注">
           <el-input v-model="form.remark" placeholder="请输入备注"/>
         </el-form-item>
-        <el-form-item label="负责人">
-          <el-autocomplete
-            class="inline-input"
-            v-model="keywords"
-            :fetch-suggestions="querySearch"
-            placeholder="请输入内容"
-            :trigger-on-focus="false"
-            @select="handleSelect"
-          ></el-autocomplete>
-        </el-form-item>
-        <el-form-item label="所属部门">
-          <el-input disabled v-model="deptName" placeholder="所属部门"/>
-        </el-form-item>
+        <Manager ref="showmanager" @toFather='getManager'/>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -377,14 +365,9 @@
 
     <!-- 转移弹框 -->
     <el-dialog title="转移" :visible.sync="dialogTransfor" width="500px">
-      <el-autocomplete
-        class="inline-input"
-        v-model="keywords"
-        :fetch-suggestions="querySearch"
-        placeholder="请输入内容"
-        :trigger-on-focus="false"
-        @select="handleSelect"
-      ></el-autocomplete>
+      <el-form>
+        <Manager ref="showmanager" @toFather='getManager'/>
+      </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleTransfor">确 定</el-button>
         <el-button @click="dialogeInvalid = false">取 消</el-button>
@@ -576,6 +559,11 @@ export default {
         // this.$store.commit("updateAlldata", this.customerList);
       })
     },
+    // 转移弹框打开按钮
+    opendialogTransfor(){
+      this.dialogTransfor = true
+      this.getdeptuser()
+    },
     //   转移确定按钮
     handleTransfor(row) {
       const ids = row.id || this.ids
@@ -674,14 +662,6 @@ export default {
       this.queryParams.city = j
       this.queryParams.district = k
     },
-    // 直接显示当前负责人和部门
-    getdeptuser() {
-      getInfo().then(res => {
-        this.form.username = res.user.userName
-        this.keywords = res.user.userName
-        this.deptName = res.user.dept.deptName
-      })
-    },
     // 客户等级字典翻译
     levelFormat(row, column) {
       return this.selectDictLabel(this.levelOptions, row.level)
@@ -751,37 +731,46 @@ export default {
           this.download(response.msg)
         })
     },
-    // 负责人查询
-    querySearch(queryString, callback) {
-      var params = {
-        keywords: queryString
-      }
-      transforCustomer(params).then(response => {
-        var restaurants = response.rows
-        const list = []
-        //封装要显示的数据
-        for (let v of restaurants) {
-          list.push({ value: v.phonenumber + ' ' + v.userName, id: v.id })
-        }
-        // 调用 callback 返回建议列表的数据,是一个数组类型
-        callback(list)
+    // // 负责人查询
+    // querySearch(queryString, callback) {
+    //   var params = {
+    //     keywords: queryString
+    //   }
+    //   transforCustomer(params).then(response => {
+    //     var restaurants = response.rows
+    //     const list = []
+    //     //封装要显示的数据
+    //     for (let v of restaurants) {
+    //       list.push({ value: v.phonenumber + ' ' + v.userName, id: v.id })
+    //     }
+    //     // 调用 callback 返回建议列表的数据,是一个数组类型
+    //     callback(list)
+    //   })
+    // },
+    // // 负责人查询
+    // handleSelect(item) {
+    //   this.reset()
+    //   this.form.userId = item.id
+    //   this.keywords = item.value.substring(12)
+    //   //  部门随负责人变动
+    //   listUser({}).then(res => {
+    //     var a = res.rows.filter(element => {
+    //       return element.id === item.id
+    //     })
+    //     console.log('res', a)
+    //     this.deptName = a[0].dept.deptName
+    //   })
+    // },
+    // 选择负责人和部门
+    getManager(value) {
+      this.form.userId = value
+    },
+    // 显示当前负责人和部门
+    getdeptuser() {
+      this.$nextTick().then(() => {
+        this.$refs.showmanager.showdeptuser()
       })
     },
-    // 负责人查询
-    handleSelect(item) {
-      this.reset()
-      this.form.userId = item.id
-      this.keywords = item.value.substring(12)
-      //  部门随负责人变动
-      listUser({}).then(res => {
-        var a = res.rows.filter(element => {
-          return element.id === item.id
-        })
-        console.log('res', a)
-        this.deptName = a[0].dept.deptName
-      })
-    },
-
   }
 }
 </script>

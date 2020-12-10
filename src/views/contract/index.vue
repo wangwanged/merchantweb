@@ -1174,11 +1174,12 @@ export default {
     handleTransfor() {
        var ids = this.ids;
        console.log('ids',ids)
-       var params = {
-           ids:ids,
-           phone:this.transforphone
+       var data = {
+         ids:ids,
+         userId: this.form.userId
+           // phone:this.transforphone
        }
-       contractTransfor(params).then(response => {
+       contractTransfor(data).then(response => {
            this.$message.success("操作成功");
            this. dialogTransfor = false;
            this.getList();

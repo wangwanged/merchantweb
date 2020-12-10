@@ -154,10 +154,10 @@ export function getAttachmentinfo(params) {
 }
 
 // 合同转移
-export function contractTransfor(params) {
+export function contractTransfor(data) {
   return request({
     url: '/contract/contractManager/transfer',
     method: 'post',
-    params
+    data
   })
 }
