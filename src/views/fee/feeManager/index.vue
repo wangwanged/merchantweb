@@ -322,7 +322,7 @@ export default {
     this.getDicts("pay_method").then(response => {
       this.payMethodOptions = response.data;
     });
-    this.getDicts("check_status").then(response => {
+    this.getDicts("fee_status").then(response => {
       this.checkStatusOptions = response.data;
     });
     this.getDicts("sys_user_need").then(response => {
