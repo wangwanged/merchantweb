@@ -90,32 +90,35 @@
         <el-form-item required label="客户姓名" prop="name">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item label="客户电话" >
-          <el-input
-            style="width: 90%"
-            v-model="phoneadd"
-            placeholder="请输入客户电话"
-          />
-          <i
-            class="el-icon-circle-plus"
-            style="font-size: 30px; margin-left: 10px"
-            @click="addPhone"
-          ></i>
+        <el-form-item required label="客户电话" prop="name">
+          <el-input v-model="form.phone"></el-input>
         </el-form-item>
-        <el-form-item>
-          <div v-for="(item, index) in phonedecrease" :key="index">
-            <el-input
-              style="width: 90%"
-              v-model="phonedecrease[index]"
-              placeholder="请输入客户电话"
-            />
-            <i
-              class="el-icon-remove"
-              style="font-size: 30px; margin-left: 10px"
-              @click="decreasePhone(index)"
-            ></i>
-          </div>
-        </el-form-item>
+<!--        <el-form-item label="客户电话" >-->
+<!--          <el-input-->
+<!--            style="width: 90%"-->
+<!--            v-model="phoneadd"-->
+<!--            placeholder="请输入客户电话"-->
+<!--          />-->
+<!--          <i-->
+<!--            class="el-icon-circle-plus"-->
+<!--            style="font-size: 30px; margin-left: 10px"-->
+<!--            @click="addPhone"-->
+<!--          ></i>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item>-->
+<!--          <div v-for="(item, index) in phonedecrease" :key="index">-->
+<!--            <el-input-->
+<!--              style="width: 90%"-->
+<!--              v-model="phonedecrease[index]"-->
+<!--              placeholder="请输入客户电话"-->
+<!--            />-->
+<!--            <i-->
+<!--              class="el-icon-remove"-->
+<!--              style="font-size: 30px; margin-left: 10px"-->
+<!--              @click="decreasePhone(index)"-->
+<!--            ></i>-->
+<!--          </div>-->
+<!--        </el-form-item>-->
         <el-form-item label="客户等级">
           <el-select
             style="width: 100%"
@@ -167,20 +170,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="负责人">
-          <el-autocomplete
-            style="width: 100%"
-            class="inline-input"
-            v-model="form.transforKeywords"
-            :fetch-suggestions="querySearch"
-            placeholder="请输入内容"
-            :trigger-on-focus="false"
-            @select="handleSelect"
-          ></el-autocomplete>
-        </el-form-item>
-        <el-form-item label="所属部门" prop="phone">
-          <el-input disabled v-model="deptName" placeholder="请输入电话" />
-        </el-form-item>
+        <Manager ref="showmanager" @toFather='getManager'/>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogrollout = false">取 消</el-button>
@@ -409,14 +399,6 @@ export default {
         callback(list);
       });
     },
-    // 获取当前负责人和部门
-    getdeptuser() {
-      getInfo().then(res => {
-        this.form.username = res.user.userName;
-        this.form.transforKeywords = res.user.userName;
-        this.deptName = res.user.dept.deptName;
-      });
-    },
     // 获取user用户信息
     userInfo() {
       listUser({}).then(response => {
@@ -437,7 +419,17 @@ export default {
     goSecond() {
       //这是操作follow子组件的方法
       this.$refs.follow.handleAdd();
-    }
+    },
+    // 选择负责人和部门
+    getManager(value) {
+      this.form.userId = value
+    },
+    // 显示当前负责人和部门
+    getdeptuser() {
+      this.$nextTick().then(() => {
+        this.$refs.showmanager.showdeptuser()
+      })
+    },
   }
 };
 </script>

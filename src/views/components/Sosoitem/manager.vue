@@ -62,7 +62,7 @@ export default {
       getInfo().then(res => {
         this.keywords = res.user.userName
         this.deptName = res.user.dept.deptName
-        console.log('son', res)
+        console.log("this.deptName",this.deptName)
       })
     },
     // 负责人查询

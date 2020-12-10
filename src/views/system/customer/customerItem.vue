@@ -528,17 +528,11 @@ export default {
   },
   computed: {},
   methods: {
-
     // 生效失效状态字典翻译
     contractTypeFormat(row, column) {
       return this.selectDictLabel(this.contractTypeOptions, row.type)
     },
-    // 显示当前负责人和部门
-    getdeptuser() {
-      this.$nextTick().then(() => {
-        this.$refs.showmanager.showdeptuser()
-      })
-    },
+
     reset() {
       this.form = {
         id: null,
@@ -645,36 +639,6 @@ export default {
         var a = this.contractTypeOptions.filter(item => {
           return item.dictValue === this.customerList.resource
         })
-      })
-    },
-    // // 负责人查询
-    querySearch(queryString, callback) {
-      var params = {
-        keywords: queryString
-      }
-      transforCustomer(params).then(response => {
-        var restaurants = response.rows
-        const list = []
-        //封装要显示的数据
-        for (let v of restaurants) {
-          list.push({ value: v.phonenumber + ' ' + v.userName, id: v.id })
-        }
-        // 调用 callback 返回建议列表的数据,是一个数组类型
-        callback(list)
-      })
-    },
-    // // 负责人查询
-    handleSelect(item) {
-      this.reset()
-      this.form.userId = item.id
-      this.keywords = item.value.substring(12)
-      //  部门随负责人变动
-      listUser({}).then(res => {
-        var a = res.rows.filter(element => {
-          return element.id === item.id
-        })
-        console.log('res', a)
-        this.deptName = a[0].dept.deptName
       })
     },
     //   新签合同按钮店面或区域显示控制
@@ -786,7 +750,13 @@ export default {
     // 选择负责人和部门
     getManager(value) {
       this.form.userId = value
-    }
+    },
+    // 显示当前负责人和部门
+    getdeptuser() {
+      this.$nextTick().then(() => {
+        this.$refs.showmanager.showdeptuser()
+      })
+    },
   }
 }
 </script>
