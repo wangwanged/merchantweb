@@ -18,6 +18,7 @@
             this.editinfo.genjinStatus
           }}
         </el-button>
+        <p>{{"form:" + this.form.produce}}</p>
         <el-button size="small" type="primary" @click="handlecontrast"
         >新签合同
         </el-button
@@ -154,7 +155,7 @@
           <el-button size="small" type="primary" plain>新签</el-button>
         </el-form-item>
         <el-form-item required label="签约产品">
-          <el-select v-model="form.produce">
+          <el-select v-model="form.produce" :value="form.produce">
             <el-option
               v-for="dict in this.customerNeedsOptions"
               :key="dict.dictValue"
@@ -196,7 +197,7 @@
         <div style="font-size:20px;font-weight:700;margin-bottom:20px">
           店面/区域信息
         </div>
-        <div>
+        <div v-if="this.form.produce==='0'">
           <el-form-item required label="店面名称">
             <el-input
               v-model="form.dianmianName"
@@ -206,26 +207,26 @@
           <el-form-item required label="所属区域">
             <Area @place-info="getPlace" :toSon="toplace"/>
           </el-form-item>
-          <el-form-item required label="详细地址" v-show="this.form.produce===0">
+          <el-form-item required label="详细地址">
             <el-input
               v-model="form.dianmianAddress"
               placeholder="请输入"
             ></el-input>
           </el-form-item>
-          <el-form-item required label="店面经度" v-show="this.form.produce===0">
+          <el-form-item required label="店面经度">
             <el-input
               placeholder="请输入"
               v-model="form.dianmianLongitude"
             ></el-input>
           </el-form-item>
-          <el-form-item required label="店面纬度" v-show="this.form.produce===0">
+          <el-form-item required label="店面纬度">
             <el-input
               v-model="form.dianmianLatitide"
               placeholder="请输入"
             ></el-input>
           </el-form-item>
         </div>
-        <!--<div v-else>
+        <div v-else>
           <el-form-item required label="区域名称">
             <el-input
               v-model="form.dianmianName"
@@ -235,7 +236,7 @@
           <el-form-item required label="所属区域">
             <Area @place-info="getPlace" :toSon="toplace"/>
           </el-form-item>
-        </div>-->
+        </div>
         <div style="font-size:20px;font-weight:700;margin-bottom:20px">
           费用信息
         </div>
