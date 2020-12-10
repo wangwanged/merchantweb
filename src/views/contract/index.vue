@@ -144,7 +144,7 @@
             type="primary"
             size="mini"
             :disabled="multiple"
-            @click="dialogTransfor=true"
+            @click="opendialogTransfor"
             v-hasPermi="['contract:contractManager:add']"
             >转移</el-button
           >
@@ -435,20 +435,20 @@
         <el-button @click="dialogCheck = false">取 消</el-button>
       </div>
     </el-dialog>
-    <!-- 续签弹框 -->
-      <el-dialog title="续签合同" :visible.sync="dialogRenew" width="40%">
+    <!-- 续签弹框 -->拍下
+      <el-dialog title="续签合同" :visible.sync="dialogRenew" width="650">
       <el-form label-position="left"  label-width="110px">
         <div style="font-size:20px;font-weight:700;margin-bottom:20px">
           客户信息
         </div>
          <el-form-item required label="选择客户">
-          <el-input v-model="renewinfo.customerNum"></el-input>
+          <el-input v-model="form.customerNum"></el-input>
         </el-form-item>
         <el-form-item required label="客户姓名">
-          <el-input v-model="renewinfo.customerName"></el-input>
+          <el-input v-model="form.customerName"></el-input>
         </el-form-item>
         <el-form-item required label="客户电话">
-          <el-input v-model="renewinfo.customerPhone"></el-input>
+          <el-input v-model="form.customerPhone"></el-input>
         </el-form-item>
         <div style="font-size:20px;font-weight:700;margin-bottom:20px">
           签约信息
@@ -467,11 +467,11 @@
           </el-select> -->
         </el-form-item>
         <el-form-item required label="合同编号">
-          <el-input placeholder="请输入" v-model="renewinfo.num"></el-input>
+          <el-input placeholder="请输入" v-model="form.num"></el-input>
         </el-form-item>
         <el-form-item required label="签约日期">
           <el-date-picker
-            v-model="renewinfo.signDate"
+            v-model="form.signDate"
             type="date"
             placeholder="选择日期"
             value-format="yyyy-MM-dd"
@@ -480,7 +480,7 @@
         </el-form-item>
         <el-form-item required label="合同开始时间">
           <el-date-picker
-            v-model="renewinfo.beginDate"
+            v-model="form.beginDate"
             type="date"
             placeholder="选择日期"
             value-format="yyyy-MM-dd"
@@ -489,7 +489,7 @@
         </el-form-item>
         <el-form-item required label="合同结束时间">
           <el-date-picker
-            v-model="renewinfo.endDate"
+            v-model="form.endDate"
             type="date"
             placeholder="请选择"
             value-format="yyyy-MM-dd"
@@ -502,25 +502,25 @@
         <div>
           <el-form-item required label="店面名称">
             <el-input
-              v-model="renewinfo.dianmianName"
+              v-model="form.dianmianName"
               placeholder="请输入"
             ></el-input>
           </el-form-item>
           <el-form-item required label="所属省">
             <el-input
-              v-model="renewinfo.dianmianProvince"
+              v-model="form.dianmianProvince"
               placeholder="请输入"
             ></el-input>
           </el-form-item>
           <el-form-item required label="所属市">
             <el-input
-              v-model="renewinfo.dianmianCity"
+              v-model="form.dianmianCity"
               placeholder="请输入"
             ></el-input>
           </el-form-item>
           <el-form-item required label="所属区">
             <el-input
-              v-model="renewinfo.dianmianDistrict"
+              v-model="form.dianmianDistrict"
               placeholder="请输入"
             ></el-input>
           </el-form-item>
@@ -528,44 +528,44 @@
         <div >
           <el-form-item required label="店面名称">
             <el-input
-              v-model="renewinfo.dianmianName"
+              v-model="form.dianmianName"
               placeholder="请输入"
             ></el-input>
           </el-form-item>
           <el-form-item required label="所属省">
             <el-input
-              v-model="renewinfo.dianmianProvince"
+              v-model="form.dianmianProvince"
               placeholder="请输入"
             ></el-input>
           </el-form-item>
           <el-form-item required label="所属市">
             <el-input
-              v-model="renewinfo.dianmianCity"
+              v-model="form.dianmianCity"
               placeholder="请输入"
             ></el-input>
           </el-form-item>
           <el-form-item required label="所属区">
             <el-input
-              v-model="renewinfo.dianmianDistrict"
+              v-model="form.dianmianDistrict"
               placeholder="请输入"
             ></el-input>
           </el-form-item>
         </div>
         <el-form-item required label="详细地址">
           <el-input
-            v-model="renewinfo.dianmianAddress"
+            v-model="form.dianmianAddress"
             placeholder="请输入"
           ></el-input>
         </el-form-item>
         <el-form-item required label="店面经度">
           <el-input
             placeholder="请输入"
-            v-model="renewinfo.dianmianLongitude"
+            v-model="form.dianmianLongitude"
           ></el-input>
         </el-form-item>
         <el-form-item required label="店面纬度">
           <el-input
-            v-model="renewinfo.dianmianLatitide"
+            v-model="form.dianmianLatitide"
             placeholder="请输入"
           ></el-input>
         </el-form-item>
@@ -597,17 +597,9 @@
         <el-input
           style="margin-bottom:20px"
           type="textarea"
-          v-model="renewinfo.remark"
+          v-model="form.remark"
         ></el-input>
-        <el-form-item required label="签约人员">
-          <el-input
-            placeholder="请输入"
-            v-model="renewinfo.manager"
-          ></el-input>
-        </el-form-item>
-        <el-form-item required label="所属部门">
-          <el-input placeholder="请输入" v-model="renewinfo.fee"></el-input>
-        </el-form-item>
+        <Manager ref="showmanager" @toFather='getManager'/>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogRenew = false">取 消</el-button>
@@ -616,14 +608,17 @@
     </el-dialog>
     <!-- 转移弹框 -->
      <el-dialog title="转移" :visible.sync="dialogTransfor" width="500px">
-        <el-autocomplete
-            class="inline-input"
-            v-model="transforKeywords"
-            :fetch-suggestions="querySearch"
-            placeholder="请输入内容"
-            :trigger-on-focus="false"
-            @select="handleSelect"
-    ></el-autocomplete>
+       <el-form>
+         <Manager ref="showmanager" @toFather='getManager'/>
+       </el-form>
+<!--        <el-autocomplete-->
+<!--            class="inline-input"-->
+<!--            v-model="transforKeywords"-->
+<!--            :fetch-suggestions="querySearch"-->
+<!--            placeholder="请输入内容"-->
+<!--            :trigger-on-focus="false"-->
+<!--            @select="handleSelect"-->
+<!--    ></el-autocomplete>-->
     <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click='handleTransfor'>确 定</el-button>
         <el-button @click="dialogTransfor = false">取 消</el-button>
@@ -933,11 +928,11 @@ export default {
         beginDate: null,
         endDate: null,
         status: null,
-        remark: null
+        remark: null,
+        managerId:null
       };
       this.resetForm("form");
     },
-
     resetQuaramDate() {
         this.queryParams.signDateStart= null,
         this.queryParams.signDateEnd= null,
@@ -1057,70 +1052,21 @@ export default {
     },
     // 合同续签按钮
     handleRenew(){
+        this.reset()
+        console.log(this.form)
         this.dialogRenew=true
         const id = this.ids[0]
         getContractManager(id).then(res=>{
-            this.renewinfo=res.data
+            this.form=res.data
+            console.log('this.form',this.form)
         })
+        this.getdeptuser()
+        // this.getManager()
     },
     // 合同续签提交
     submitRenew(){
         const id = this.ids[0]
-        const data ={
-            beginDate: this.renewinfo.beginDate,
-            beginDateEnd: this.renewinfo.beginDateEnd,
-            beginDateStart: this.renewinfo.beginDateStart,
-            checkDate: this.renewinfo.checkDate,
-            checkDateEnd: this.renewinfo.checkDateEnd,
-            checkDateStart: this.renewinfo.checkDateStart,
-            checkStatus: this.renewinfo.checkStatus,
-            createBy: this.renewinfo.createBy,
-            createTime:this.renewinfo.createTime,
-            customerId: this.renewinfo. customerId,
-            customerName: this.renewinfo.customerName,
-            customerNum: this.renewinfo.customerNum,
-            customerPhone: this.renewinfo.customerPhone,
-            deptId: this.renewinfo.deptId,
-            dianmianAddress: this.renewinfo. dianmianAddress,
-            dianmianCity: this.renewinfo.dianmianCity,
-            dianmianDistrict: this.renewinfo.dianmianDistrict,
-            dianmianLatitude: this.renewinfo. dianmianLatitude,
-            dianmianLongitude: this.renewinfo.dianmianLongitude,
-            dianmianName: this.renewinfo.dianmianName,
-            dianmianNum:this.renewinfo. dianmianNum,
-            dianmianProvince: this.renewinfo.dianmianProvince,
-            endDate: this.renewinfo. endDate,
-            endDateEnd: this.renewinfo.endDateEnd,
-            endDateStart:this.renewinfo.endDateStart,
-            fee:this.renewinfo.fee,
-            file: this.renewinfo.file,
-            guarantee: this.renewinfo.guarantee,
-            id:this.renewinfo.id,
-            imgs: this.renewinfo.imgs,
-            keywords: this.renewinfo.keywords,
-            manager: this.renewinfo.manager,
-            managerId:this.renewinfo.managerId,
-            num:this.renewinfo.num,
-            operation: this.renewinfo.operation,
-            params: this.renewinfo.params,
-            pid: this.renewinfo.pid,
-            produce:this.renewinfo.produce,
-            remark: this.renewinfo.remark,
-            rootNum: this.renewinfo.rootNum,
-            searchValue: this.renewinfo.searchValue,
-            signDate: this.renewinfo.signDate,
-            signDateEnd: this.renewinfo.signDateEnd,
-            signDateStart: this.renewinfo.signDateStart,
-            signUser: this.renewinfo.signUser,
-            signUserId: this.renewinfo. signUserId,
-            status: this.renewinfo.status,
-            terminateDate: this.renewinfo.terminateDate,
-            terminateFile: this.renewinfo.terminateFile,
-            type: this.renewinfo.type,
-            updateBy: this.renewinfo.updateBy,
-            updateTime: this.renewinfo.updateTime
-        }
-       contractRenew(data,id).then(res=>{
+        contractRenew(this.form,id).then(res=>{
            this.$message.success("操作成功");
          this.dialogRenew=false
        }).catch(error=>{
@@ -1170,12 +1116,18 @@ export default {
           this.deptName = b[0]
       });
     },
+    // 打开转移弹框
+    opendialogTransfor(){
+      this.dialogTransfor=true
+      this.reset()
+      this.getdeptuser()
+    },
      //   转移确定按钮
     handleTransfor() {
        var ids = this.ids;
        var params = {
            ids: ids,
-           managerId: this.transferManagerId
+           managerId: this.form.managerId
        }
        console.log("params", params)
        contractTransfor(params).then(response => {
@@ -1186,28 +1138,42 @@ export default {
            this.$message.error("操作失败");
       });
     },
-  },
-  // 省市区赋值
-  toPlace() {
-    this.toplace.province = this.form.province
-    this.toplace.city = this.form.city
-    this.toplace.district = this.form.district
-  },
-  //   获取省市区的地址
-  getPlace(i, j, k) {
-    this.form.province = i
-    this.form.city = j
-    this.form.district = k
-    this.queryParams.province = i
-    this.queryParams.city = j
-    this.queryParams.district = k
-  },
-  computed:{
-    // totalfee: function () {
-    //   console.log(this.fee.daibanFee)
-    //   return  this.fee.daibanFee + this.fee.guohuoFee + this.fee.systemUseFee + this.fee.yunyingManagerFee+ this.fee.jingyingManagerFee.total
-    //     + this.fee.systemMaintenanceFee
-    // }
+    // 省市区赋值
+    toPlace() {
+      this.toplace.province = this.form.province
+      this.toplace.city = this.form.city
+      this.toplace.district = this.form.district
+    },
+    //   获取省市区的地址
+    getPlace(i, j, k) {
+      this.form.province = i
+      this.form.city = j
+      this.form.district = k
+      this.queryParams.province = i
+      this.queryParams.city = j
+      this.queryParams.district = k
+    },
+    // 显示当前负责人和部门
+    getdeptuser() {
+      this.$nextTick().then(() => {
+        this.$refs.showmanager.showdeptuser()
+      })
+    },
+    // 选择负责人和部门
+    getManager(value,deptId) {
+      this.form.managerId = value
+      this.form.deptId = deptId
+      console.log('this.form.managerId',this.form.managerId)
+      console.log('this.form.deptId',this.form.deptId)
+    },
   }
+
 };
+computed:{
+  // totalfee: function () {
+  //   console.log(this.fee.daibanFee)
+  //   return  this.fee.daibanFee + this.fee.guohuoFee + this.fee.systemUseFee + this.fee.yunyingManagerFee+ this.fee.jingyingManagerFee.total
+  //     + this.fee.systemMaintenanceFee
+  // }
+}
 </script>

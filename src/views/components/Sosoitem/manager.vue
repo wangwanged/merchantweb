@@ -29,17 +29,19 @@ export default {
       username: '',
       deptName: '',
       transforphone: '',
-      userId: ''
+      userId: '',
+      deptId:''
     }
   },
   watch: {
     userId(newval, oldval) {
+      console.log("wwwwwww")
       this.toParent()
     }
   },
   methods: {
     toParent() {
-      this.$emit('toFather', this.userId)
+      this.$emit('toFather', this.userId,this.deptId)
     },
     // 负责人查询
     querySearch(queryString, callback) {
@@ -51,7 +53,7 @@ export default {
         const list = []
         //封装要显示的数据
         for (let v of restaurants) {
-          list.push({ value: v.phonenumber + ' ' + v.userName, id: v.id })
+          list.push({ value: v.phonenumber + ' ' + v.userName, id: v.id,deptId: v.deptId })
         }
         // 调用 callback 返回建议列表的数据,是一个数组类型
         callback(list)
@@ -69,6 +71,7 @@ export default {
     handleSelect(item) {
       //   this.queryParams.userId=item.id
       this.userId = item.id
+      this.deptId = item.deptId
       this.keywords = item.value.substring(12)
       //  部门随负责人变动
       listUser({}).then(res => {

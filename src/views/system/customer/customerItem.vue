@@ -665,9 +665,9 @@ export default {
     },
     // 新签合同按钮操作
     handlecontrast() {
-      this.getdeptuser()
       this.reset()
       this.dialogNewsign = true
+      this.form=this.customerList
       this.form.customerName = this.customerList.name
       this.form.customerPhone = this.customerList.phone
       this.form.customerId = this.customerList.id
@@ -675,11 +675,12 @@ export default {
       this.form.managerId = this.customerList.userId
       this.form.manager = this.customerList.username
       this.form.customerNum = this.customerList.num
-      this.form.creatBy = this.customerList.username
+      this.form.createBy = this.customerList.username
       this.form.fee = JSON.stringify(this.fee)
       this.form.signDate = parseTime(new Date(), '{y}-{m}-{d}')
       this.form.beginDate = parseTime(new Date(), '{y}-{m}-{d}')
       this.form.endDate = parseTime(new Date(), '{y}-{m}-{d}')
+      this.getdeptuser()
     },
     // 合同确定按钮
     submitcontract() {
