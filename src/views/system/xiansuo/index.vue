@@ -9,7 +9,8 @@
       label-width="68px"
     >
       <el-form-item>
-           <el-select
+        <showdept @myevent = 'getDeptId' @keyup.enter.native="handleQuery"/>
+           <!--<el-select
           v-model="queryParams.resource"
           placeholder="线索来源"
           clearable
@@ -31,7 +32,7 @@
             :value="dict.dictValue"
           />
           </el-option-group>
-        </el-select>
+        </el-select>-->
       </el-form-item>
       <el-form-item>
         <Area class='liandong' @place-info="getPlace" :toSon="toplace"></Area>
@@ -131,6 +132,7 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="公司" align="center" prop="deptName"/>
       <el-table-column label="客户姓名" align="center" prop="name">
         <template slot-scope="obj">
           <el-button
@@ -407,6 +409,7 @@ import {
 } from "@/api/system/customer";
 import { listUser } from "@/api/system/user";
 import { getInfo } from "@/api/login";
+import Showdept from '@/components/DeptShow/index'
 export default {
   name: "Xiansuo",
   data() {
@@ -463,6 +466,7 @@ export default {
       levelOptions: [],
     //   // 查询参数
       queryParams: {
+        deptId: null,
         pageNum: 1,
         pageSize: 10,
         name: null,
@@ -496,6 +500,7 @@ export default {
     };
   },
   components:{
+    Showdept,
     cascater
   },
   created() {
@@ -522,6 +527,10 @@ export default {
     });
   },
   methods: {
+    getDeptId(deptId) {
+      this.queryParams.deptId = deptId;
+      console.log("deptId:",deptId)
+    },
     // 表单重置
     reset() {
       this.form = {
