@@ -57,7 +57,12 @@
       </el-form-item>
       <el-form-item label="费用状态" prop="checkStatus">
         <el-select v-model="queryParams.checkStatus" placeholder="请选择费用状态" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
+          <el-option
+            v-for="dict in checkStatusOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
         </el-select>
       </el-form-item>
       <el-form-item label="收款时间" prop="shoukuanDate">
@@ -264,7 +269,7 @@ export default {
       // 是否显示弹出层
       open: false,
       
-      // 门店状态字典
+      // 付款方式字典
       payMethodOptions: [],
       // 费用审核状态字典
       checkStatusOptions: [],
@@ -322,7 +327,7 @@ export default {
     this.getDicts("pay_method").then(response => {
       this.payMethodOptions = response.data;
     });
-    this.getDicts("check_status").then(response => {
+    this.getDicts("fee_status").then(response => {
       this.checkStatusOptions = response.data;
     });
     this.getDicts("sys_user_need").then(response => {
