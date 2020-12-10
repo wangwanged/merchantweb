@@ -18,7 +18,6 @@
             this.editinfo.genjinStatus
           }}
         </el-button>
-        <p>{{"form:" + this.form.produce}}</p>
         <el-button size="small" type="primary" @click="handlecontrast"
         >新签合同
         </el-button
@@ -241,22 +240,22 @@
           费用信息
         </div>
         <el-form-item required label="履约保证金">
-          <el-input placeholder="请输入" v-model="fee.lvyue"></el-input>
+          <el-input placeholder="请输入" v-model="form.guarantee"></el-input>
         </el-form-item>
         <el-form-item required label="运营管理费">
-          <el-input placeholder="请输入" v-model="fee.yunyingManage"></el-input>
+          <el-input placeholder="请输入" v-model="fee.yunyingManagerFee"></el-input>
         </el-form-item>
         <el-form-item required label="系统使用费">
-          <el-input placeholder="请输入" v-model="fee.systemUse"></el-input>
+          <el-input placeholder="请输入" v-model="fee.systemUseFee"></el-input>
         </el-form-item>
         <el-form-item required label="系统维护费">
-          <el-input placeholder="请输入" v-model="fee.systemGuard"></el-input>
+          <el-input placeholder="请输入" v-model="fee.systemMaintenanceFee"></el-input>
         </el-form-item>
         <el-form-item required label="过户费">
-          <el-input placeholder="请输入" v-model="fee.guohu"></el-input>
+          <el-input placeholder="请输入" v-model="fee.guohuoFee"></el-input>
         </el-form-item>
         <el-form-item required label="代办费">
-          <el-input placeholder="请输入" v-model="fee.daiban"></el-input>
+          <el-input placeholder="请输入" v-model="fee.daibanFee"></el-input>
         </el-form-item>
         <el-form-item></el-form-item>
         <div style="font-size:20px;font-weight:700;margin-bottom:20px">
@@ -416,6 +415,7 @@ import { getContractInfo, addContractManager } from '@/api/contract/contractMana
 import Follow from '@/views/components/Sosoitem/follow.vue'
 import { getInfo } from '@/api/login'
 import { listUser } from '@/api/system/user'
+import { parseTime } from '@/utils/ruoyi'
 
 export default {
   data() {
@@ -429,13 +429,16 @@ export default {
         district: ''
       },
       fee: {
-        lvyue: '',
-        yunyingManage: '',
-        systemUse: '',
-        systemGuard: '',
-        guohu: '',
-        daiban: ''
-        // jingyingManage: {},
+        lvyueFee: '',
+        jingyingManagerFee: {
+          total: '',
+          detail:[]
+        },
+        yunyingManagerFee: '',
+        systemUseFee: '',
+        systemMaintenanceFee: '',
+        daibanFee: '',
+        guohuoFee: ''
       },
       //   客户等级字母显示
       level: '',
@@ -577,7 +580,7 @@ export default {
         dianmianDistrict: null,
         dianmianLatitude: null,
         dianmianLongitude: null,
-        dianmianProvince: null
+        dianmianProvince: null,
       }
       this.resetForm('form')
     },
@@ -643,35 +646,35 @@ export default {
       })
     },
     // // 负责人查询
-    // querySearch(queryString, callback) {
-    //   var params = {
-    //     keywords: queryString
-    //   }
-    //   transforCustomer(params).then(response => {
-    //     var restaurants = response.rows
-    //     const list = []
-    //     //封装要显示的数据
-    //     for (let v of restaurants) {
-    //       list.push({ value: v.phonenumber + ' ' + v.userName, id: v.id })
-    //     }
-    //     // 调用 callback 返回建议列表的数据,是一个数组类型
-    //     callback(list)
-    //   })
-    // },
+    querySearch(queryString, callback) {
+      var params = {
+        keywords: queryString
+      }
+      transforCustomer(params).then(response => {
+        var restaurants = response.rows
+        const list = []
+        //封装要显示的数据
+        for (let v of restaurants) {
+          list.push({ value: v.phonenumber + ' ' + v.userName, id: v.id })
+        }
+        // 调用 callback 返回建议列表的数据,是一个数组类型
+        callback(list)
+      })
+    },
     // // 负责人查询
-    // handleSelect(item) {
-    //   this.reset()
-    //   this.form.userId = item.id
-    //   this.keywords = item.value.substring(12)
-    //   //  部门随负责人变动
-    //   listUser({}).then(res => {
-    //     var a = res.rows.filter(element => {
-    //       return element.id === item.id
-    //     })
-    //     console.log('res', a)
-    //     this.deptName = a[0].dept.deptName
-    //   })
-    // },
+    handleSelect(item) {
+      this.reset()
+      this.form.userId = item.id
+      this.keywords = item.value.substring(12)
+      //  部门随负责人变动
+      listUser({}).then(res => {
+        var a = res.rows.filter(element => {
+          return element.id === item.id
+        })
+        console.log('res', a)
+        this.deptName = a[0].dept.deptName
+      })
+    },
     //   新签合同按钮店面或区域显示控制
     // showdianmian(i) {
     //   if (i === "0") {
@@ -700,9 +703,12 @@ export default {
       this.dialogNewsign = true
       this.form.name = this.customerList.name
       this.form.phone = this.customerList.phone
-      this.form.signDate = new Date()
-      this.form.beginDate = new Date()
-      this.form.endDate = new Date()
+      this.form.customerId = this.customerList.id
+      this.form.deptId = this.customerList.deptId
+      this.form.managerId.this.customerList.userId
+      this.form.signDate = parseTime(new Date(), '{y}-{m}-{d}')
+      this.form.beginDate = parseTime(new Date(), '{y}-{m}-{d}')
+      this.form.endDate = parseTime(new Date(), '{y}-{m}-{d}')
     },
     // 合同确定按钮
     submitcontract() {
