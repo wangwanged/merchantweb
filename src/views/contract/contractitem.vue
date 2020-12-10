@@ -165,31 +165,32 @@
                   <div class="main_title">财务信息</div>
                   <p class="main_content_name">
                     <span class="main_content_firstname">加盟费：</span>
-                    <span>xxx</span>
+                    <span>{{Number.parseInt(contractList.fee.daibanFee) + Number.parseInt(contractList.fee.guohuoFee) + Number.parseInt(contractList.fee.systemUseFee) + Number.parseInt(contractList.fee.yunyingManagerFee)
+                    + Number.parseInt(contractList.fee.systemMaintenanceFee) + Number.parseInt(contractList.fee.jingyingManagerFee.total)}}</span>
                   </p>
                   <p class="main_content_name">
                     <span class="main_content_firstname">运营管理费：</span>
-                    <span>xxx</span>
+                    <span>{{ contractList.fee.yunyingManagerFee }}</span>
                   </p>
                   <p class="main_content_name">
                     <span class="main_content_firstname">系统使用费：</span>
-                    <span>xxx</span>
+                    <span>{{ contractList.fee.systemUseFee }}</span>
                   </p>
                   <p class="main_content_name">
                     <span class="main_content_firstname">系统维护费：</span>
-                    <span>xxx</span>
+                    <span>{{ contractList.fee.systemMaintenanceFee }}</span>
                   </p>
                   <p class="main_content_name">
                     <span class="main_content_firstname">办件费：</span>
-                    <span>xxx</span>
+                    <span>{{ contractList.fee.daibanFee }}</span>
                   </p>
                   <p class="main_content_name">
-                    <span class="main_content_firstname">履约保证见：</span>
-                    <span>xxx</span>
+                    <span class="main_content_firstname">履约保证金：</span>
+                    <span>{{ contractList.guarantee }}</span>
                   </p>
                   <p class="main_content_name">
                     <span class="main_content_firstname">经营管理费：</span>
-                    <span>xxx</span>
+                    <span>{{ contractList.fee.jingyingManagerFee }}</span>
                   </p>
                   <div class="main_title">备注信息</div>
                   <p class="main_content_name">
@@ -211,7 +212,7 @@
                   </p>
                   <p class="main_content_name">
                     <span class="main_content_firstname">审核时间：</span>
-                    <span>xxx</span>
+                    <span>{{ contractList.checkDate}}</span>
                   </p>
                 </div>
               </div>
@@ -547,7 +548,7 @@
                 <el-button type="primary" @click="submitOpenshop">确 定</el-button>
                 </span>
             </el-dialog>
-            <!-- 开店按钮 -->
+            <!-- 开店弹窗 -->
             <el-dialog
               title="开店"
               width="40%"
@@ -1182,6 +1183,7 @@ export default {
     getList(aa = () => {}, bb = () => {}, cc = () => {}, dd = () => {}) {
       getContractManager(this.id).then(response => {
         this.contractList = response.data;
+        this.contractList.fee = JSON.parse(this.contractList.fee)
         this.rootNum = response.data.rootNum;
         this.checkStatus = response.data.checkStatus;
         aa();
