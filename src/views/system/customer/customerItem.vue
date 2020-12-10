@@ -4,6 +4,7 @@
     <div class="header">
       <div class="header_top">
         <span class="title_name fl">{{ customerList.name }}</span>
+        <p>{{"fee:" + JSON.stringify(this.fee)}}</p>
         <el-button style="margin:0 20px" type="primary" circle
         >
           <div style="width:12px;height:12px;">
@@ -142,10 +143,10 @@
           客户信息
         </div>
         <el-form-item required label="客户姓名">
-          <el-input v-model="form.name"></el-input>
+          <el-input v-model="form.customerName"></el-input>
         </el-form-item>
         <el-form-item required label="客户电话">
-          <el-input v-model="form.phone"></el-input>
+          <el-input v-model="form.customerPhone"></el-input>
         </el-form-item>
         <div style="font-size:20px;font-weight:700;margin-bottom:20px">
           签约信息
@@ -431,8 +432,8 @@ export default {
       fee: {
         lvyueFee: '',
         jingyingManagerFee: {
-          total: '',
-          detail:[]
+          total: '3000',
+          detail:[{"2020.11.01-2020.12.01": 1000},{"2020.12.01-2021.01.01": 2000}]
         },
         yunyingManagerFee: '',
         systemUseFee: '',
@@ -581,6 +582,7 @@ export default {
         dianmianLatitude: null,
         dianmianLongitude: null,
         dianmianProvince: null,
+        fee: {}
       }
       this.resetForm('form')
     },
@@ -686,9 +688,9 @@ export default {
     // },
     // 获取省市区
     getPlace(i, j, k) {
-      this.form.province = i
-      this.form.city = j
-      this.form.district = k
+      this.form.dianmianProvince = i
+      this.form.dianmianCity = j
+      this.form.dianmianDistrict = k
     },
     // 省市区赋值
     toPlace() {
@@ -701,11 +703,14 @@ export default {
       this.getdeptuser()
       this.reset()
       this.dialogNewsign = true
-      this.form.name = this.customerList.name
-      this.form.phone = this.customerList.phone
+      this.form.customerName = this.customerList.name
+      this.form.customerPhone = this.customerList.phone
       this.form.customerId = this.customerList.id
       this.form.deptId = this.customerList.deptId
-      this.form.managerId.this.customerList.userId
+      this.form.managerId = this.customerList.userId
+      this.form.manager = this.customerList.username
+      this.form.customerNum = this.customerList.num
+      this.form.fee = JSON.stringify(this.fee)
       this.form.signDate = parseTime(new Date(), '{y}-{m}-{d}')
       this.form.beginDate = parseTime(new Date(), '{y}-{m}-{d}')
       this.form.endDate = parseTime(new Date(), '{y}-{m}-{d}')
@@ -713,7 +718,8 @@ export default {
     // 合同确定按钮
     submitcontract() {
       addContractManager(this.form).then(res => {
-        console.log(res)
+        this.$message.success('操作成功')
+        this.dialogNewsign = false
       })
     },
     // 点击编辑按钮
@@ -731,7 +737,7 @@ export default {
           this.dialogedit = false
         })
         .catch(error => {
-          this.$message.error('操作成功')
+          this.$message.error(error.msg)
         })
     },
     // 失效按钮操作
