@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px" class="formInput">
       <!-- <el-form-item prop="diandongId">
         <el-input
           v-model="queryParams.diandongId"
@@ -146,15 +146,6 @@
       <el-col :span="1.5">
         <el-button
           type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['dianmian:dianmianManager:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
           icon="el-icon-edit"
           size="mini"
           :disabled="single"
@@ -172,7 +163,7 @@
           v-hasPermi="['dianmian:dianmianManager:remove']"
         >删除</el-button>
       </el-col>
-      <el-col :span="1.5">
+         <el-col :span="1.5" style="float:right">
         <el-button
           type="primary"
           icon="el-icon-download"
@@ -181,7 +172,16 @@
           v-hasPermi="['dianmian:dianmianManager:export']"
         >导出</el-button>
       </el-col>
-	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+        <el-col :span="1.5" style="float:right">
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['dianmian:dianmianManager:add']"
+        >新增</el-button>
+      </el-col>
+	  <!-- <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar> -->
     </el-row>
 
     <el-table v-loading="loading" :data="dianmianManagerList" @selection-change="handleSelectionChange">
@@ -216,7 +216,7 @@
           <el-button
             @click="
               $router.push({
-                path: '/contract/contractItem',
+                path: './contract/contractItem',
                 query: { id: obj.row.id }
               })
             "
@@ -259,8 +259,8 @@
     />
 
     <!-- 添加或修改店面管理对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-dialog :title="title" :visible.sync="open" width="40%" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="110px" class="elInput">
         <el-form-item label="店东id" prop="diandongId">
           <el-input v-model="form.diandongId" placeholder="请输入店东id" />
         </el-form-item>
@@ -318,7 +318,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="开店日期" prop="openDate">
-          <el-date-picker clearable size="small" style="width: 200px"
+          <el-date-picker clearable size="small" style="width: 66%"
             v-model="form.openDate"
             type="date"
             value-format="yyyy-MM-dd"
@@ -342,7 +342,7 @@
           <el-input v-model="form.area" placeholder="请输入授权区域" />
         </el-form-item>
         <el-form-item label="闭店/停业时间" prop="closeDate">
-          <el-date-picker clearable size="small" style="width: 200px"
+          <el-date-picker clearable size="small" style="width: 66%"
             v-model="form.closeDate"
             type="date"
             value-format="yyyy-MM-dd"
@@ -622,3 +622,20 @@ export default {
   }
 };
 </script>
+<style lang="less" scoped>
+// .mb8{
+//   float:right;
+// }
+.el-form{
+  margin:0 0 20px 0 !important;
+}
+.formInput .el-input{
+  width:160px !important;
+}
+.elInput .el-input{
+  width:66%;
+}
+.elInput .el-select{
+  width:66%;
+}
+</style>
