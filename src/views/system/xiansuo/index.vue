@@ -36,7 +36,6 @@
       </el-form-item>
       <el-form-item>
         <Area class='liandong' @place-info="getPlace" :toSon="toplace"></Area>
-
       </el-form-item>
        <el-form-item prop="inputDate">
         <el-date-picker
@@ -135,17 +134,17 @@
       <el-table-column label="公司" align="center" prop="deptName"/>
       <el-table-column label="客户姓名" align="center" prop="name">
         <template slot-scope="obj">
-          <el-button
+          <span
+          style="color: #1890FF;cursor: pointer;"
             @click="
               $router.push({
                 path: '/xiansuo/xiansuoitem',
                 query: { id: obj.row.id }
               })
             "
-            size="small"
-            type="text"
-            >{{ obj.row.name }}</el-button
-          >
+          >{{ obj.row.name }}
+
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="客户电话" align="center" prop="phone">

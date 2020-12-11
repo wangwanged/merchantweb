@@ -52,21 +52,6 @@ export default {
     this.showPlace()
   },
   watch: {
-//     prov(newVal,oldval){
-//       console.log("watch prov")
-//       console.log("newVal", newVal)
-//       console.log("oldval", oldval)
-//
-//       this.updateCity();
-//       this.updateDistrict();
-//       // if(newVal==='请选择'){
-//       //   newVal=null
-//       //   this.prov = null
-//       //   this.city=null
-//       //   this.district=null
-//       // }
-// },
-
     prov: {
       // 表格数据刷新后需清空之前查看的订单详情内容
       handler: function(newVal, oldVal) {
@@ -121,24 +106,10 @@ export default {
       this.$emit("place-info", this.prov, this.city, this.district);
     },
     clearpro(){
-      // console.log('this.prov11111',this.prov)
-      // if(this.prov===''){
-      //   this.city=null
-      //   this.district=null
-      // }
         this.prov=null
         this.city=null
         this.district=null
         this.toFather()
-       // if(this.prov==='请选择'){
-       //   this.prov=null
-       //   this.city=null
-       //   this.district=null
-       // }
-       // if(this.city==='null'){
-       //   this.city=null
-       //   this.district=null
-       // }
     },
     clearcity(){
       this.district=null
@@ -157,24 +128,12 @@ export default {
     updateDistrict() {
       for (var i in this.cityArr) {
         var obj = this.cityArr[i];
-        // console.log("this.cityArr:", this.cityArr)
         if (obj.name == this.city) {
-          // console.log("this.city", this.city)
           this.districtArr = obj.sub;
-          // console.log('this.districtArr',this.districtArr)
           break;
         }
       }
       this.district = this.districtArr[1]? this.districtArr[1].name:null;
-      // if (
-      //   this.districtArr &&
-      //   this.districtArr.length > 0 &&
-      //   this.districtArr[1].name
-      // ) {
-      //   this.district = this.districtArr[1]?this.districtArr[1].name:null;
-      // } else {
-      //   this.district = "";
-      // }
     }
   }
 };
