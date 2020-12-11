@@ -116,14 +116,11 @@
 
       <el-form-item>
         <el-button
-          type="cyan"
+          type="primary"
           icon="el-icon-search"
           size="mini"
           @click="handleQuery"
           >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
         >
       </el-form-item>
     </el-form>
@@ -141,7 +138,7 @@
       </el-col> -->
       <el-col :span="1.5">
         <el-button
-          type="success"
+          type="primary"
           icon="el-icon-edit"
           size="mini"
           :disabled="single"
@@ -152,7 +149,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="danger"
+          type="primary"
           icon="el-icon-delete"
           size="mini"
           :disabled="multiple"

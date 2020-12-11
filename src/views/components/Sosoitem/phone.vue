@@ -11,8 +11,6 @@
         style="font-size: 30px; margin-left: 10px"
         @click="addPhone"
       ></i>
-    </el-form-item>
-    <el-form-item>
       <div v-for="(item, index) in phonedecrease" :key="index">
         <el-input
           style="width: 90%"
@@ -34,35 +32,57 @@ export default {
   data() {
     return {
       phoneadd: '',
-      phonedecrease:[]
+      phonedecrease:[],
+      stringPhone:''
     };
   },
+  props:{
+    toSon:String
+  },
   watch:{
-    // phoneadd(value){
-    //   console.log('phoneadd',value)
-    // },
-    // phonedecrease(value){
-    //   console.log('phonedecrease',value)
-    // }
+    phoneadd(){
+      this.handlePhone()
+    },
+    phonedecrease(){
+      this.handlePhone()
+    },
+    stringPhone(){
+      this.toFather()
+    }
   },
   methods: {
     // 添加电话号码
     addPhone() {
-      this.phonedecrease.push('');
+      this.phonedecrease.push('')
     },
     // 删除电话号码
     decreasePhone(i) {
+      console.log(i)
       this.phonedecrease.splice(i , 1);
     },
     // 处理电话号码格式
     handlePhone() {
-      this.stringPhone=this.phonedecrease.toString()
-      console.log('this.phonedecrease',this.phonedecrease)
+      let phoneString = this.phonedecrease.toString();
+      if (phoneString === '') {
+        this.stringPhone = this.phoneadd + phoneString
+      }else{
+        this.stringPhone = this.phoneadd +','+ phoneString
+      }
     },
     toFather(){
-      this.$emit('phone',this.phoneadd)
+      this.$emit('stringPhone',this.stringPhone)
     },
+    fromFatherphone(){
+      console.log('this.toSon',this.toSon)
+      var a = this.toSon.split(',')
+      this.phoneadd = a.slice(0,1).toString()
+        console.log('a',a)
+      this.phonedecrease=a.slice(1)
+      console.log(this.phoneadd,'this.phoneadd')
+      console.log(this.phonedecrease,'this.phonedecrease')
+    }
   },
+
 };
 </script>
 

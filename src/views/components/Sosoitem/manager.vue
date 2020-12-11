@@ -11,7 +11,7 @@
         @select="handleSelect"
       ></el-autocomplete>
     </el-form-item>
-    <el-form-item label="所属部门" prop="phone">
+    <el-form-item label="所属部门">
       <el-input disabled v-model="deptName" placeholder="请输入电话"/>
     </el-form-item>
   </div>
@@ -35,7 +35,6 @@ export default {
   },
   watch: {
     userId(newval, oldval) {
-      console.log("wwwwwww")
       this.toParent()
     }
   },

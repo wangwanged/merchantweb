@@ -6,7 +6,7 @@
         <div class="head-container">
           <el-input
             v-model="deptName"
-            placeholder="请输入部门名称"
+            placeholder="部门名称"
             clearable
             size="small"
             prefix-icon="el-icon-search"
@@ -28,33 +28,33 @@
       <!--用户数据-->
       <el-col :span="20" :xs="24">
         <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-          <el-form-item label="用户名称" prop="userName">
+          <el-form-item  prop="userName">
             <el-input
               v-model="queryParams.userName"
-              placeholder="请输入用户名称"
+              placeholder="用户名称"
               clearable
               size="small"
-              style="width: 240px"
+              style="width: 200px"
               @keyup.enter.native="handleQuery"
             />
           </el-form-item>
-          <el-form-item label="手机号码" prop="phonenumber">
+          <el-form-item  prop="phonenumber">
             <el-input
               v-model="queryParams.phonenumber"
-              placeholder="请输入手机号码"
+              placeholder="手机号码"
               clearable
               size="small"
-              style="width: 240px"
+              style="width: 200px"
               @keyup.enter.native="handleQuery"
             />
           </el-form-item>
-          <el-form-item label="状态" prop="status">
+          <el-form-item prop="status">
             <el-select
               v-model="queryParams.status"
               placeholder="用户状态"
               clearable
               size="small"
-              style="width: 240px"
+              style="width: 160px"
             >
               <el-option
                 v-for="dict in statusOptions"
@@ -64,11 +64,11 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="创建时间">
+          <el-form-item>
             <el-date-picker
               v-model="dateRange"
               size="small"
-              style="width: 240px"
+              style="width: 200px"
               value-format="yyyy-MM-dd"
               type="daterange"
               range-separator="-"
@@ -77,12 +77,11 @@
             ></el-date-picker>
           </el-form-item>
           <el-form-item>
-            <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+            <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
           </el-form-item>
         </el-form>
 
-        <el-row :gutter="10" class="mb8">
+        <el-row :gutter="10" class="mb8 fr">
           <el-col :span="1.5">
             <el-button
               type="primary"
@@ -94,7 +93,7 @@
           </el-col>
           <el-col :span="1.5">
             <el-button
-              type="success"
+              type="primary"
               icon="el-icon-edit"
               size="mini"
               :disabled="single"
@@ -104,7 +103,7 @@
           </el-col>
           <el-col :span="1.5">
             <el-button
-              type="danger"
+              type="primary"
               icon="el-icon-delete"
               size="mini"
               :disabled="multiple"
@@ -114,7 +113,7 @@
           </el-col>
           <el-col :span="1.5">
             <el-button
-              type="info"
+              type="primary"
               icon="el-icon-upload2"
               size="mini"
               @click="handleImport"
@@ -123,14 +122,13 @@
           </el-col>
           <el-col :span="1.5">
             <el-button
-              type="warning"
+              type="primary"
               icon="el-icon-download"
               size="mini"
               @click="handleExport"
               v-hasPermi="['system:user:export']"
             >导出</el-button>
           </el-col>
-          <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
         </el-row>
 
         <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
@@ -162,21 +160,6 @@
             class-name="small-padding fixed-width"
           >
             <template slot-scope="scope">
-              <el-button
-                size="mini"
-                type="text"
-                icon="el-icon-edit"
-                @click="handleUpdate(scope.row)"
-                v-hasPermi="['system:user:edit']"
-              >修改</el-button>
-              <el-button
-                v-if="scope.row.id !== 1"
-                size="mini"
-                type="text"
-                icon="el-icon-delete"
-                @click="handleDelete(scope.row)"
-                v-hasPermi="['system:user:remove']"
-              >删除</el-button>
               <el-button
                 size="mini"
                 type="text"

@@ -241,7 +241,7 @@
           费用信息
         </div>
         <el-form-item required label="履约保证金">
-          <el-input placeholder="请输入" v-model="form.guarantee"></el-input>
+          <el-input placeholder="请输入" v-model="fee.lvyueFee"></el-input>
         </el-form-item>
         <el-form-item required label="运营管理费">
           <el-input placeholder="请输入" v-model="fee.yunyingManagerFee"></el-input>
@@ -665,9 +665,9 @@ export default {
     },
     // 新签合同按钮操作
     handlecontrast() {
+      this.getdeptuser()
       this.reset()
       this.dialogNewsign = true
-      this.form=this.customerList
       this.form.customerName = this.customerList.name
       this.form.customerPhone = this.customerList.phone
       this.form.customerId = this.customerList.id
@@ -675,15 +675,16 @@ export default {
       this.form.managerId = this.customerList.userId
       this.form.manager = this.customerList.username
       this.form.customerNum = this.customerList.num
-      this.form.createBy = this.customerList.username
-      this.form.fee = JSON.stringify(this.fee)
+      this.form.creatBy = this.customerList.username
       this.form.signDate = parseTime(new Date(), '{y}-{m}-{d}')
       this.form.beginDate = parseTime(new Date(), '{y}-{m}-{d}')
       this.form.endDate = parseTime(new Date(), '{y}-{m}-{d}')
-      this.getdeptuser()
     },
     // 合同确定按钮
     submitcontract() {
+      this.form.guarantee = this.fee.lvyueFee
+      this.fee.jingyingManagerFee.total = '3000'
+      this.form.fee = JSON.stringify(this.fee)
       addContractManager(this.form).then(res => {
         this.$message.success('操作成功')
         this.dialogNewsign = false
