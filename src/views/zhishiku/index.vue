@@ -3,7 +3,7 @@
 		<div class="left">
 			<span>应用产品</span>
 			<div>
-				<div>
+				<div v-for="n in 10">
 					<img src="" alt="">
 					<div class="right">
 						<div class="top">
@@ -13,31 +13,18 @@
 						<div class="down">jdrhgjdfhgj</div>
 					</div>
 				</div>
-				<div>
-					<img src="" alt="">
-					<div class="right">
-						<div class="top">
-							<span>单店加盟</span>
-							<span>下载</span>
-						</div>
-						<div class="down">jdrhgjdfhgj</div>
-					</div>
-				</div>
+				
 			</div>
 		</div>
 		<div class="right">
 			<span>合同模板</span>
 			<div>
-				<div>
+				<div  v-for="n in 20">
 					<img src="" alt="">
 					<span>ddfjgdfljghdgh</span>
 					<span class="xiazai">下载</span>
 				</div>
-				<div>
-					<img src="" alt="">
-					<span>ddfjgdfljghdgh</span>
-					<span>下载</span>
-				</div>
+				
 			</div>
 		</div>
 	</div>
@@ -63,6 +50,7 @@
 			    padding: 0 20px;
 			    background: #fff;
 		}
+		
 		>.left,>.right {
 			margin:20px;
 			flex:1;
@@ -70,6 +58,7 @@
 			overflow: scroll;
 			display: flex;
 			flex-direction: column;
+			position:relative;
 			&::-webkit-scrollbar {
 				display: none;
 			}
@@ -82,6 +71,7 @@
 				align-items: center;
 				padding:10px 0;
 				border-top:5px solid #FFBF2A;
+				
 			}
 			>div {
 				>div {
@@ -126,11 +116,16 @@
 			width:100%;
 			>div>div {
 				border-bottom:1px solid #ccc;
+				span {
+					display: flex;
+					align-items: center;
+				}
 			}
 			img {
 				width:30px !important;
 				height:30px !important;
 			}
+			
 			span:nth-child(2){
 				margin:0 20px 0 30px;
 				width:300px;
