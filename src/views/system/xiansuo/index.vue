@@ -148,7 +148,11 @@
           >
         </template>
       </el-table-column>
-      <el-table-column label="客户电话" align="center" prop="phone[0]" />
+      <el-table-column label="客户电话" align="center" prop="phone">
+        <template slot-scope="obj">
+          {{obj.row.phone.substring(0,11)}}
+        </template>
+      </el-table-column>
       <el-table-column label="客户公司" align="center" prop="companyName" />
       <el-table-column label="客户地区" align="center">
         <template slot-scope="obj">
@@ -213,7 +217,7 @@
         <el-form-item label="客户姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入客户姓名" />
         </el-form-item>
-        <Phone @stringPhone="i=>this.form.phone=i" @toSon="this.form.phone"/>
+        <Phone ref="myphone" @stringPhone="i=>this.form.phone=i" :toSon="this.form.phone"/>
         <el-form-item label="客户地区">
            <Area @place-info="getPlace" :toSon="toplace"/>
         </el-form-item>
@@ -274,7 +278,7 @@
           <el-input v-model="form.name" placeholder="请输入客户姓名" />
         </el-form-item>
         <Phone ref="myphone" @stringPhone="i=>this.form.phone=i" :toSon="this.form.phone"/>
-        <el-form-item label="客户等级">
+          <el-form-item label="客户等级">
           <el-select
             style="width:100%"
             v-model="form.level"
@@ -510,9 +514,9 @@ export default {
       this.loading = true;
       listXiansuo(this.queryParams).then(response => {
         this.xiansuoList = response.rows;
-        this.xiansuoList.forEach(item => {
-          item.phone = item.phone.split(",");
-        });
+        // this.xiansuoList.forEach(item => {
+        //   item.phone = item.phone.split(",");
+        // });
         this.total = response.total;
         this.loading = false;
       });
