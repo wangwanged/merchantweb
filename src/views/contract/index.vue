@@ -436,7 +436,7 @@
       </div>
     </el-dialog>
     <!-- 续签弹框 -->拍下
-      <el-dialog title="续签合同" :visible.sync="dialogRenew" width="650">
+      <el-dialog title="续签合同" :visible.sync="dialogRenew" width="700px">
       <el-form label-position="left"  label-width="110px">
         <div style="font-size:20px;font-weight:700;margin-bottom:20px">
           客户信息
@@ -444,12 +444,7 @@
          <el-form-item required label="选择客户">
           <el-input v-model="form.customerNum"></el-input>
         </el-form-item>
-        <el-form-item required label="客户姓名">
-          <el-input v-model="form.customerName"></el-input>
-        </el-form-item>
-        <el-form-item required label="客户电话">
-          <el-input v-model="form.customerPhone"></el-input>
-        </el-form-item>
+        <Phone ref="myphone" @stringPhone="i=>this.form.customerPhone=i" :toSon="this.form.customerPhone"/>
         <div style="font-size:20px;font-weight:700;margin-bottom:20px">
           签约信息
         </div>
@@ -457,14 +452,14 @@
           <el-button size="small" type="primary" plain>续签</el-button>
         </el-form-item>
         <el-form-item required label="签约产品">
-          <!-- <el-select v-model="renewinfo.produce">
+          <el-select v-model="form.produce">
             <el-option
               v-for="dict in customerNeedsOptions"
               :key="dict.dictValue"
               :label="dict.dictLabel"
               :value="dict.dictValue"
             />
-          </el-select> -->
+          </el-select>
         </el-form-item>
         <el-form-item required label="合同编号">
           <el-input placeholder="请输入" v-model="form.num"></el-input>
@@ -499,7 +494,7 @@
         <div style="font-size:20px;font-weight:700;margin-bottom:20px">
           店面/区域信息
         </div>
-        <div>
+        <div v-if="form.produce==='0'">
           <el-form-item required label="店面名称">
             <el-input
               v-model="form.dianmianName"
@@ -525,7 +520,7 @@
             ></el-input>
           </el-form-item>
         </div>
-        <div >
+        <div v-else>
           <el-form-item required label="店面名称">
             <el-input
               v-model="form.dianmianName"
@@ -675,8 +670,6 @@ export default {
       dialogTransfor:false,
       // 费用信息
       fee:[],
-      // 续签合同信息
-      renewinfo:[],
       // 续签合同
       dialogRenew:false,
       // 审核日期
@@ -701,16 +694,18 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
-      // 合同类型(0：新签:1：续签)字典
+      // 合同类型字典
       typeOptions: [],
       // 签约产品字典
       produceOptions: [],
       // 生效失效状态字典
       statusOptions: [],
-      // 合同审核状态
+      // 合同审核状态字典
       checkStatusOptions: [],
       // 时间类型字典
       typeTimeOptions:[],
+      // 客户需求字典
+      customerNeedsOptions:[],
       // 查询参数
       queryParams: {
         // to back时间的值
@@ -827,7 +822,6 @@ export default {
       console.log("typeTimeValue2", this.typeTimeValue)
       // Object.keys(this.queryParams).forEach(key=>{this.queryParams[key]=''})
       this.resetQuaramDate()
-
       if(this.typeTimeValue==='0'){
         this.queryParams.signDateStart = this.TimeValue ? this.TimeValue[0] : null
         this.queryParams.signDateEnd = this.TimeValue ? this.TimeValue[1] : null
@@ -862,6 +856,9 @@ export default {
     });
     this.getDicts("sys_type_time").then(response => {
       this.typeTimeOptions = response.data;
+    });
+    this.getDicts("sys_user_need").then(response => {
+      this.customerNeedsOptions = response.data;
     });
   },
   methods: {
@@ -929,7 +926,8 @@ export default {
         endDate: null,
         status: null,
         remark: null,
-        managerId:null
+        managerId:null,
+        phone:null
       };
       this.resetForm("form");
     },
@@ -1055,13 +1053,14 @@ export default {
         this.reset()
         console.log(this.form)
         this.dialogRenew=true
-        const id = this.ids[0]
-        getContractManager(id).then(res=>{
-            this.form=res.data
-            console.log('this.form',this.form)
-        })
+        var aaa = this.contractManagerList.filter(item => {
+          return item.id === this.ids[0];
+        });
+       this.form = aaa[0];
         this.getdeptuser()
-        // this.getManager()
+        this.$nextTick(()=>{
+          this.$refs.myphone.fromFatherphone()
+        })
     },
     // 合同续签提交
     submitRenew(){

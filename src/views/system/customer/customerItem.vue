@@ -145,9 +145,7 @@
         <el-form-item required label="客户姓名">
           <el-input v-model="form.customerName"></el-input>
         </el-form-item>
-        <el-form-item required label="客户电话">
-          <el-input v-model="form.customerPhone"></el-input>
-        </el-form-item>
+        <Phone ref="myphone" @stringPhone="i=>this.form.phone=i" :toSon="this.form.phone"/>
         <div style="font-size:20px;font-weight:700;margin-bottom:20px">
           签约信息
         </div>
@@ -278,16 +276,14 @@
     <el-dialog
       title="编辑客户"
       :visible.sync="dialogedit"
-      width="500px"
+      width="650px"
       append-to-body
     >
-      <el-form label-width="80px">
+      <el-form label-width="80px" label-position="left">
         <el-form-item required label="客户姓名">
           <el-input v-model="form.name" placeholder="请输入"/>
         </el-form-item>
-        <el-form-item required label="客户电话">
-          <el-input v-model="form.phone" placeholder="请输入客户电话"/>
-        </el-form-item>
+        <Phone ref="myphone" @stringPhone="i=>this.form.phone=i" :toSon="this.form.phone"/>
         <el-form-item required label="客户等级">
           <el-select v-model="form.level" placeholder="请选择客户等级">
             <el-option
@@ -358,14 +354,15 @@
     </el-dialog>
     <!-- 客户转移弹框 -->
     <el-dialog title="转移" :visible.sync="dialogTransfor" width="500px">
-      <el-autocomplete
-        class="inline-input"
-        v-model="keywords"
-        :fetch-suggestions="querySearch"
-        placeholder="请输入内容"
-        :trigger-on-focus="false"
-        @select="handleSelect"
-      ></el-autocomplete>
+      <el-form><Manager ref="showmanager" @toFather='getManager'/></el-form>
+<!--      <el-autocomplete-->
+<!--        class="inline-input"-->
+<!--        v-model="keywords"-->
+<!--        :fetch-suggestions="querySearch"-->
+<!--        placeholder="请输入内容"-->
+<!--        :trigger-on-focus="false"-->
+<!--        @select="handleSelect"-->
+<!--      ></el-autocomplete>-->
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleTransfor">确 定</el-button>
         <el-button @click="dialogeInvalid = false">取 消</el-button>
@@ -696,6 +693,9 @@ export default {
       this.reset()
       this.form = this.customerList
       this.toPlace()
+      this.$nextTick(()=>{
+        this.$refs.myphone.fromFatherphone()
+      })
     },
     // 编辑按钮提交
     UpdataSubmit() {
