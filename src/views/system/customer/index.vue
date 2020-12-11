@@ -187,18 +187,16 @@
       <el-table-column label="公司" align="center" prop="deptName"/>
       <el-table-column label="客户名称" align="center">
         <template slot-scope="obj">
-          <el-button
+          <span
+            style="color: #1890FF;cursor: pointer;"
             @click="
               $router.push({
                 path: '/customer/customeritem',
                 query: { id: obj.row.id }
               })
-            "
-            size="small"
-            type="text"
-          >{{ obj.row.name }}
-          </el-button
-          >
+            ">{{ obj.row.name }}
+
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="客户电话" align="center" prop="phone">

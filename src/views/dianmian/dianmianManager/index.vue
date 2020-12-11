@@ -189,17 +189,15 @@
       <el-table-column label="公司" align="center" prop="customer.companyName"/>
       <el-table-column label="店面名称" align="center" prop="name">
           <template slot-scope="obj">
-          <el-button
-            @click="
+            <span 
+            style="color: #1890FF;cursor: pointer;"
+              @click="
               $router.push({
                 path: '/dianmian/dianmianItem',
                 query: { id: obj.row.id }
-              })
-            "
-            size="small"
-            type="text"
-            >{{ obj.row.name }}</el-button
-          >
+              })">{{ obj.row.name }}
+              
+            </span>
           </template>
       </el-table-column>
       <el-table-column label="店面状态" align="center" prop="status" :formatter="statusFormat" />
@@ -213,17 +211,15 @@
       </el-table-column>
       <el-table-column label="对应合同" align="center" prop="contractNum" width="180">
           <template slot-scope="obj">
-          <el-button
+           <span
             @click="
               $router.push({
-                path: './contract/contractItem',
-                query: { id: obj.row.id }
+                path: '/contract/contractItem',
+                query: { id: obj.row.id },
               })
             "
-            size="small"
-            type="text"
-            >{{ obj.row.contractNum }}</el-button
-          >
+            style="color: #1890FF;cursor: pointer;"
+          >{{ obj.row.contractNum }}</span>
         </template>
       </el-table-column>
       <el-table-column label="店面类型" align="center" prop="type" :formatter="typeFormat" />

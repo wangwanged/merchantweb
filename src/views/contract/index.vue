@@ -212,17 +212,16 @@
       <el-table-column label="公司" align="center" prop="deptName" />
       <el-table-column label="合同编号" align="center" prop="num" width="180">
         <template slot-scope="obj">
-          <el-button
+          <span
             @click="
               $router.push({
                 path: '/contract/contractItem',
-                query: { id: obj.row.id }
+                query: { id: obj.row.id },
               })
             "
-            size="small"
-            type="text"
-            >{{ obj.row.num }}</el-button
-          >
+            style="color: #1890FF;cursor: pointer;"
+          >{{ obj.row.num }}
+          </span>
         </template>
       </el-table-column>
       <el-table-column
