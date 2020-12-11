@@ -11,7 +11,6 @@
 							<span class="xiazai">下载</span>
 						</div>
 						<div class="down">jdrhgjdfhgj</div>
-						<a class='download' :href='downloadhttp' download=""  title="下载">下载</a>
 					</div>
 				</div>
 				<div>
