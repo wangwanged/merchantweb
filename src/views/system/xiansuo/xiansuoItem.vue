@@ -365,6 +365,10 @@ export default {
   margin: 0 20px;
 }
 .my-scroll-bar{
-    height: 738px;
+   height:calc(100vh - 230px ) !important;
+   overflow: scroll ;
+   &::-webkit-scrollbar {
+   	display: none;
+   }
 }
 </style>

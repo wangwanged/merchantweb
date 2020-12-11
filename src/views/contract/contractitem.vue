@@ -445,7 +445,7 @@
             >
               <el-form label-width="80px">
                 <el-form-item required label="附件名称">
-                  <el-input placeholder="aaa"></el-input>
+                  <!-- <el-input placeholder="aaa"></el-input> -->
                 </el-form-item>
                 <el-form-item label="附件说明">
                   <el-input
@@ -1460,6 +1460,12 @@ export default {
 .main_right_top {
   background-color: #fff;
   padding: 20px 20px;
+  height:calc(100vh - 200px );
+  overflow: scroll !important;
+  &::-webkit-scrollbar {
+  	display: none;
+  }
+  
 }
 .contract_genjin_top {
   height: 80px;
