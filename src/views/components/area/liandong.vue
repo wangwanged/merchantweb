@@ -118,9 +118,7 @@ export default {
       this.district=this.toSon.district
     },
     toFather() {
-      console.log("call to father")
       this.$emit("place-info", this.prov, this.city, this.district);
-      console.log("afer emit")
     },
     clearpro(){
       // console.log('this.prov11111',this.prov)

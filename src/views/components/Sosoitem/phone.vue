@@ -34,33 +34,42 @@ export default {
   data() {
     return {
       phoneadd: '',
-      phonedecrease:[]
+      phonedecrease:[],
+      stringPhone:''
     };
   },
   watch:{
-    // phoneadd(value){
-    //   console.log('phoneadd',value)
-    // },
-    // phonedecrease(value){
-    //   console.log('phonedecrease',value)
-    // }
+    phoneadd(){
+      this.handlePhone()
+    },
+    phonedecrease(){
+      this.handlePhone()
+    },
+    stringPhone(){
+      this.toFather()
+    }
   },
   methods: {
     // 添加电话号码
     addPhone() {
-      this.phonedecrease.push('');
+      this.phonedecrease.push('')
     },
     // 删除电话号码
     decreasePhone(i) {
+      console.log(i)
       this.phonedecrease.splice(i , 1);
     },
     // 处理电话号码格式
     handlePhone() {
-      this.stringPhone=this.phonedecrease.toString()
-      console.log('this.phonedecrease',this.phonedecrease)
+      let phoneString = this.phonedecrease.toString();
+      if (phoneString === '') {
+        this.stringPhone = this.phoneadd + phoneString
+      }else{
+        this.stringPhone = this.phoneadd +','+ phoneString
+      }
     },
     toFather(){
-      this.$emit('phone',this.phoneadd)
+      this.$emit('stringPhone',this.stringPhone)
     },
   },
 };

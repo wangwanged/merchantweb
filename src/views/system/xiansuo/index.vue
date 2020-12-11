@@ -213,32 +213,7 @@
         <el-form-item label="客户姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入客户姓名" />
         </el-form-item>
-        <el-form-item label="客户电话" >
-          <el-input
-            style="width: 90%"
-            v-model="phoneadd"
-            placeholder="请输入客户电话"
-          />
-          <i
-            class="el-icon-circle-plus"
-            style="font-size: 30px; margin-left: 10px"
-            @click="addPhone"
-          ></i>
-        </el-form-item>
-        <el-form-item>
-          <div v-for="(item, index) in phonedecrease" :key="index">
-            <el-input
-              style="width: 90%"
-              v-model="phonedecrease[index]"
-              placeholder="请输入客户电话"
-            />
-            <i
-              class="el-icon-remove"
-              style="font-size: 30px; margin-left: 10px"
-              @click="decreasePhone(index)"
-            ></i>
-          </div>
-        </el-form-item>
+        <Phone @stringPhone="i=>this.form.phone=i"/>
         <el-form-item label="客户地区">
            <Area @place-info="getPlace" :toSon="toplace"/>
         </el-form-item>
@@ -274,20 +249,6 @@
         <el-form-item label="客户备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
-<!--        <el-form-item label="负责人">-->
-<!--          <el-autocomplete-->
-<!--            style="width:100%"-->
-<!--            class="inline-input"-->
-<!--            v-model="keywords"-->
-<!--            :fetch-suggestions="querySearch"-->
-<!--            placeholder="请输入内容"-->
-<!--            :trigger-on-focus="false"-->
-<!--            @select="handleSelect"-->
-<!--          ></el-autocomplete>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="所属部门" prop="dept">-->
-<!--          <el-input disabled v-model="deptName" placeholder="请输入所属部门" />-->
-<!--        </el-form-item>-->
         <Manager ref="showmanager" @toFather='getManager'/>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -312,9 +273,7 @@
         <el-form-item label="客户姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入客户姓名" />
         </el-form-item>
-        <el-form-item label="客户电话" prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入电话" />
-        </el-form-item>
+        <Phone @stringPhone="i=>this.form.phone=i"/>
         <el-form-item label="客户等级">
           <el-select
             style="width:100%"
@@ -615,12 +574,12 @@ export default {
     // /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      console.log('this.formthis.form',this.form)
       this.getdeptuser();
       this.dialog.dialogaddxiansuo = true;
     },
     /** 新增提交按钮 */
     submitForm() {
-      this.handlePhone();
       this.$refs["form"].validate(valid => {
         if (valid) {
           this.form.status = "0";
@@ -636,14 +595,6 @@ export default {
         }
       });
     },
-    //  // 直接显示当前负责人和部门
-    // getdeptuser() {
-    //   getInfo().then(res => {
-    //     this.form.username = res.user.userName;
-    //     this.keywords = res.user.userName;
-    //     this.deptName = res.user.dept.deptName;
-    //   });
-    // },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
@@ -686,21 +637,6 @@ export default {
             this.$message.error("操作失败");
           });
       });
-    },
-    // 添加电话号码
-    // 添加电话号码
-    addPhone() {
-      this.phonedecrease.push('');
-    },
-    // 删除电话号码
-    decreasePhone(i) {
-      this.phonedecrease.splice(i , 1);
-      console.log('phonedecrease',this.phonedecrease)
-    },
-    // 处理电话号码格式
-    handlePhone() {
-      this.form.phone=this.phoneadd+","+this.phonedecrease.toString()
-      console.log('this.form.phone',this.form.phone)
     },
     // 导入数据
     getMyExcelData(data) {
