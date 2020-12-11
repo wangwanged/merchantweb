@@ -11,8 +11,6 @@
         style="font-size: 30px; margin-left: 10px"
         @click="addPhone"
       ></i>
-    </el-form-item>
-    <el-form-item>
       <div v-for="(item, index) in phonedecrease" :key="index">
         <el-input
           style="width: 90%"
@@ -37,6 +35,9 @@ export default {
       phonedecrease:[],
       stringPhone:''
     };
+  },
+  props:{
+    toSon:String
   },
   watch:{
     phoneadd(){
@@ -71,7 +72,17 @@ export default {
     toFather(){
       this.$emit('stringPhone',this.stringPhone)
     },
+    fromFatherphone(){
+      console.log('this.toSon',this.toSon)
+      var a = this.toSon.split(',')
+      this.phoneadd = a.slice(0,1).toString()
+        console.log('a',a)
+      this.phonedecrease=a.slice(1)
+      console.log(this.phoneadd,'this.phoneadd')
+      console.log(this.phonedecrease,'this.phonedecrease')
+    }
   },
+
 };
 </script>
 

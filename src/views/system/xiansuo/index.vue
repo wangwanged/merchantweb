@@ -213,7 +213,7 @@
         <el-form-item label="客户姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入客户姓名" />
         </el-form-item>
-        <Phone @stringPhone="i=>this.form.phone=i"/>
+        <Phone @stringPhone="i=>this.form.phone=i" @toSon="this.form.phone"/>
         <el-form-item label="客户地区">
            <Area @place-info="getPlace" :toSon="toplace"/>
         </el-form-item>
@@ -273,7 +273,7 @@
         <el-form-item label="客户姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入客户姓名" />
         </el-form-item>
-        <Phone @stringPhone="i=>this.form.phone=i"/>
+        <Phone ref="myphone" @stringPhone="i=>this.form.phone=i" :toSon="this.form.phone"/>
         <el-form-item label="客户等级">
           <el-select
             style="width:100%"
@@ -338,7 +338,6 @@
   </div>
 </template>
 <script>
-import cascater from '@/views/components/area/cascater'
 import {
   listXiansuo,
   getXiansuo,
@@ -448,8 +447,10 @@ export default {
   },
   components:{
     Showdept,
-    cascater
   },
+  props:[
+
+  ],
   created() {
     this.getList();
     // 客户来源字典
@@ -619,6 +620,9 @@ export default {
         return item.id === this.ids[0];
       });
       this.form = aaa[0];
+      this.$nextTick(()=>{
+        this.$refs.myphone.fromFatherphone()
+      })
       this.form.ids =  this.ids
       this.getManager()
       this.toPlace();
