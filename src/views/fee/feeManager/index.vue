@@ -1,7 +1,13 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="费用编号" prop="num">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      v-show="showSearch"
+      label-width="68px"
+    >
+      <!-- <el-form-item label="费用编号" prop="num">
         <el-input
           v-model="queryParams.num"
           placeholder="请输入费用编号"
@@ -18,8 +24,20 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
+      </el-form-item> -->
+      <el-form-item prop="shoukuanDate">
+        <el-date-picker
+          clearable
+          size="small"
+          style="width: 200px"
+          v-model="queryParams.shoukuanDate"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="选择收款时间"
+        >
+        </el-date-picker>
       </el-form-item>
-      <el-form-item label="费用类型" prop="type">
+      <el-form-item prop="type">
         <el-input
           v-model="queryParams.type"
           placeholder="请输入费用类型"
@@ -28,7 +46,22 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="付款方式" prop="payMethod">
+      <el-form-item prop="produce">
+        <el-select
+          v-model="queryParams.produce"
+          placeholder="请选择签约产品"
+          clearable
+          size="small"
+        >
+          <el-option
+            v-for="dict in produceOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
+      <!-- <el-form-item  prop="payMethod">
         <el-input
           v-model="queryParams.payMethod"
           placeholder="请输入付款方式"
@@ -36,8 +69,8 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="付款人" prop="payer">
+      </el-form-item> -->
+      <!-- <el-form-item label="付款人" prop="payer">
         <el-input
           v-model="queryParams.payer"
           placeholder="请输入付款人"
@@ -54,9 +87,14 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="费用状态" prop="checkStatus">
-        <el-select v-model="queryParams.checkStatus" placeholder="请选择费用状态" clearable size="small">
+      </el-form-item> -->
+      <el-form-item  prop="checkStatus">
+        <el-select
+          v-model="queryParams.checkStatus"
+          placeholder="请选择费用状态"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in checkStatusOptions"
             :key="dict.dictValue"
@@ -65,30 +103,42 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="收款时间" prop="shoukuanDate">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.shoukuanDate"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择收款时间">
-        </el-date-picker>
+
+      <el-form-item prop="keywords">
+        <el-input
+          v-model="queryParams.keywords"
+          placeholder="模糊搜索"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
+
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="cyan"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="primary"
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
           v-hasPermi="['fee:feeManager:add']"
-        >新增</el-button>
-      </el-col>
+          >新增</el-button
+        >
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="success"
@@ -97,7 +147,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['fee:feeManager:edit']"
-        >修改</el-button>
+          >修改</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -107,42 +158,83 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['fee:feeManager:remove']"
-        >删除</el-button>
+          >删除</el-button
+        >
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="warning"
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
           v-hasPermi="['fee:feeManager:export']"
-        >导出</el-button>
-      </el-col>
-	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+          >导出</el-button
+        >
+      </el-col> -->
+      <div class="fr">
+        <el-col :span="1.5">
+          <el-button
+            type="primary"
+            size="mini"
+            @click="handleAdd"
+            v-hasPermi="['fee:feeManager:add']"
+            >新增费用</el-button
+          >
+        </el-col>
+        
+        <el-col :span="1.5">
+          <el-button
+            type="primary"
+            size="mini"
+            @click="handleExport"
+            v-hasPermi="['fee:feeManager:export']"
+            >导出</el-button
+          >
+        </el-col>
+      </div>
     </el-row>
 
-    <el-table v-loading="loading" :data="feeManagerList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="feeManagerList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="合同费用表id" align="center" prop="id" /> -->
       <el-table-column label="公司" align="center" prop="sysCompany.name" />
       <el-table-column label="收费时间" align="center" prop="shoukuanDate">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.shoukuanDate, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.shoukuanDate, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="费用编号" align="center" prop="num" width="180"/>
+      <el-table-column label="费用编号" align="center" prop="num" width="180" />
       <el-table-column label="费用类型" align="center" prop="type" />
       <el-table-column label="费用金额" align="center" prop="amount" />
-      <el-table-column label="付款方式" align="center" prop="payMethod" :formatter="payMethodFormat"/>
+      <el-table-column
+        label="付款方式"
+        align="center"
+        prop="payMethod"
+        :formatter="payMethodFormat"
+      />
       <el-table-column label="收款人" align="center" prop="reciever" />
-      <el-table-column label="费用状态" align="center" prop="checkStatus" :formatter="checkStatusFormat"/>
-      <el-table-column label="合同编号" align="center" prop="contractNum" width="180">
-          <template slot-scope="obj">
+      <el-table-column
+        label="费用状态"
+        align="center"
+        prop="checkStatus"
+        :formatter="checkStatusFormat"
+      />
+      <el-table-column
+        label="合同编号"
+        align="center"
+        prop="contractNum"
+        width="180"
+      >
+        <template slot-scope="obj">
           <el-button
             @click="
               $router.push({
                 path: '/contract/contractItem',
-                query: { id: obj.row.id }
+                query: { id: obj.row.id },
               })
             "
             size="small"
@@ -185,7 +277,7 @@
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -219,19 +311,27 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="收款时间" prop="shoukuanDate">
-          <el-date-picker clearable size="small" style="width: 200px"
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
             v-model="form.shoukuanDate"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="选择收款时间">
+            placeholder="选择收款时间"
+          >
           </el-date-picker>
         </el-form-item>
         <el-form-item label="更新时间" prop="updateDate">
-          <el-date-picker clearable size="small" style="width: 200px"
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
             v-model="form.updateDate"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="选择更新时间">
+            placeholder="选择更新时间"
+          >
           </el-date-picker>
         </el-form-item>
       </el-form>
@@ -244,7 +344,14 @@
 </template>
 
 <script>
-import { listFeeManager, getFeeManager, delFeeManager, addFeeManager, updateFeeManager, exportFeeManager } from "@/api/fee/feeManager";
+import {
+  listFeeManager,
+  getFeeManager,
+  delFeeManager,
+  addFeeManager,
+  updateFeeManager,
+  exportFeeManager,
+} from "@/api/fee/feeManager";
 
 export default {
   name: "FeeManager",
@@ -268,12 +375,12 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
-      
+
       // 付款方式字典
       payMethodOptions: [],
       // 费用审核状态字典
       checkStatusOptions: [],
-       // 签约产品字典
+      // 签约产品字典
       produceOptions: [],
       // 查询参数
       queryParams: {
@@ -292,45 +399,41 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        num: [
-          { required: true, message: "费用编号不能为空", trigger: "blur" }
-        ],
+        num: [{ required: true, message: "费用编号不能为空", trigger: "blur" }],
         contractNum: [
-          { required: true, message: "合同编号不能为空", trigger: "blur" }
+          { required: true, message: "合同编号不能为空", trigger: "blur" },
         ],
         type: [
-          { required: true, message: "费用类型不能为空", trigger: "blur" }
+          { required: true, message: "费用类型不能为空", trigger: "blur" },
         ],
         payMethod: [
-          { required: true, message: "付款方式不能为空", trigger: "blur" }
+          { required: true, message: "付款方式不能为空", trigger: "blur" },
         ],
-        payer: [
-          { required: true, message: "付款人不能为空", trigger: "blur" }
-        ],
+        payer: [{ required: true, message: "付款人不能为空", trigger: "blur" }],
         reciever: [
-          { required: true, message: "收款人不能为空", trigger: "blur" }
+          { required: true, message: "收款人不能为空", trigger: "blur" },
         ],
         checkStatus: [
-          { required: true, message: "费用状态不能为空", trigger: "blur" }
+          { required: true, message: "费用状态不能为空", trigger: "blur" },
         ],
         shoukuanDate: [
-          { required: true, message: "收款时间不能为空", trigger: "blur" }
+          { required: true, message: "收款时间不能为空", trigger: "blur" },
         ],
         updateDate: [
-          { required: true, message: "更新时间不能为空", trigger: "blur" }
-        ]
-      }
+          { required: true, message: "更新时间不能为空", trigger: "blur" },
+        ],
+      },
     };
   },
   created() {
     this.getList();
-    this.getDicts("pay_method").then(response => {
+    this.getDicts("pay_method").then((response) => {
       this.payMethodOptions = response.data;
     });
-    this.getDicts("fee_status").then(response => {
+    this.getDicts("fee_status").then((response) => {
       this.checkStatusOptions = response.data;
     });
-    this.getDicts("sys_user_need").then(response => {
+    this.getDicts("sys_user_need").then((response) => {
       this.produceOptions = response.data;
     });
   },
@@ -338,14 +441,14 @@ export default {
     /** 查询费用管理列表 */
     getList() {
       this.loading = true;
-      listFeeManager(this.queryParams).then(response => {
+      listFeeManager(this.queryParams).then((response) => {
         this.feeManagerList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
     },
 
-    // 门店状态字典翻译
+    // 付款方式字典翻译
     payMethodFormat(row, column) {
       return this.selectDictLabel(this.payMethodOptions, row.payMethod);
     },
@@ -353,7 +456,7 @@ export default {
     checkStatusFormat(row, column) {
       return this.selectDictLabel(this.checkStatusOptions, row.checkStatus);
     },
-     // 签约产品字典翻译
+    // 签约产品字典翻译
     produceFormat(row, column) {
       return this.selectDictLabel(this.produceOptions, row.produce);
     },
@@ -374,7 +477,7 @@ export default {
         reciever: null,
         checkStatus: "0",
         shoukuanDate: null,
-        updateDate: null
+        updateDate: null,
       };
       this.resetForm("form");
     },
@@ -390,38 +493,38 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
+      this.ids = selection.map((item) => item.id);
+      this.single = selection.length !== 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加费用管理";
+      this.title = "新增费用";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
-      getFeeManager(id).then(response => {
+      const id = row.id || this.ids;
+      getFeeManager(id).then((response) => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改费用管理";
+        this.title = "编辑费用";
       });
     },
     /** 提交按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != null) {
-            updateFeeManager(this.form).then(response => {
+            updateFeeManager(this.form).then((response) => {
               this.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addFeeManager(this.form).then(response => {
+            addFeeManager(this.form).then((response) => {
               this.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -433,30 +536,38 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除费用管理编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm(
+        '是否确认删除费用管理编号为"' + ids + '"的数据项?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+          type: "warning",
+        }
+      )
+        .then(function () {
           return delFeeManager(ids);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        })
+        });
     },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有费用管理数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+      this.$confirm("是否确认导出所有费用管理数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(function () {
           return exportFeeManager(queryParams);
-        }).then(response => {
-          this.download(response.msg);
         })
-    }
-  }
+        .then((response) => {
+          this.download(response.msg);
+        });
+    },
+  },
 };
 </script>
