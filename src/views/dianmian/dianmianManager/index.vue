@@ -31,7 +31,7 @@
       <el-form-item prop="companyId">
         <el-input
           v-model="queryParams.companyId"
-          placeholder="请输入所属公司id"
+          placeholder="所属公司id"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -47,7 +47,7 @@
         />
       </el-form-item> -->
       <el-form-item prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择门店状态" clearable size="small">
+        <el-select v-model="queryParams.status" placeholder="门店状态" clearable size="small">
           <el-option
             v-for="dict in statusOptions"
             :key="dict.dictValue"
@@ -59,7 +59,7 @@
       <el-form-item prop="province">
         <el-input
           v-model="queryParams.province"
-          placeholder="请输入所属省"
+          placeholder="所属省"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -68,7 +68,7 @@
       <el-form-item prop="city">
         <el-input
           v-model="queryParams.city"
-          placeholder="请输入所属市"
+          placeholder="所属市"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -77,7 +77,7 @@
       <el-form-item prop="district">
         <el-input
           v-model="queryParams.district"
-          placeholder="请输入所属区"
+          placeholder="所属区"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -86,14 +86,14 @@
       <el-form-item prop="address">
         <el-input
           v-model="queryParams.address"
-          placeholder="请输入店面详细地址"
+          placeholder="店面详细地址"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item prop="checkResult">
-        <el-select v-model="queryParams.checkResult" placeholder="请选择验收结果" clearable size="small">
+        <el-select v-model="queryParams.checkResult" placeholder="验收结果" clearable size="small">
           <el-option
             v-for="dict in checkResultOptions"
             :key="dict.dictValue"
@@ -120,7 +120,7 @@
         />
       </el-form-item> -->
       <el-form-item prop="type">
-        <el-select v-model="queryParams.type" placeholder="请选择店面类型" clearable size="small">
+        <el-select v-model="queryParams.type" placeholder="店面类型" clearable size="small">
           <el-option
             v-for="dict in typeOptions"
             :key="dict.dictValue"
@@ -132,7 +132,7 @@
       <el-form-item prop="area">
         <el-input
           v-model="queryParams.area"
-          placeholder="请输入授权区域"
+          placeholder="授权区域"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -630,7 +630,10 @@ export default {
   margin:0 0 20px 0 !important;
 }
 .formInput .el-input{
-  width:160px !important;
+  width:140px !important;
+}
+.formInput .el-select{
+  width:140px !important;
 }
 .elInput .el-input{
   width:66%;
