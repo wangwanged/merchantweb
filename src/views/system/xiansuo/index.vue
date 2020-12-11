@@ -36,7 +36,6 @@
       </el-form-item>
       <el-form-item>
         <Area class='liandong' @place-info="getPlace" :toSon="toplace"></Area>
-
       </el-form-item>
        <el-form-item prop="inputDate">
         <el-date-picker

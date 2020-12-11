@@ -434,7 +434,7 @@
         <el-button @click="dialogCheck = false">取 消</el-button>
       </div>
     </el-dialog>
-    <!-- 续签弹框 -->拍下
+    <!-- 续签弹框 -->
       <el-dialog title="续签合同" :visible.sync="dialogRenew" width="700px">
       <el-form label-position="left"  label-width="110px">
         <div style="font-size:20px;font-weight:700;margin-bottom:20px">
@@ -490,61 +490,27 @@
           >
           </el-date-picker>
         </el-form-item>
-        <div style="font-size:20px;font-weight:700;margin-bottom:20px">
-          店面/区域信息
+        <div style="font-size:20px;font-weight:700;margin-bottom:20px" v-if="form.produce==='0'">
+          店面信息
         </div>
-        <div v-if="form.produce==='0'">
-          <el-form-item required label="店面名称">
+        <div style="font-size:20px;font-weight:700;margin-bottom:20px" v-else>
+          区域信息
+        </div>
+          <el-form-item required label="店面名称" v-if="form.produce==='0'">
             <el-input
               v-model="form.dianmianName"
               placeholder="请输入"
             ></el-input>
           </el-form-item>
-          <el-form-item required label="所属省">
-            <el-input
-              v-model="form.dianmianProvince"
-              placeholder="请输入"
-            ></el-input>
-          </el-form-item>
-          <el-form-item required label="所属市">
-            <el-input
-              v-model="form.dianmianCity"
-              placeholder="请输入"
-            ></el-input>
-          </el-form-item>
-          <el-form-item required label="所属区">
-            <el-input
-              v-model="form.dianmianDistrict"
-              placeholder="请输入"
-            ></el-input>
-          </el-form-item>
-        </div>
-        <div v-else>
-          <el-form-item required label="店面名称">
+          <el-form-item required label="区域名称" v-else>
             <el-input
               v-model="form.dianmianName"
               placeholder="请输入"
             ></el-input>
           </el-form-item>
-          <el-form-item required label="所属省">
-            <el-input
-              v-model="form.dianmianProvince"
-              placeholder="请输入"
-            ></el-input>
-          </el-form-item>
-          <el-form-item required label="所属市">
-            <el-input
-              v-model="form.dianmianCity"
-              placeholder="请输入"
-            ></el-input>
-          </el-form-item>
-          <el-form-item required label="所属区">
-            <el-input
-              v-model="form.dianmianDistrict"
-              placeholder="请输入"
-            ></el-input>
-          </el-form-item>
-        </div>
+        <el-form-item required label="所属区域">
+          <Area class='liandong' @place-info="getPlace" :toSon="toplace"></Area>
+        </el-form-item>
         <el-form-item required label="详细地址">
           <el-input
             v-model="form.dianmianAddress"
@@ -559,7 +525,7 @@
         </el-form-item>
         <el-form-item required label="店面纬度">
           <el-input
-            v-model="form.dianmianLatitide"
+            v-model="form.dianmianLatitude"
             placeholder="请输入"
           ></el-input>
         </el-form-item>
@@ -605,14 +571,6 @@
        <el-form>
          <Manager ref="showmanager" @toFather='getManager'/>
        </el-form>
-<!--        <el-autocomplete-->
-<!--            class="inline-input"-->
-<!--            v-model="transforKeywords"-->
-<!--            :fetch-suggestions="querySearch"-->
-<!--            placeholder="请输入内容"-->
-<!--            :trigger-on-focus="false"-->
-<!--            @select="handleSelect"-->
-<!--    ></el-autocomplete>-->
     <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click='handleTransfor'>确 定</el-button>
         <el-button @click="dialogTransfor = false">取 消</el-button>
@@ -645,6 +603,12 @@ export default {
   },
   data() {
     return {
+      //  传给省市区
+      toplace: {
+        province: "",
+        city: "",
+        district: ""
+      },
       transferManagerId: null,
       // 时间字段
       TimeValue:null,
@@ -865,7 +829,6 @@ export default {
       this.queryParams.deptId = deptId;
       console.log("deptId:",deptId)
     },
-
     /** 查询合同列表 */
     getList() {
       this.loading = true;
@@ -906,27 +869,56 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        id: null,
-        num: null,
-        customerName: null,
-        customerId: null,
-        customerPhone: null,
-        type: null,
-        produce: null,
-        dianmianName: null,
-        dianmianNum: null,
-        guarantee: null,
-        fee: null,
-        operation: null,
-        manager: null,
-        signDate: null,
-        signUser: null,
         beginDate: null,
-        endDate: null,
-        status: null,
-        remark: null,
-        managerId:null,
-        phone:null
+      checkDate: null,
+      checkStatus: null,
+      createBy: null,
+      createTime: null,
+      customerId: null,
+      customerName: null,
+      customerNum:null,
+      customerPhone: null,
+      deptId:null,
+      deptName: null,
+      dianmianAddress: null,
+      dianmianCity:null,
+      dianmianDistrict: null,
+      dianmianLatitude: null,
+      dianmianLongitude: null,
+      dianmianName: null,
+      dianmianNum: null,
+      dianmianProvince: null,
+      endDate: null,
+      fee: null,
+      file: null,
+      guarantee: null,
+      id: null,
+      imgs: null,
+      isAsc:null,
+      keywords: null,
+      manager: null,
+      managerId: null,
+      num: null,
+      operation: null,
+      orderBy: null,
+      orderByColumn: null,
+      pageNum: null,
+      pageSize: null,
+      params:null,
+      pid: null,
+      produce:null,
+      remark: null,
+      rootNum: null,
+      searchValue: null,
+      signDate: null,
+      signUser: null,
+      signUserId: null,
+      status:null,
+      terminateDate: null,
+      terminateFile: null,
+      type: null,
+      updateBy: null,
+      updateTime: null,
       };
       this.resetForm("form");
     },
@@ -1060,6 +1052,8 @@ export default {
         this.$nextTick(()=>{
           this.$refs.myphone.fromFatherphone()
         })
+      this.getPlace()
+        this.toPlace()
     },
     // 合同续签提交
     submitRenew(){
@@ -1070,49 +1064,6 @@ export default {
        }).catch(error=>{
            this.$message.error("操作失败");
        })
-    },
-      // 负责人查询
-    querySearch(queryString, callback) {
-            const keywords=this.transforKeywords
-            var params={
-                keywords:keywords
-            }
-        transforCustomer(params).then(response => {
-           var restaurants = response.rows;
-           console.log('eeeeeeeeeeeeeeee',restaurants)
-           const list = []
-             //封装要显示的数据
-           for (let v of restaurants) {
-             console.log("vvvvvvvvv", v)
-            list.push({ value: v.phonenumber + " " + v.userName, id: v.id})
-            }
-                 // 调用 callback 返回建议列表的数据,是一个数组类型
-            callback(list)
-      });
-      },
-         // 负责人查询
-    handleSelect(item) {
-        console.log(item)
-        this.transferManagerId = item.id
-
-        // this.userInfo()
-      },
-    // 获取user用户信息
-    userInfo() {
-      listUser({}).then(response => {
-          this.user=response.rows
-          var a  = this.user.filter(item=>{
-              if(this.transforphone===item.phonenumber){
-                  return item
-              }
-          })
-          var b = []
-          for(var i = 0; i<a.length;i++){
-              var c = a[i].dept
-              b.push(c.deptName)
-              }
-          this.deptName = b[0]
-      });
     },
     // 打开转移弹框
     opendialogTransfor(){
@@ -1165,13 +1116,7 @@ export default {
       console.log('this.form.deptId',this.form.deptId)
     },
   }
-
 };
 computed:{
-  // totalfee: function () {
-  //   console.log(this.fee.daibanFee)
-  //   return  this.fee.daibanFee + this.fee.guohuoFee + this.fee.systemUseFee + this.fee.yunyingManagerFee+ this.fee.jingyingManagerFee.total
-  //     + this.fee.systemMaintenanceFee
-  // }
 }
 </script>
