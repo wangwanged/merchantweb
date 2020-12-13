@@ -545,11 +545,11 @@ export default {
       })
     },
     // 选择负责人和部门
-    getManager(value,deptId) {
-      this.form.managerId = value
+    getManager(value,deptId,username) {
+      console.log("value,deptId,username", value,deptId,username)
+      this.form.userId = value
       this.form.deptId = deptId
-      console.log('this.form.managerId',this.form.managerId)
-      console.log('this.form.deptId',this.form.deptId)
+      this.form.username = username
     },
     // 省市区赋值
     toPlace() {
@@ -599,10 +599,14 @@ export default {
     // /** 新增按钮操作 */
     handleAdd() {
       this.reset();
-      console.log('this.formthis.form',this.form)
+      console.log("this.user.deptId1111",this.user.deptId)
+      this.form.deptId = this.user.deptId
+      console.log('this.form111',this.form)
       this.getdeptuser();
-      this.getManager()
       this.dialog.dialogaddxiansuo = true;
+      this.$nextTick(()=>{
+        this.$refs.showmanager.toParent();
+      })
     },
     /** 新增提交按钮 */
     submitForm() {

@@ -33,6 +33,12 @@ export default {
       deptId:''
     }
   },
+  created() {
+    this.showdeptuser()
+  },
+  mounted() {
+    setTimeout(this.toParent(),50)
+  },
   watch: {
     userId(newval, oldval) {
       this.toParent()
@@ -43,7 +49,8 @@ export default {
   },
   methods: {
     toParent() {
-      this.$emit('toFather', this.userId,this.deptId)
+      console.log("this.userId, this.deptId, this.username", this.userId, this.deptId, this.username)
+      this.$emit('toFather', this.userId,this.deptId,this.username)
     },
     // 负责人查询
     querySearch(queryString, callback) {
@@ -55,7 +62,7 @@ export default {
         const list = []
         //封装要显示的数据
         for (let v of restaurants) {
-          list.push({ value: v.phonenumber + ' ' + v.userName, id: v.id,deptId: v.deptId })
+          list.push({ value: v.phonenumber + ' ' + v.userName, id: v.id,deptId: v.deptId,username:v.userName })
         }
         // 调用 callback 返回建议列表的数据,是一个数组类型
         callback(list)
@@ -66,6 +73,9 @@ export default {
       getInfo().then(res => {
         this.keywords = res.user.userName
         this.deptName = res.user.dept.deptName
+        this.userId = res.user.id
+        this.deptId = res.user.deptId
+        this.username = res.user.userName
       })
     },
     // 负责人查询
@@ -73,6 +83,7 @@ export default {
       //   this.queryParams.userId=item.id
       this.userId = item.id
       this.deptId = item.deptId
+      this.username = item.username
       this.keywords = item.value.substring(12)
       //  部门随负责人变动
       listUser({}).then(res => {
