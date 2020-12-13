@@ -1388,6 +1388,7 @@ export default {
         .catch(error => {
           this.$message.error("操作失败");
         });
+      this.getList()
     },
     // 获取附件信息
     getAttachment() {
@@ -1465,7 +1466,7 @@ export default {
   &::-webkit-scrollbar {
   	display: none;
   }
-  
+
 }
 .contract_genjin_top {
   height: 80px;

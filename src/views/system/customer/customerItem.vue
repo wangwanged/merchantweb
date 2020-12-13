@@ -163,7 +163,7 @@
           </el-select>
         </el-form-item>
         <el-form-item required label="合同编号">
-          <el-input placeholder="请输入" v-model="form.num"></el-input>
+          <el-input placeholder="请输入" v-model="form.code"></el-input>
         </el-form-item>
         <el-form-item required label="签约日期">
           <el-date-picker
@@ -552,7 +552,7 @@ export default {
         status: '0',
         inputDate: null,
         updateDate: null,
-        num: null, //合同编号，手动录入
+        code: null, //合同编号，手动录入
         customerName: null, //客户username
         customerId: null, //客户id
         customerPhone: null, //客户手机号
