@@ -546,7 +546,6 @@ export default {
     },
     // 选择负责人和部门
     getManager(value,deptId,username) {
-      console.log("value,deptId,username", value,deptId,username)
       this.form.userId = value
       this.form.deptId = deptId
       this.form.username = username

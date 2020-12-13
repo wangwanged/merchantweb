@@ -36,9 +36,6 @@ export default {
   created() {
     this.showdeptuser()
   },
-  mounted() {
-    setTimeout(this.toParent(),50)
-  },
   watch: {
     userId(newval, oldval) {
       this.toParent()

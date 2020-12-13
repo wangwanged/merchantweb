@@ -626,9 +626,6 @@ export default {
     },
     //   获取省市区的地址
     getPlace(i, j, k) {
-      console.log("iiiiiii", i)
-      console.log("jjjjjj",j)
-      console.log("kkkkkk",k)
       this.form.province = i
       this.form.city = j
       this.form.district = k
@@ -677,6 +674,9 @@ export default {
       this.open = true
       this.title = '添加我的客户'
       this.getdeptuser()
+      this.$nextTick(()=>{
+        this.$refs.showmanager.toParent();
+      })
     },
     /** 新增提交按钮 */
     submitForm() {
@@ -686,6 +686,7 @@ export default {
         addCustomer(this.form).then(response => {
           this.msgSuccess('新增成功')
           this.open = false
+          getPlace(null,null,null)
           this.getList()
         })
       })
@@ -706,8 +707,10 @@ export default {
         })
     },
     // 选择负责人和部门
-    getManager(value) {
+    getManager(value, deptId, username) {
       this.form.userId = value
+      this.form.deptId = deptId
+      this.form.username = username
     },
     // 显示当前负责人和部门
     getdeptuser() {
