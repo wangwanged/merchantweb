@@ -37,13 +37,14 @@
         ></el-date-picker>
       </el-form-item>
       <el-form-item prop="type">
-        <el-input
-          v-model="queryParams.type"
-          placeholder="请输入费用类型"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.type" placeholder="请输入费用类型" clearable size="small">
+          <el-option
+            v-for="dict in feeTypeOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item prop="produce">
         <el-select v-model="queryParams.produce" placeholder="请选择签约产品" clearable size="small">
@@ -173,7 +174,7 @@
     <el-table v-loading="loading" :data="feeManagerList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="合同费用表id" align="center" prop="id" /> -->
-      <el-table-column label="公司" align="center" prop="companyName" />
+      <el-table-column label="公司" align="center" prop="deptName" />
       <el-table-column label="收费时间" align="center" prop="shoukuanDate">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.shoukuanDate, "{y}-{m}-{d}") }}</span>

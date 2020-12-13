@@ -248,7 +248,7 @@
                       :key="index"
                     >
                       <p>{{ item.amount }}</p>
-                      <p>{{ item.type }}</p>
+                      <p >{{ feeLable(item.type)}}</p>
                     </el-col>
                   </el-row>
                   <el-table
@@ -270,6 +270,7 @@
                     </el-table-column>
                     <el-table-column
                       prop="type"
+                      :formatter="feeTypeFormat"
                       label="汇款类型"
                       min-width="100"
                     >
@@ -1009,8 +1010,17 @@ import {
 } from "@/api/dianmian/dianmianManager";
 import { addFeeManager } from "@/api/fee/feeManager";
 import { getInfo } from "@/api/login.js";
+import {selectDictLabel} from '@/utils/ruoyi'
 import { getDicts } from '@/api/system/dict/data'
 export default {
+  filters: {
+    toLable: (key) => {
+      console.log("key",key)
+      // console.log("selectDictLabel222222",this.selectDictLabel(this.dict.feeTypeOptions, key))
+      // return key+"dddddd"
+      return this.selectDictLabel(this.dict.feeTypeOptions,key)
+    }
+  },
   data() {
     return {
       id: this.$route.query.id, //当前详情页id
@@ -1049,11 +1059,13 @@ export default {
         statusOptions: [],
         contractTypeOptions:[],  //合同类型字典
         produceTypeOptions:[],  //产品类型字典
+        feeTypeOptions:[],
 
         checkLabel: '',
         statusLabel: '',
         contractTypeLabel: '',
         produceTypeLabel: '',
+        feeTypeLabel: '',
       },
       loading: true,
     };
@@ -1067,6 +1079,9 @@ export default {
     document.querySelector("body").removeAttribute("style");
   },
   computed: {
+    feeLable() {
+      return (key) => this.selectDictLabel(this.dict.feeTypeOptions,key)
+    },
     //  合同审核按钮
     contentCheck() {
       return {
@@ -1164,17 +1179,34 @@ export default {
         var a = this.dict.statusOptions.filter(item => {
           return item.dictValue === this.contractList.status;
         });
-        this.dict.statusOptions= a[0] ? a[0].dictLabel : null;
+        this.dict.contractTypeLabel= a[0] ? a[0].dictLabel : null;
+      });
+      // 获取合同状态字典
+      this.getDicts("fee_type").then(response => {
+        this.dict.feeTypeOptions = response.data;
+        var a = this.dict.feeTypeOptions.filter(item => {
+          return item.dictValue === this.contractList.status;
+        });
+        this.dict.feeTypeLabel= a[0] ? a[0].dictLabel : null;
       });
     },
 
+    convertFeeType(type) {
+      return this.selectDictLabel(this.dict.contractTypeOptions, type);
+    },
     produceFormat(row, column) {
       return this.selectDictLabel(this.dict.produceTypeOptions, row.produce);
     },
     // 生效失效状态字典翻译
     contractTypeFormat(row, column) {
+      console.log("selectDictLabel", this.selectDictLabel(this.dict.contractTypeOptions,row.type))
       return this.selectDictLabel(this.dict.contractTypeOptions, row.type);
     },
+    // 生效失效状态字典翻译
+    feeTypeFormat(row, column) {
+      return this.selectDictLabel(this.dict.feeTypeOptions, row.type);
+    },
+
     // 表单重置
     reset() {
       this.form = {
