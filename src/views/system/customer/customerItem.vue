@@ -430,7 +430,7 @@ export default {
         lvyueFee: '',
         jingyingManagerFee: {
           total: '3000',
-          detail:[{"2020.11.01-2020.12.01": 1000},{"2020.12.01-2021.01.01": 2000}]
+          detail:[{date: "2020.11.01-2020.12.01", price:'1000'},{date: "2020.11.01-2020.12.01", money:'1000'}]
         },
         yunyingManagerFee: '',
         systemUseFee: '',

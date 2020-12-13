@@ -414,7 +414,7 @@
         <el-form-item required label="代办费">
           <el-input placeholder="请输入" v-model="fee.daiban"></el-input>
         </el-form-item>
-        <Fee/>
+        <Fee @jinyingFee="i=>fee.jingyingManagerFee.detail=i"/>
         <div style="font-size:20px;font-weight:700;margin-bottom:20px">
           备注信息
         </div>
@@ -888,7 +888,6 @@ export default {
     },
     // 合同续签提交
     submitRenew(){
-
         const id = this.ids[0]
         contractRenew(this.form,id).then(res=>{
            this.$message.success("操作成功");
