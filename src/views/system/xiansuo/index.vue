@@ -648,7 +648,7 @@ export default {
       var aaa = this.xiansuoList.filter(item => {
         return item.id === this.ids[0];
       });
-      this.form = aaa[0];
+      this.form = JSON.parse(JSON.stringify(aaa[0]));
       this.form.deptId = this.user.deptId
       this.$nextTick(()=>{
         this.$refs.myphone.fromFatherphone()

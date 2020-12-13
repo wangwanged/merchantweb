@@ -145,7 +145,7 @@
         <el-form-item required label="客户姓名">
           <el-input v-model="form.customerName"></el-input>
         </el-form-item>
-        <Phone ref="myphone" @stringPhone="i=>this.form.phone=i" :toSon="this.form.phone"/>
+        <Phone ref="myphone" @stringPhone="i=>this.form.customerPhone=i" :toSon="this.form.customerPhone"/>
         <div style="font-size:20px;font-weight:700;margin-bottom:20px">
           签约信息
         </div>
@@ -646,7 +646,6 @@ export default {
     //   } else {
     //     this.showDianmian = false;
     //   }
-    //   console.log(this.showDianmian);
     // },
     // 获取省市区
     getPlace(i, j, k) {
@@ -673,9 +672,13 @@ export default {
       this.form.manager = this.customerList.username
       this.form.customerNum = this.customerList.num
       this.form.creatBy = this.customerList.username
+      this.form.produce = this.customerList.customerNeeds
       this.form.signDate = parseTime(new Date(), '{y}-{m}-{d}')
       this.form.beginDate = parseTime(new Date(), '{y}-{m}-{d}')
       this.form.endDate = parseTime(new Date(), '{y}-{m}-{d}')
+      this.$nextTick(()=>{
+        this.$refs.myphone.fromFatherphone()
+      })
     },
     // 合同确定按钮
     submitcontract() {
@@ -691,7 +694,7 @@ export default {
     handleUpdate() {
       this.dialogedit = true
       this.reset()
-      this.form = this.customerList
+      this.form = JSON.parse(JSON.stringify(this.customerList))
       this.toPlace()
       this.$nextTick(()=>{
         this.$refs.myphone.fromFatherphone()

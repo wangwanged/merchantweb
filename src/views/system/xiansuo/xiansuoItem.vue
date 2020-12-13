@@ -308,7 +308,7 @@ export default {
     // 转成客户按钮
     handletocustomer() {
       this.reset();
-      this.form = this.xiansuoList;
+      this.form = JSON.parse(JSON.stringify(this.xiansuoList));
       console.log("this.form", this.form);
       this.getdeptuser();
       this.toPlace();

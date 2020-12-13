@@ -85,9 +85,7 @@ export default {
     },
     // 父传子信息 处理
     fromFatherphone(){
-      console.log('aaaaaaaaaaa',this.toSon)
       var a = this.toSon.split(',')
-
       this.phoneadd = a.slice(0,1).toString()
       this.phonedecrease=a.slice(1)
       console.log(this.phonedecrease,'this.phonedecrease')
