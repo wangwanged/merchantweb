@@ -201,7 +201,7 @@
       </el-table-column>
       <el-table-column label="客户电话" align="center" prop="phone">
         <template slot-scope="obj">
-          {{obj.row.phone.substring(0,11)}}
+          {{obj.row.phone.split(",")[0]}}
         </template>
       </el-table-column>
       <el-table-column

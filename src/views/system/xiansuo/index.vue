@@ -149,7 +149,7 @@
       </el-table-column>
       <el-table-column label="客户电话" align="center" prop="phone">
         <template slot-scope="obj">
-          {{obj.row.phone.substring(0,11)}}
+          {{obj.row.phone.split(",")[0]}}
         </template>
       </el-table-column>
       <el-table-column label="客户公司" align="center" prop="companyName" />
@@ -451,9 +451,13 @@ export default {
   components:{
     Showdept,
   },
-  props:[
-
-  ],
+  props:[],
+  computed:{
+    user(){
+      console.log("this.$store.state.user.userinfo", this.$store.state.user.userinfo)
+      return this.$store.state.user.userinfo
+    }
+  },
   created() {
     this.getList();
     // 客户来源字典
@@ -485,37 +489,51 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        name: null,
-        phone: null,
-        companyId: null,
-        province: null,
         city: null,
-        resource: null,
-        sysUserId: null,
-        isCustomer: null,
-        createTime: null,
-        updateTime: null,
-        username: null,
         companyName: null,
-        remark: null,
-        ids: null,
-        level: null,
+        createBy: null,
+        createTime: null,
         customerNeeds: null,
+        deptId: null,
+        deptName:null,
         dianmianAddress: null,
-        status: null,
+        district: null,
         experience: null,
-        genjinStatus: null,
+        genjinDate:null,
+        genjinStatus:null,
+        id:null,
+        inputDate: null,
+        isAsc: null,
+        keywords: null,
+        level:null,
+        luruName:null,
+        name: null,
+        num:null,
+        orderBy: null,
+        orderByColumn:null,
+        pageNum: null,
+        pageSize: null,
+        params: null,
+        phone: null,
+        province:null,
+        remark: null,
+        resource: null,
+        searchValue: null,
+        status: null,
+        updateBy: null,
+        updateDate: null,
+        updateTime:null,
+        userId:null,
+        username: null,
       };
-      this.resetForm("form");
+      // this.resetForm("form");
     },
     /** 查询客户线索列表 */
     getList() {
       this.loading = true;
       listXiansuo(this.queryParams).then(response => {
         this.xiansuoList = response.rows;
-        // this.xiansuoList.forEach(item => {
-        //   item.phone = item.phone.split(",");
-        // });
+        console.log('this.xiansuoList',this.xiansuoList)
         this.total = response.total;
         this.loading = false;
       });
@@ -527,8 +545,11 @@ export default {
       })
     },
     // 选择负责人和部门
-    getManager(value) {
-      this.form.userId = value
+    getManager(value,deptId) {
+      this.form.managerId = value
+      this.form.deptId = deptId
+      console.log('this.form.managerId',this.form.managerId)
+      console.log('this.form.deptId',this.form.deptId)
     },
     // 省市区赋值
     toPlace() {
@@ -580,6 +601,7 @@ export default {
       this.reset();
       console.log('this.formthis.form',this.form)
       this.getdeptuser();
+      this.getManager()
       this.dialog.dialogaddxiansuo = true;
     },
     /** 新增提交按钮 */
@@ -623,13 +645,12 @@ export default {
         return item.id === this.ids[0];
       });
       this.form = aaa[0];
+      this.form.deptId = this.user.deptId
       this.$nextTick(()=>{
         this.$refs.myphone.fromFatherphone()
       })
       this.form.ids =  this.ids
-      this.getManager()
       this.toPlace();
-      this.form.phone=this.form.phone.toString()
     },
     // 转成客户提交
     submitTocustomer() {

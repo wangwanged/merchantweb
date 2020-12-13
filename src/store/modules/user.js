@@ -3,6 +3,7 @@ import { getToken, setToken, removeToken } from '@/utils/auth'
 
 const user = {
   state: {
+    userinfo:null,
     token: getToken(),
     name: '',
     avatar: '',
@@ -25,7 +26,10 @@ const user = {
     },
     SET_PERMISSIONS: (state, permissions) => {
       state.permissions = permissions
-    }
+    },
+    SET_USER: (state, user) => {
+      state.userinfo = user
+    },
   },
 
   actions: {
@@ -59,6 +63,7 @@ const user = {
             commit('SET_ROLES', ['ROLE_DEFAULT'])
           }
           commit('SET_NAME', user.userName)
+          commit('SET_USER', user)
           commit('SET_AVATAR', avatar)
           resolve(res)
         }).catch(error => {
@@ -66,7 +71,7 @@ const user = {
         })
       })
     },
-    
+
     // 退出系统
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {

@@ -36,6 +36,9 @@ export default {
   watch: {
     userId(newval, oldval) {
       this.toParent()
+    },
+    deptId(newval, oldval) {
+      this.toParent()
     }
   },
   methods: {
@@ -63,7 +66,6 @@ export default {
       getInfo().then(res => {
         this.keywords = res.user.userName
         this.deptName = res.user.dept.deptName
-        console.log("this.deptName",this.deptName)
       })
     },
     // 负责人查询
@@ -81,7 +83,6 @@ export default {
         this.deptName = a[0].dept.deptName
       })
     }
-
   }
 }
 </script>
