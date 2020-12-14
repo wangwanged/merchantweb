@@ -308,7 +308,6 @@
                   >
                     <el-form label-width="80px" label-position="left">
                       <el-form-item
-                        required
                         label="收费时间"
                         prop="shoukuanDate"
                       >
@@ -323,7 +322,7 @@
                         >
                         </el-date-picker>
                       </el-form-item>
-                      <el-form-item required label="费用编号" prop="num">
+                      <el-form-item label="费用编号" prop="num">
                         <el-input
                           v-model="addfeeInfo.num"
                           placeholder="请输入费用编号"
@@ -331,40 +330,60 @@
                       </el-form-item>
 
                       <el-form-item
-                        required
                         label="费用金额"
-                        prop="constractNum"
+                        prop="amount"
                       >
                         <el-input
                           v-model="addfeeInfo.amount"
-                          placeholder="请输入合同编号"
+                          placeholder="请输入费用金额"
                         />
                       </el-form-item>
-                      <el-form-item required label="付款方式" prop="payMethod">
+                      <el-form-item label="付款方式" prop="experience">
+                        <el-select v-model="addfeeInfo.payMethod" placeholder="请选择付款方式">
+                          <el-option
+                            v-for="dict in dict.payMethodOptions"
+                            :key="dict.dictValue"
+                            :label="dict.dictLabel"
+                            :value="dict.dictValue"
+                          ></el-option>
+                        </el-select>
+                      </el-form-item>
+                      <el-form-item label="费用类型" prop="experience">
+                        <el-select v-model="addfeeInfo.type" placeholder="请选择费用类型">
+                          <el-option
+                            v-for="dict in dict.feeTypeOptions"
+                            :key="dict.dictValue"
+                            :label="dict.dictLabel"
+                            :value="dict.dictValue"
+                          ></el-option>
+                        </el-select>
+                      </el-form-item>
+                     <!-- <el-form-item label="付款方式" prop="payMethod">
                         <el-input
                           v-model="addfeeInfo.payMethod"
-                          placeholder="请输入付款方式"
+                          placeholder="请选择付款方式"
                         />
                       </el-form-item>
-                      <el-form-item required label="费用类型" prop="type">
+                      <el-form-item label="费用类型" prop="type">
                         <el-input
                           v-model="addfeeInfo.type"
-                          placeholder="请输入费用类型"
+                          placeholder="请选择费用类型"
                         />
-                      </el-form-item>
+                      </el-form-item>-->
                       <!-- <el-form-item label="付款人" prop="payer">
                         <el-input
                           v-model="addfeeInfo.payer"
                           placeholder="请输入付款人"
                         />
                       </el-form-item> -->
-                      <el-form-item required label="收款人" prop="reciever">
+                      <!--<el-form-item label="收款人" prop="reciever">
                         <el-input
                           v-model="addfeeInfo.reciever"
                           placeholder="请输入收款人"
                         />
-                      </el-form-item>
-                      <el-form-item label="备注" prop="updateDate">
+                      </el-form-item>-->
+                      <Manager ref="showmanager" @toFather="getManager"></Manager>
+                      <el-form-item label="备注" prop="remark">
                         <el-input
                           type="textarea"
                           :rows="3"
@@ -1059,13 +1078,15 @@ export default {
         statusOptions: [],
         contractTypeOptions:[],  //合同类型字典
         produceTypeOptions:[],  //产品类型字典
-        feeTypeOptions:[],
+        feeTypeOptions:[], // 费用类型字典
+        payMethodOptions: [], // 付款方式字典
 
         checkLabel: '',
         statusLabel: '',
         contractTypeLabel: '',
         produceTypeLabel: '',
         feeTypeLabel: '',
+        payMethodLabel: ''
       },
       loading: true,
     };
@@ -1145,8 +1166,17 @@ export default {
       this.dict.contractTypeOptions = response.data;
     });*/
     this.getdicts();
+    this.getDicts("pay_method").then((response) => {
+      this.dict.payMethodOptions = response.data;
+    });
   },
   methods: {
+    // 选择负责人和部门
+    getManager(value,deptId,username) {
+      this.form.userId = value
+      this.form.deptId = deptId
+      this.form.username = username
+    },
     // 获取字典
     getdicts(){
       // 获取产品类型字典
@@ -1438,6 +1468,9 @@ export default {
         this.addfeeInfo.reciever = res.user.userName;
         this.dialog.dialogaddFee = true;
       });
+      this.$nextTick(()=>{
+        this.$refs.showmanager.toParent();
+      })
     },
     // 新增费用按钮提交
     submitAddfee() {
@@ -1457,6 +1490,7 @@ export default {
         .then(res => {
           this.$message.success("操作成功");
           this.dialog.dialogaddFee = false;
+          this.getList()
         })
         .catch(error => {
           this.$message.error("操作失败");
