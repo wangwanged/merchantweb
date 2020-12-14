@@ -131,28 +131,6 @@
       <el-col :span="1.5">
         <el-button
           type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['system:customer:add']"
-        >新增
-        </el-button
-        >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['system:customer:export']"
-        >导出
-        </el-button
-        >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
           size="mini"
           :disabled="multiple"
           @click="opendialogTransfor"
@@ -172,12 +150,30 @@
         </el-button
         >
       </el-col>
-      <!-- <right-toolbar
-        :showSearch.sync="showSearch"
-        @queryTable="getList"
-      ></right-toolbar> -->
-    </el-row>
+      <div style="float: right">
+        <el-col :span="1.5">
+          <el-button
+            type="primary"
+            size="mini"
+            @click="handleAdd"
+            v-hasPermi="['system:customer:add']"
+          >新增
+          </el-button
+          >
+        </el-col>
+        <el-col :span="1.5">
+          <el-button
+            type="primary"
+            size="mini"
+            @click="handleExport"
+            v-hasPermi="['system:customer:export']"
+          >导出
+          </el-button
+          >
+        </el-col>
+      </div>
 
+    </el-row>
     <el-table
       v-loading="loading"
       :data="customerList"

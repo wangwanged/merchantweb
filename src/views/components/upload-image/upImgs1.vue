@@ -296,7 +296,6 @@ export default {
           self.upImgSuccess(self.imgUrl, file, time);
         },
       };
-
       var subscription = observable.subscribe(observer); // 上传开始
     },
     // 删除图片

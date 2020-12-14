@@ -11,8 +11,8 @@
         style="font-size: 30px; margin-left: 10px"
         @click="addPhone"
       ></i>
-      <el-form-item prop="phonedecrease">
-        <div v-for="(item, index) in phonedecrease" :key="index">
+      <el-form-item  v-for="(item, index) in phonedecrease" :key="index" :prop="'phonedecrease.'+ index" :rules="{required: true, message: '电话不能为空', trigger: 'blur'}">
+        <div >
           <el-input
             style="width: 90%"
             v-model="phonedecrease[index]"
@@ -79,6 +79,7 @@ export default {
       }else{
         this.stringPhone = this.phoneadd +','+ phoneString
       }
+      console.log('this.stringPhone',this.stringPhone)
     },
     toFather(){
       this.$emit('stringPhone',this.stringPhone)

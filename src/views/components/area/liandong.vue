@@ -1,7 +1,7 @@
 <template>
-  <span>
+  <span id="liandong">
     <el-form-item style="width:30%">
-      <el-select @clear="clearpro"  clearable v-model="prov" placeholder="请选择省">
+      <el-select  @clear="clearpro"  clearable v-model="prov" placeholder="请选择省">
         <el-option
           v-for="(item, index) of arr"
           :key="index"
@@ -134,22 +134,27 @@ export default {
         }
       }
       this.district = this.districtArr[1]? this.districtArr[1].name:null;
+    },
+    reset(){
+        this.prov= null,
+        this.city= null,
+        this.district= null
     }
   }
 };
 </script>
-
 <style lang="less" scoped>
-.el-select {
+ .el-select {
   height: 32px;
 }
-.el-form-item{
+ .el-form-item{
   margin:0 1.5%
 }
-.el-form-item__content{
+ .el-form-item__content{
    display: inline-block;
+  width: 100px;
 }
-.el-form-item--medium{
+ .el-form-item--medium{
     display: inline-block;
 }
 </style>

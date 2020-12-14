@@ -5,7 +5,13 @@ const state = {
      dialogAddXiansuo:false,  //新增线索弹框
      dialogExport:false,  //线索导出弹框
      xiansuoList:[],  //index页线索list
- }
+ },
+  contract:{
+    dialogRenew:false,
+    dialogTransfor: false,
+    dialogCheck:false,
+    dialogeInvalid:false
+  }
 }
 const mutations = {
    allXiansuoData(state,payload){
@@ -13,9 +19,7 @@ const mutations = {
    }
 }
 const actions = {
-
 }
-
 export default {
   state,
   mutations,

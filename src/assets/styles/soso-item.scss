@@ -63,7 +63,7 @@
     .right {
       float: right;
       font-weight: 700;
-      color: #409EFF
+      color: #409eff
     }
   }
 .line_between{
@@ -93,10 +93,14 @@
 }
 //搜索的样式
 .search .el-input {
-  width: 150px;
+  width: 120px;
 }
 .search .el-select {
-  width: 150px;
+  width: 120px;
+  /deep/ .el-input__inner{
+    height: 32px;
+    width: 120px;
+  }
 }
 .search .datepicker {
   margin-top: 2px;
@@ -112,16 +116,7 @@
   width: 150px;
 }
 .search .liandong{
-   //.el-select{
-   //  width: 120px;
-   //  height: 32px;
-   //}
-   ///deep/ .el-input__inner{
-   //  width:120px;
-   //  height: 32px;
-   //}
  }
-
 .my-scroll-bar{
    height: 700px;
 }

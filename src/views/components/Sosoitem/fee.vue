@@ -7,7 +7,7 @@
           type="monthrange"
           start-placeholder="开始月份"
           end-placeholder="结束月份"
-          value-format="yyyy-MM-dd"
+          value-format="yyyy.MM.dd"
         >
         </el-date-picker>
         <el-input v-model='feestable.money'></el-input>
@@ -20,7 +20,7 @@
              v-model="feeadd.date"
              start-placeholder="开始月份"
              end-placeholder="结束月份"
-             value-format="yyyy-MM-dd"
+             value-format="yyyy.MM.dd"
            >
         </el-date-picker>
           <el-input  v-model="feeadd.money"></el-input>
@@ -39,7 +39,7 @@
              type="monthrange"
              start-placeholder="开始月份"
              end-placeholder="结束月份"
-             value-format="yyyy-MM-dd"
+             value-format="yyyy.MM.dd"
            >
            </el-date-picker>
           <el-input v-model="feedecrease[index].money"></el-input>
@@ -88,7 +88,7 @@ export default {
   },
   methods:{
     toParent(){
-      this.$emit('@jinyingFee',this.detail)
+      this.$emit('jinyingFee',this.detail)
     },
     // 添加电话号码
     addfee() {
@@ -100,10 +100,16 @@ export default {
     },
     handleformat(){
       var aa = [...this.feedecrease]
-      var bb = aa.unshift(this.feeadd)
-      // var aa = aa.unshift(this.feestable)
-      // this.detail=cc
-      console.log('this.detailthis.detail',bb)
+      aa.unshift(this.feestable,this.feeadd)
+      console.log('aaaaaaaaaaaaaa',aa)
+      aa.forEach((item) => {
+        console.log('itemitem',item)
+         return  item.date.join("-")
+        // item.date.forEach((item1)=>{
+        //   console.log('itemitem111',item)
+        //   // return item1.join("-")
+        // })
+      })
     }
   }
 }

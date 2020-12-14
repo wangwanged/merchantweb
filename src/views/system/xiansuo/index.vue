@@ -218,7 +218,7 @@
         </el-form-item>
         <Phone ref="myphone" @stringPhone="i=>this.form.phone=i" :toSon="this.form.phone"/>
         <el-form-item label="客户地区">
-           <Area @place-info="getPlace" :toSon="toplace"/>
+           <Area ref="area" @place-info="getPlace" :toSon="toplace"/>
         </el-form-item>
         <el-form-item label="客户公司" prop="companyName">
           <el-input v-model="form.companyName" placeholder="请输入公司和部门" />
@@ -255,7 +255,7 @@
         <Manager ref="showmanager" @toFather='getManager'/>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="cancel">取 消</el-button>
+        <el-button @click="cancelAdd">取 消</el-button>
         <el-button type="primary" @click="submitForm">确 定</el-button>
       </div>
     </el-dialog>
@@ -306,7 +306,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="客户地区">
-          <Area class='liandong' @place-info="getPlace" :toSon="toplace"/>
+          <Area ref="area" class='liandong' @place-info="getPlace" :toSon="toplace"/>
         </el-form-item>
         <el-form-item label="客户公司">
           <el-input v-model="form.companyName" placeholder="请输入公司" />
@@ -335,7 +335,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitTocustomer">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
+        <el-button @click="cancelTocustomer">取 消</el-button>
       </div>
     </el-dialog>
   </div>
@@ -607,6 +607,15 @@ export default {
         this.$refs.showmanager.toParent();
       })
     },
+    // 新增按钮取消
+    cancelAdd(){
+      this.reset()
+      this.$nextTick(()=>{
+        this.$refs.myphone.reset()
+        this.$refs.area.reset()
+      })
+      this.dialog.dialogaddxiansuo=false
+    },
     /** 新增提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
@@ -617,6 +626,10 @@ export default {
               this.$message.success("新增成功");
               this.dialog.dialogaddxiansuo = false;
               this.getList();
+              this.$nextTick(()=>{
+                this.$refs.myphone.reset()
+                this.$refs.area.reset()
+              })
             })
             .catch(error => {
               this.$message.error("新增失败");
@@ -655,6 +668,15 @@ export default {
       this.form.ids =  this.ids
       this.toPlace();
     },
+    // 转成客户取消
+    cancelTocustomer(){
+      this.reset()
+      this.$nextTick(()=>{
+        this.$refs.myphone.reset()
+        this.$refs.area.reset()
+      })
+      this.dialog.dialogtocustomer=false
+    },
     // 转成客户提交
     submitTocustomer() {
       this.$refs["form"].validate(valid => {
@@ -663,6 +685,10 @@ export default {
             this.$message.success("操作成功");
             this.dialog.dialogtocustomer = false;
             this.getList();
+            this.$nextTick(()=>{
+              this.$refs.myphone.reset()
+              this.$refs.area.reset()
+            })
           })
           .catch(error => {
             this.$message.error("操作失败");

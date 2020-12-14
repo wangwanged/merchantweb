@@ -5,8 +5,8 @@
       class="my-scroll-bar">
     <div class="noinfo" v-if="genjinList.length === 0">当前没有跟进信息</div>
     <div
-      v-for="item in genjinList"
-      :key="item.customerId"
+      v-for="(item,index) in genjinList"
+      :key="index"
       class="main_content_top"
       v-else
     >
@@ -30,8 +30,8 @@
     </div>
     </GeminiScrollbar>
     <el-dialog title="写跟进" :visible.sync="dialogfollow" width="700px">
-      <el-form>
-        <el-form-item required>
+      <el-form  :model="form" :rules="rules" ref="ruleForm">
+        <el-form-item :required="true" prop="method">
           <el-input
             v-model="form.method"
             class="input"
@@ -47,15 +47,13 @@
           >
           </el-input>
           <div class="status" style="text-align:center">
-            <el-button
-              size="mini"
-              plain
+            <el-tag
               type="info"
               v-for="(item, index) in genjinStatus"
               :key="index"
               :class="index === form.status ? 'genjinbutton' : ''"
                @click="changestatus(index)"
-              >{{ item }}</el-button
+              >{{ item }}</el-tag
             >
           </div>
         </el-form-item>
@@ -85,6 +83,19 @@ export default {
       form:{},  //表单数据
       image:  null,
       imgs:[],
+      rules: {
+        method: [
+          { required: true, message: "客户名称不能为空", trigger: "blur" }
+        ],
+        phone: [
+          { required: true, message: "您的手机号不能为空", trigger: "blur" },
+          {
+            pattern: /^1[3-9]\d{9}$/, // 正则表达式
+            message: "您的手机号格式不正确",
+            trigger: "blur"
+          }
+        ]
+      }
     };
   },
   created() {
@@ -105,19 +116,19 @@ export default {
         image:  null,
         method: null,
         status:  null,
-        sysUserId:  null
+        sysUserId:  null,
      }
     },
     // 改变跟进状态
     changestatus(i) {
       this.form.status = i;
+      console.log('this.form.status',this.form.status)
     },
      // 取消按钮
     cancel() {
       this.reset();
       this.dialogfollow = false;
     },
-
     update() {
       let imagesArr = []
       imagesArr = this.value.map(item => {
@@ -133,7 +144,6 @@ export default {
         return item.is_head == 1
       }).image_url : null;
       this.imgs = this.value ? JSON.stringify(imagesArr) : '';
-      console.log(this.imgs)
     },
     // 获取跟进数据
     getList() {
@@ -145,19 +155,10 @@ export default {
     handleAdd(){
       this.reset()
       this.dialogfollow=true
+      this.form.status=Number(this.genjinList[0].status)
     },
     // 添加跟进按钮提交
     submitAdd() {
-      // var params = {
-      //   imgs: this.addInfo.imgs,
-      //   content: this.addInfo.content,
-      //   customerId: Number(this.$route.query.id),
-      //   image: this.addInfo.image,
-      //   method: this.addInfo.method,
-      //   status: this.addInfo.status,
-      //   sysUserId: this.tofollow.userId
-      // };
-      console.log('this.tofollow',this.tofollow)
       this.form.customerId=this.$route.query.id
       this.form.sysUserId=this.tofollow.userId
       addGenjin(this.form)
@@ -166,9 +167,6 @@ export default {
           this.dialogfollow = false;
           this.getList();
         })
-        .catch(error => {
-          this.$message.error("操作失败");
-        });
     }
   }
 };
@@ -196,14 +194,14 @@ export default {
   padding-top: 20px;
 }
 .genjinbutton {
-  background-color: #606266;
+  background-color: rgb(144, 147, 153);
   color: #fff;
 }
 .el-form{
   margin:0 20px;
   }
-.el-button{
-  margin:0 3px
+.el-tag{
+  margin:0 7px
 }
 .my-scroll-bar{
    height: 720px;

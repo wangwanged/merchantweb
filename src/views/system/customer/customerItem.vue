@@ -680,7 +680,7 @@ export default {
         this.$refs.myphone.fromFatherphone()
       })
     },
-    // 合同确定按钮
+    // 新签合同确定按钮
     submitcontract() {
       this.form.guarantee = this.fee.lvyueFee
       this.fee.jingyingManagerFee.total = '3000'

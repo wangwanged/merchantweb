@@ -2,6 +2,7 @@
   <div>
     <el-form-item label="负责人">
       <el-autocomplete
+        disabled
         style="width: 100%"
         class="inline-input"
         v-model="keywords"
