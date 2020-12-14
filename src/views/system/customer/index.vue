@@ -187,21 +187,23 @@
       <el-table-column label="公司" align="center" prop="deptName"/>
       <el-table-column label="客户名称" align="center">
         <template slot-scope="obj">
-          <el-button
+          <span
+            style="color: #1890FF;cursor: pointer;"
             @click="
               $router.push({
                 path: '/customer/customeritem',
                 query: { id: obj.row.id }
               })
-            "
-            size="small"
-            type="text"
-          >{{ obj.row.name }}
-          </el-button
-          >
+            ">{{ obj.row.name }}
+
+          </span>
         </template>
       </el-table-column>
-      <el-table-column label="客户电话" align="center" prop="phone"/>
+      <el-table-column label="客户电话" align="center" prop="phone">
+        <template slot-scope="obj">
+          {{obj.row.phone.split(",")[0]}}
+        </template>
+      </el-table-column>
       <el-table-column
         label="客户等级"
         align="center"
@@ -260,35 +262,7 @@
         <el-form-item label="客户姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入"/>
         </el-form-item>
-        <el-form-item label="客户电话" prop="name">
-          <el-input v-model="form.phone" placeholder="请输入"/>
-        </el-form-item>
-<!--        <el-form-item label="客户电话" prop="phone">-->
-<!--          <el-input-->
-<!--            style="width: 90%"-->
-<!--            v-model="phoneadd"-->
-<!--            placeholder="请输入客户电话"-->
-<!--          />-->
-<!--          <i-->
-<!--            class="el-icon-circle-plus"-->
-<!--            style="font-size: 30px; margin-left: 10px"-->
-<!--            @click="addPhone"-->
-<!--          ></i>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item>-->
-<!--          <div v-for="(item, index) in phonedecrease" :key="index">-->
-<!--            <el-input-->
-<!--              style="width: 90%"-->
-<!--              v-model="phonedecrease[index]"-->
-<!--              placeholder="请输入客户电话"-->
-<!--            />-->
-<!--            <i-->
-<!--              class="el-icon-remove"-->
-<!--              style="font-size: 30px; margin-left: 10px"-->
-<!--              @click="decreasePhone(index)"-->
-<!--            ></i>-->
-<!--          </div>-->
-<!--        </el-form-item>-->
+        <Phone ref="myphone" @stringPhone="i=>this.form.phone=i" :toSon="this.form.phone"/>
         <el-form-item label="客户等级">
           <el-select v-model="form.level" placeholder="请选择客户等级">
             <el-option
@@ -652,9 +626,6 @@ export default {
     },
     //   获取省市区的地址
     getPlace(i, j, k) {
-      console.log("iiiiiii", i)
-      console.log("jjjjjj",j)
-      console.log("kkkkkk",k)
       this.form.province = i
       this.form.city = j
       this.form.district = k
@@ -703,6 +674,9 @@ export default {
       this.open = true
       this.title = '添加我的客户'
       this.getdeptuser()
+      this.$nextTick(()=>{
+        this.$refs.showmanager.toParent();
+      })
     },
     /** 新增提交按钮 */
     submitForm() {
@@ -712,6 +686,7 @@ export default {
         addCustomer(this.form).then(response => {
           this.msgSuccess('新增成功')
           this.open = false
+          getPlace(null,null,null)
           this.getList()
         })
       })
@@ -731,39 +706,11 @@ export default {
           this.download(response.msg)
         })
     },
-    // // 负责人查询
-    // querySearch(queryString, callback) {
-    //   var params = {
-    //     keywords: queryString
-    //   }
-    //   transforCustomer(params).then(response => {
-    //     var restaurants = response.rows
-    //     const list = []
-    //     //封装要显示的数据
-    //     for (let v of restaurants) {
-    //       list.push({ value: v.phonenumber + ' ' + v.userName, id: v.id })
-    //     }
-    //     // 调用 callback 返回建议列表的数据,是一个数组类型
-    //     callback(list)
-    //   })
-    // },
-    // // 负责人查询
-    // handleSelect(item) {
-    //   this.reset()
-    //   this.form.userId = item.id
-    //   this.keywords = item.value.substring(12)
-    //   //  部门随负责人变动
-    //   listUser({}).then(res => {
-    //     var a = res.rows.filter(element => {
-    //       return element.id === item.id
-    //     })
-    //     console.log('res', a)
-    //     this.deptName = a[0].dept.deptName
-    //   })
-    // },
     // 选择负责人和部门
-    getManager(value) {
+    getManager(value, deptId, username) {
       this.form.userId = value
+      this.form.deptId = deptId
+      this.form.username = username
     },
     // 显示当前负责人和部门
     getdeptuser() {

@@ -206,6 +206,6 @@ export default {
   margin:0 3px
 }
 .my-scroll-bar{
-   height: 750px;
+   height: 720px;
 }
 </style>

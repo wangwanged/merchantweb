@@ -36,7 +36,6 @@
       </el-form-item>
       <el-form-item>
         <Area class='liandong' @place-info="getPlace" :toSon="toplace"></Area>
-
       </el-form-item>
        <el-form-item prop="inputDate">
         <el-date-picker
@@ -135,20 +134,24 @@
       <el-table-column label="公司" align="center" prop="deptName"/>
       <el-table-column label="客户姓名" align="center" prop="name">
         <template slot-scope="obj">
-          <el-button
+          <span
+          style="color: #1890FF;cursor: pointer;"
             @click="
               $router.push({
                 path: '/xiansuo/xiansuoitem',
                 query: { id: obj.row.id }
               })
             "
-            size="small"
-            type="text"
-            >{{ obj.row.name }}</el-button
-          >
+          >{{ obj.row.name }}
+
+          </span>
         </template>
       </el-table-column>
-      <el-table-column label="客户电话" align="center" prop="phone[0]" />
+      <el-table-column label="客户电话" align="center" prop="phone">
+        <template slot-scope="obj">
+          {{obj.row.phone.split(",")[0]}}
+        </template>
+      </el-table-column>
       <el-table-column label="客户公司" align="center" prop="companyName" />
       <el-table-column label="客户地区" align="center">
         <template slot-scope="obj">
@@ -213,7 +216,7 @@
         <el-form-item label="客户姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入客户姓名" />
         </el-form-item>
-        <Phone @stringPhone="i=>this.form.phone=i"/>
+        <Phone ref="myphone" @stringPhone="i=>this.form.phone=i" :toSon="this.form.phone"/>
         <el-form-item label="客户地区">
            <Area @place-info="getPlace" :toSon="toplace"/>
         </el-form-item>
@@ -273,8 +276,8 @@
         <el-form-item label="客户姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入客户姓名" />
         </el-form-item>
-        <Phone @stringPhone="i=>this.form.phone=i"/>
-        <el-form-item label="客户等级">
+        <Phone ref="myphone" @stringPhone="i=>this.form.phone=i" :toSon="this.form.phone"/>
+          <el-form-item label="客户等级">
           <el-select
             style="width:100%"
             v-model="form.level"
@@ -338,7 +341,6 @@
   </div>
 </template>
 <script>
-import cascater from '@/views/components/area/cascater'
 import {
   listXiansuo,
   getXiansuo,
@@ -448,7 +450,13 @@ export default {
   },
   components:{
     Showdept,
-    cascater
+  },
+  props:[],
+  computed:{
+    user(){
+      console.log("this.$store.state.user.userinfo", this.$store.state.user.userinfo)
+      return this.$store.state.user.userinfo
+    }
   },
   created() {
     this.getList();
@@ -481,37 +489,51 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        name: null,
-        phone: null,
-        companyId: null,
-        province: null,
         city: null,
-        resource: null,
-        sysUserId: null,
-        isCustomer: null,
-        createTime: null,
-        updateTime: null,
-        username: null,
         companyName: null,
-        remark: null,
-        ids: null,
-        level: null,
+        createBy: null,
+        createTime: null,
         customerNeeds: null,
+        deptId: null,
+        deptName:null,
         dianmianAddress: null,
-        status: null,
+        district: null,
         experience: null,
-        genjinStatus: null,
+        genjinDate:null,
+        genjinStatus:null,
+        id:null,
+        inputDate: null,
+        isAsc: null,
+        keywords: null,
+        level:null,
+        luruName:null,
+        name: null,
+        num:null,
+        orderBy: null,
+        orderByColumn:null,
+        pageNum: null,
+        pageSize: null,
+        params: null,
+        phone: null,
+        province:null,
+        remark: null,
+        resource: null,
+        searchValue: null,
+        status: null,
+        updateBy: null,
+        updateDate: null,
+        updateTime:null,
+        userId:null,
+        username: null,
       };
-      this.resetForm("form");
+      // this.resetForm("form");
     },
     /** 查询客户线索列表 */
     getList() {
       this.loading = true;
       listXiansuo(this.queryParams).then(response => {
         this.xiansuoList = response.rows;
-        this.xiansuoList.forEach(item => {
-          item.phone = item.phone.split(",");
-        });
+        console.log('this.xiansuoList',this.xiansuoList)
         this.total = response.total;
         this.loading = false;
       });
@@ -523,8 +545,10 @@ export default {
       })
     },
     // 选择负责人和部门
-    getManager(value) {
+    getManager(value,deptId,username) {
       this.form.userId = value
+      this.form.deptId = deptId
+      this.form.username = username
     },
     // 省市区赋值
     toPlace() {
@@ -574,9 +598,14 @@ export default {
     // /** 新增按钮操作 */
     handleAdd() {
       this.reset();
-      console.log('this.formthis.form',this.form)
+      console.log("this.user.deptId1111",this.user.deptId)
+      this.form.deptId = this.user.deptId
+      console.log('this.form111',this.form)
       this.getdeptuser();
       this.dialog.dialogaddxiansuo = true;
+      this.$nextTick(()=>{
+        this.$refs.showmanager.toParent();
+      })
     },
     /** 新增提交按钮 */
     submitForm() {
@@ -618,11 +647,13 @@ export default {
       var aaa = this.xiansuoList.filter(item => {
         return item.id === this.ids[0];
       });
-      this.form = aaa[0];
+      this.form = JSON.parse(JSON.stringify(aaa[0]));
+      this.form.deptId = this.user.deptId
+      this.$nextTick(()=>{
+        this.$refs.myphone.fromFatherphone()
+      })
       this.form.ids =  this.ids
-      this.getManager()
       this.toPlace();
-      this.form.phone=this.form.phone.toString()
     },
     // 转成客户提交
     submitTocustomer() {

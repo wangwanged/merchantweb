@@ -1,4 +1,12 @@
 import request from '@/utils/request'
+// 查询合同列表
+export function listContractManager(data) {
+  return request({
+    url: '/contract/contractManager/list',
+     method: 'post',
+    data: data
+  })
+}
 
 // 查询费用管理列表
 export function listFeeManager(query) {

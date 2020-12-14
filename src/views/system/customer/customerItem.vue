@@ -145,9 +145,7 @@
         <el-form-item required label="客户姓名">
           <el-input v-model="form.customerName"></el-input>
         </el-form-item>
-        <el-form-item required label="客户电话">
-          <el-input v-model="form.customerPhone"></el-input>
-        </el-form-item>
+        <Phone ref="myphone" @stringPhone="i=>this.form.customerPhone=i" :toSon="this.form.customerPhone"/>
         <div style="font-size:20px;font-weight:700;margin-bottom:20px">
           签约信息
         </div>
@@ -165,7 +163,7 @@
           </el-select>
         </el-form-item>
         <el-form-item required label="合同编号">
-          <el-input placeholder="请输入" v-model="form.num"></el-input>
+          <el-input placeholder="请输入" v-model="form.code"></el-input>
         </el-form-item>
         <el-form-item required label="签约日期">
           <el-date-picker
@@ -241,7 +239,7 @@
           费用信息
         </div>
         <el-form-item required label="履约保证金">
-          <el-input placeholder="请输入" v-model="form.guarantee"></el-input>
+          <el-input placeholder="请输入" v-model="fee.lvyueFee"></el-input>
         </el-form-item>
         <el-form-item required label="运营管理费">
           <el-input placeholder="请输入" v-model="fee.yunyingManagerFee"></el-input>
@@ -278,16 +276,14 @@
     <el-dialog
       title="编辑客户"
       :visible.sync="dialogedit"
-      width="500px"
+      width="650px"
       append-to-body
     >
-      <el-form label-width="80px">
+      <el-form label-width="80px" label-position="left">
         <el-form-item required label="客户姓名">
           <el-input v-model="form.name" placeholder="请输入"/>
         </el-form-item>
-        <el-form-item required label="客户电话">
-          <el-input v-model="form.phone" placeholder="请输入客户电话"/>
-        </el-form-item>
+        <Phone ref="myphone" @stringPhone="i=>this.form.phone=i" :toSon="this.form.phone"/>
         <el-form-item required label="客户等级">
           <el-select v-model="form.level" placeholder="请选择客户等级">
             <el-option
@@ -358,14 +354,15 @@
     </el-dialog>
     <!-- 客户转移弹框 -->
     <el-dialog title="转移" :visible.sync="dialogTransfor" width="500px">
-      <el-autocomplete
-        class="inline-input"
-        v-model="keywords"
-        :fetch-suggestions="querySearch"
-        placeholder="请输入内容"
-        :trigger-on-focus="false"
-        @select="handleSelect"
-      ></el-autocomplete>
+      <el-form><Manager ref="showmanager" @toFather='getManager'/></el-form>
+<!--      <el-autocomplete-->
+<!--        class="inline-input"-->
+<!--        v-model="keywords"-->
+<!--        :fetch-suggestions="querySearch"-->
+<!--        placeholder="请输入内容"-->
+<!--        :trigger-on-focus="false"-->
+<!--        @select="handleSelect"-->
+<!--      ></el-autocomplete>-->
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleTransfor">确 定</el-button>
         <el-button @click="dialogeInvalid = false">取 消</el-button>
@@ -433,7 +430,7 @@ export default {
         lvyueFee: '',
         jingyingManagerFee: {
           total: '3000',
-          detail:[{"2020.11.01-2020.12.01": 1000},{"2020.12.01-2021.01.01": 2000}]
+          detail:[{date: "2020.11.01-2020.12.01", price:'1000'},{date: "2020.11.01-2020.12.01", money:'1000'}]
         },
         yunyingManagerFee: '',
         systemUseFee: '',
@@ -555,7 +552,7 @@ export default {
         status: '0',
         inputDate: null,
         updateDate: null,
-        num: null, //合同编号，手动录入
+        code: null, //合同编号，手动录入
         customerName: null, //客户username
         customerId: null, //客户id
         customerPhone: null, //客户手机号
@@ -649,7 +646,6 @@ export default {
     //   } else {
     //     this.showDianmian = false;
     //   }
-    //   console.log(this.showDianmian);
     // },
     // 获取省市区
     getPlace(i, j, k) {
@@ -665,9 +661,9 @@ export default {
     },
     // 新签合同按钮操作
     handlecontrast() {
+      this.getdeptuser()
       this.reset()
       this.dialogNewsign = true
-      this.form=this.customerList
       this.form.customerName = this.customerList.name
       this.form.customerPhone = this.customerList.phone
       this.form.customerId = this.customerList.id
@@ -675,15 +671,20 @@ export default {
       this.form.managerId = this.customerList.userId
       this.form.manager = this.customerList.username
       this.form.customerNum = this.customerList.num
-      this.form.createBy = this.customerList.username
-      this.form.fee = JSON.stringify(this.fee)
+      this.form.creatBy = this.customerList.username
+      this.form.produce = this.customerList.customerNeeds
       this.form.signDate = parseTime(new Date(), '{y}-{m}-{d}')
       this.form.beginDate = parseTime(new Date(), '{y}-{m}-{d}')
       this.form.endDate = parseTime(new Date(), '{y}-{m}-{d}')
-      this.getdeptuser()
+      this.$nextTick(()=>{
+        this.$refs.myphone.fromFatherphone()
+      })
     },
     // 合同确定按钮
     submitcontract() {
+      this.form.guarantee = this.fee.lvyueFee
+      this.fee.jingyingManagerFee.total = '3000'
+      this.form.fee = JSON.stringify(this.fee)
       addContractManager(this.form).then(res => {
         this.$message.success('操作成功')
         this.dialogNewsign = false
@@ -693,8 +694,11 @@ export default {
     handleUpdate() {
       this.dialogedit = true
       this.reset()
-      this.form = this.customerList
+      this.form = JSON.parse(JSON.stringify(this.customerList))
       this.toPlace()
+      this.$nextTick(()=>{
+        this.$refs.myphone.fromFatherphone()
+      })
     },
     // 编辑按钮提交
     UpdataSubmit() {

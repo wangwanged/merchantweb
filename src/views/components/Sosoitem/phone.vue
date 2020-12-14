@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form-item label="客户电话" >
+    <el-form-item label="客户电话" prop="phoneadd">
       <el-input
         style="width: 90%"
         v-model="phoneadd"
@@ -11,32 +11,44 @@
         style="font-size: 30px; margin-left: 10px"
         @click="addPhone"
       ></i>
-    </el-form-item>
-    <el-form-item>
-      <div v-for="(item, index) in phonedecrease" :key="index">
-        <el-input
-          style="width: 90%"
-          v-model="phonedecrease[index]"
-          placeholder="请输入客户电话"
-        />
-        <i
-          class="el-icon-remove"
-          style="font-size: 30px; margin-left: 10px"
-          @click="decreasePhone(index)"
-        ></i>
-      </div>
+      <el-form-item prop="phonedecrease">
+        <div v-for="(item, index) in phonedecrease" :key="index">
+          <el-input
+            style="width: 90%"
+            v-model="phonedecrease[index]"
+            placeholder="请输入客户电话"
+          />
+          <i
+            class="el-icon-remove"
+            style="font-size: 30px; margin-left: 10px"
+            @click="decreasePhone(index)"
+          ></i>
+        </div>
+      </el-form-item>
     </el-form-item>
   </div>
 </template>
-
 <script>
 export default {
   data() {
     return {
       phoneadd: '',
       phonedecrease:[],
-      stringPhone:''
-    };
+      stringPhone:'',
+    // rules: {
+    //   phoneadd: [
+    //     { required: true, message: "您的手机号不能为空", trigger: "blur" },
+    //     {
+    //       pattern: /^1[3-9]\d{9}$/, // 正则表达式
+    //       message: "您的手机号格式不正确",
+    //       trigger: "blur"
+    //     }
+    //   ]
+    // }
+    }
+  },
+  props:{
+    toSon:String
   },
   watch:{
     phoneadd(){
@@ -71,6 +83,19 @@ export default {
     toFather(){
       this.$emit('stringPhone',this.stringPhone)
     },
+    // 父传子信息 处理
+    fromFatherphone(){
+      var a = this.toSon.split(',')
+      this.phoneadd = a.slice(0,1).toString()
+      this.phonedecrease=a.slice(1)
+      console.log(this.phonedecrease,'this.phonedecrease')
+    },
+    // 当前页内容清空
+    reset(){
+        this.phoneadd=null
+        this.phonedecrease=null
+        this.stringPhone=null
+    }
   },
 };
 </script>

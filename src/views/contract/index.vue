@@ -153,42 +153,13 @@
           <el-button
             type="primary"
             size="mini"
-            @click="handleAdd"
+            @click="handleRenew"
             v-hasPermi="['contract:contractManager:add']"
             >解约</el-button
           >
         </el-col>
       </div>
       <div class="fr">
-        <el-col :span="1.5">
-          <el-button
-            type="primary"
-            size="mini"
-            @click="handleAdd"
-            v-hasPermi="['contract:contractManager:add']"
-            >新签合同</el-button
-          >
-        </el-col>
-        <!-- <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['contract:contractManager:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['contract:contractManager:remove']"
-        >删除</el-button>
-      </el-col> -->
         <el-col :span="1.5">
           <el-button
             type="primary"
@@ -212,17 +183,16 @@
       <el-table-column label="公司" align="center" prop="deptName" />
       <el-table-column label="合同编号" align="center" prop="num" width="180">
         <template slot-scope="obj">
-          <el-button
+          <span
             @click="
               $router.push({
                 path: '/contract/contractItem',
-                query: { id: obj.row.id }
+                query: { id: obj.row.id },
               })
             "
-            size="small"
-            type="text"
-            >{{ obj.row.num }}</el-button
-          >
+            style="color: #1890FF;cursor: pointer;"
+          >{{ obj.row.num }}
+          </span>
         </template>
       </el-table-column>
       <el-table-column
@@ -306,113 +276,6 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-
-    <!-- 添加或修改合同对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="650px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="120px" label-position="left">
-        <el-form-item label="合同编号" prop="num">
-          <el-input v-model="form.num" placeholder="请输入合同编号" />
-        </el-form-item>
-        <el-form-item label="客户姓名" prop="customerName">
-          <el-input v-model="form.customerName" placeholder="请输入客户姓名" />
-        </el-form-item>
-        <el-form-item label="客户id" prop="customerId">
-          <el-input v-model="form.customerId" placeholder="请输入客户id" />
-        </el-form-item>
-        <el-form-item label="客户手机号" prop="customerPhone">
-          <el-input
-            v-model="form.customerPhone"
-            placeholder="请输入客户手机号"
-          />
-        </el-form-item>
-        <el-form-item label="合同类型" prop="type">
-          <el-select v-model="form.type" placeholder="请选择合同类型">
-            <el-option
-              v-for="dict in typeOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="签约产品" prop="produce">
-          <el-select v-model="form.produce" placeholder="请选择签约产品">
-            <el-option
-              v-for="dict in produceOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="店面或区域名称" prop="dianmianName">
-          <el-input
-            v-model="form.dianmianName"
-            placeholder="请输入店面或区域名称"
-          />
-        </el-form-item>
-        <el-form-item label="店面数量" prop="dianmianNum">
-          <el-input v-model="form.dianmianNum" placeholder="请输入店面数量" />
-        </el-form-item>
-        <el-form-item label="保证金" prop="guarantee">
-          <el-input v-model="form.guarantee" placeholder="请输入保证金" />
-        </el-form-item>
-        <el-form-item label="操作" prop="operation">
-          <el-input v-model="form.operation" placeholder="请输入操作" />
-        </el-form-item>
-        <el-form-item label="负责人" prop="manager">
-          <el-input v-model="form.manager" placeholder="请输入负责人" />
-        </el-form-item>
-        <el-form-item label="签约日期" prop="signDate">
-          <el-date-picker
-            clearable
-            size="small"
-            style="width: 200px"
-            v-model="form.signDate"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择签约日期"
-          >
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="签约人员" prop="signUser">
-          <el-input v-model="form.signUser" placeholder="请输入签约人员" />
-        </el-form-item>
-        <el-form-item label="合同开始日期" prop="beginDate">
-          <el-date-picker
-            clearable
-            size="small"
-            style="width: 200px"
-            v-model="form.beginDate"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择合同开始日期"
-          >
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="合同结束日期" prop="endDate">
-          <el-input v-model="form.endDate" placeholder="请输入合同结束日期" />
-        </el-form-item>
-        <el-form-item label="生效失效状态" prop="status">
-          <el-select v-model="form.status" placeholder="请选择生效失效状态">
-            <el-option
-              v-for="dict in statusOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <Fee/>
-        <el-form-item label="备注信息" prop="remark">
-          <el-input v-model="form.remark" placeholder="请输入备注信息" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
     <!-- 审核弹框 -->
     <el-dialog title="合同审核" :visible.sync="dialogCheck" width="500px">
         <tr>
@@ -435,8 +298,8 @@
         <el-button @click="dialogCheck = false">取 消</el-button>
       </div>
     </el-dialog>
-    <!-- 续签弹框 -->拍下
-      <el-dialog title="续签合同" :visible.sync="dialogRenew" width="650">
+    <!-- 续签弹框 -->
+      <el-dialog title="续签合同" :visible.sync="dialogRenew" width="700px">
       <el-form label-position="left"  label-width="110px">
         <div style="font-size:20px;font-weight:700;margin-bottom:20px">
           客户信息
@@ -444,12 +307,7 @@
          <el-form-item required label="选择客户">
           <el-input v-model="form.customerNum"></el-input>
         </el-form-item>
-        <el-form-item required label="客户姓名">
-          <el-input v-model="form.customerName"></el-input>
-        </el-form-item>
-        <el-form-item required label="客户电话">
-          <el-input v-model="form.customerPhone"></el-input>
-        </el-form-item>
+        <Phone ref="myphone" @stringPhone="i=>this.form.customerPhone=i" :toSon="this.form.customerPhone"/>
         <div style="font-size:20px;font-weight:700;margin-bottom:20px">
           签约信息
         </div>
@@ -457,14 +315,14 @@
           <el-button size="small" type="primary" plain>续签</el-button>
         </el-form-item>
         <el-form-item required label="签约产品">
-          <!-- <el-select v-model="renewinfo.produce">
+          <el-select v-model="form.produce">
             <el-option
               v-for="dict in customerNeedsOptions"
               :key="dict.dictValue"
               :label="dict.dictLabel"
               :value="dict.dictValue"
             />
-          </el-select> -->
+          </el-select>
         </el-form-item>
         <el-form-item required label="合同编号">
           <el-input placeholder="请输入" v-model="form.num"></el-input>
@@ -496,61 +354,27 @@
           >
           </el-date-picker>
         </el-form-item>
-        <div style="font-size:20px;font-weight:700;margin-bottom:20px">
-          店面/区域信息
+        <div style="font-size:20px;font-weight:700;margin-bottom:20px" v-if="form.produce==='0'">
+          店面信息
         </div>
-        <div>
-          <el-form-item required label="店面名称">
+        <div style="font-size:20px;font-weight:700;margin-bottom:20px" v-else>
+          区域信息
+        </div>
+          <el-form-item required label="店面名称" v-if="form.produce==='0'">
             <el-input
               v-model="form.dianmianName"
               placeholder="请输入"
             ></el-input>
           </el-form-item>
-          <el-form-item required label="所属省">
-            <el-input
-              v-model="form.dianmianProvince"
-              placeholder="请输入"
-            ></el-input>
-          </el-form-item>
-          <el-form-item required label="所属市">
-            <el-input
-              v-model="form.dianmianCity"
-              placeholder="请输入"
-            ></el-input>
-          </el-form-item>
-          <el-form-item required label="所属区">
-            <el-input
-              v-model="form.dianmianDistrict"
-              placeholder="请输入"
-            ></el-input>
-          </el-form-item>
-        </div>
-        <div >
-          <el-form-item required label="店面名称">
+          <el-form-item required label="区域名称" v-else>
             <el-input
               v-model="form.dianmianName"
               placeholder="请输入"
             ></el-input>
           </el-form-item>
-          <el-form-item required label="所属省">
-            <el-input
-              v-model="form.dianmianProvince"
-              placeholder="请输入"
-            ></el-input>
-          </el-form-item>
-          <el-form-item required label="所属市">
-            <el-input
-              v-model="form.dianmianCity"
-              placeholder="请输入"
-            ></el-input>
-          </el-form-item>
-          <el-form-item required label="所属区">
-            <el-input
-              v-model="form.dianmianDistrict"
-              placeholder="请输入"
-            ></el-input>
-          </el-form-item>
-        </div>
+        <el-form-item required label="所属区域">
+          <Area class='liandong' @place-info="getPlace" :toSon="toplace"></Area>
+        </el-form-item>
         <el-form-item required label="详细地址">
           <el-input
             v-model="form.dianmianAddress"
@@ -565,7 +389,7 @@
         </el-form-item>
         <el-form-item required label="店面纬度">
           <el-input
-            v-model="form.dianmianLatitide"
+            v-model="form.dianmianLatitude"
             placeholder="请输入"
           ></el-input>
         </el-form-item>
@@ -590,7 +414,7 @@
         <el-form-item required label="代办费">
           <el-input placeholder="请输入" v-model="fee.daiban"></el-input>
         </el-form-item>
-        <el-form-item></el-form-item>
+        <Fee @jinyingFee="i=>fee.jingyingManagerFee.detail=i"/>
         <div style="font-size:20px;font-weight:700;margin-bottom:20px">
           备注信息
         </div>
@@ -611,14 +435,6 @@
        <el-form>
          <Manager ref="showmanager" @toFather='getManager'/>
        </el-form>
-<!--        <el-autocomplete-->
-<!--            class="inline-input"-->
-<!--            v-model="transforKeywords"-->
-<!--            :fetch-suggestions="querySearch"-->
-<!--            placeholder="请输入内容"-->
-<!--            :trigger-on-focus="false"-->
-<!--            @select="handleSelect"-->
-<!--    ></el-autocomplete>-->
     <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click='handleTransfor'>确 定</el-button>
         <el-button @click="dialogTransfor = false">取 消</el-button>
@@ -651,6 +467,24 @@ export default {
   },
   data() {
     return {
+      fee: {
+        lvyueFee: '',
+        jingyingManagerFee: {
+          total: '3000',
+          detail:[{"2020.11.01-2020.12.01": 1000},{"2020.12.01-2021.01.01": 2000}]
+        },
+        yunyingManagerFee: '',
+        systemUseFee: '',
+        systemMaintenanceFee: '',
+        daibanFee: '',
+        guohuoFee: ''
+      },
+      //  传给省市区
+      toplace: {
+        province: "",
+        city: "",
+        district: ""
+      },
       transferManagerId: null,
       // 时间字段
       TimeValue:null,
@@ -673,10 +507,6 @@ export default {
       transforphone:"",
         // 转移弹框
       dialogTransfor:false,
-      // 费用信息
-      fee:[],
-      // 续签合同信息
-      renewinfo:[],
       // 续签合同
       dialogRenew:false,
       // 审核日期
@@ -701,16 +531,18 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
-      // 合同类型(0：新签:1：续签)字典
+      // 合同类型字典
       typeOptions: [],
       // 签约产品字典
       produceOptions: [],
       // 生效失效状态字典
       statusOptions: [],
-      // 合同审核状态
+      // 合同审核状态字典
       checkStatusOptions: [],
       // 时间类型字典
       typeTimeOptions:[],
+      // 客户需求字典
+      customerNeedsOptions:[],
       // 查询参数
       queryParams: {
         // to back时间的值
@@ -805,7 +637,6 @@ export default {
       this.$refs.tree.filter(val);
     },
     TimeValue(){
-      console.log("typeTimeValue1", this.typeTimeValue)
       this.resetQuaramDate()
       // Object.keys(this.queryParams).forEach(key=>{this.queryParams[key]=''})
       if(this.typeTimeValue==='0'){
@@ -824,10 +655,8 @@ export default {
       console.log(this.TimeValue)
     },
     typeTimeValue(){
-      console.log("typeTimeValue2", this.typeTimeValue)
       // Object.keys(this.queryParams).forEach(key=>{this.queryParams[key]=''})
       this.resetQuaramDate()
-
       if(this.typeTimeValue==='0'){
         this.queryParams.signDateStart = this.TimeValue ? this.TimeValue[0] : null
         this.queryParams.signDateEnd = this.TimeValue ? this.TimeValue[1] : null
@@ -841,7 +670,6 @@ export default {
         this.queryParams.endDateStart = this.TimeValue ? this.TimeValue[0] : null
         this.queryParams.endDateEnd = this.TimeValue ? this.TimeValue[1] : null
       }
-      console.log(this.TimeValue)
     },
   },
   created() {
@@ -863,13 +691,14 @@ export default {
     this.getDicts("sys_type_time").then(response => {
       this.typeTimeOptions = response.data;
     });
+    this.getDicts("sys_user_need").then(response => {
+      this.customerNeedsOptions = response.data;
+    });
   },
   methods: {
     getDeptId(deptId) {
       this.queryParams.deptId = deptId;
-      console.log("deptId:",deptId)
     },
-
     /** 查询合同列表 */
     getList() {
       this.loading = true;
@@ -880,7 +709,6 @@ export default {
           item.fee = JSON.parse(item.fee)
           item.fee = Number.parseInt(item.fee.daibanFee) + Number.parseInt(item.fee.guohuoFee) + Number.parseInt(item.fee.systemUseFee) + Number.parseInt(item.fee.yunyingManagerFee)
             + Number.parseInt(item.fee.systemMaintenanceFee) + Number.parseInt(item.fee.jingyingManagerFee.total)
-          console.log("item.fee", item.fee)
         })
         this.total = response.total;
         this.loading = false;
@@ -910,28 +738,57 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        id: null,
-        num: null,
-        customerName: null,
-        customerId: null,
-        customerPhone: null,
-        type: null,
-        produce: null,
-        dianmianName: null,
-        dianmianNum: null,
-        guarantee: null,
-        fee: null,
-        operation: null,
-        manager: null,
-        signDate: null,
-        signUser: null,
-        beginDate: null,
-        endDate: null,
-        status: null,
-        remark: null,
-        managerId:null
+      beginDate: null,
+      checkDate: null,
+      checkStatus: null,
+      createBy: null,
+      createTime: null,
+      customerId: null,
+      customerName: null,
+      customerNum:null,
+      customerPhone: null,
+      deptId:null,
+      deptName: null,
+      dianmianAddress: null,
+      dianmianCity:null,
+      dianmianDistrict: null,
+      dianmianLatitude: null,
+      dianmianLongitude: null,
+      dianmianName: null,
+      dianmianNum: null,
+      dianmianProvince: null,
+      endDate: null,
+      file: null,
+      guarantee: null,
+      id: null,
+      imgs: null,
+      isAsc:null,
+      keywords: null,
+      manager: null,
+      managerId: null,
+      num: null,
+      operation: null,
+      orderBy: null,
+      orderByColumn: null,
+      pageNum: null,
+      pageSize: null,
+      params:null,
+      pid: null,
+      produce:null,
+      remark: null,
+      rootNum: null,
+      searchValue: null,
+      signDate: null,
+      signUser: null,
+      signUserId: null,
+      status:null,
+      terminateDate: null,
+      terminateFile: null,
+      type: null,
+      updateBy: null,
+      updateTime: null,
+      fee:{}
       };
-      this.resetForm("form");
     },
     resetQuaramDate() {
         this.queryParams.signDateStart= null,
@@ -969,42 +826,6 @@ export default {
       this.ids = selection.map(item => item.id);
       this.single = selection.length !== 1;
       this.multiple = !selection.length;
-    },
-    /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加合同";
-    },
-    /** 修改按钮操作 */
-    handleUpdate(row) {
-      this.reset();
-      const id = row.id || this.ids;
-      getContractManager(id).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改合同";
-      });
-    },
-    /** 提交按钮 */
-    submitForm() {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.id != null) {
-            updateContractManager(this.form).then(response => {
-              this.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            addContractManager(this.form).then(response => {
-              this.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
-          }
-        }
-      });
     },
     /** 删除按钮操作 */
     handleDelete(row) {
@@ -1053,15 +874,17 @@ export default {
     // 合同续签按钮
     handleRenew(){
         this.reset()
-        console.log(this.form)
         this.dialogRenew=true
-        const id = this.ids[0]
-        getContractManager(id).then(res=>{
-            this.form=res.data
-            console.log('this.form',this.form)
-        })
+        var aaa = this.contractManagerList.filter(item => {
+          return item.id === this.ids[0];
+        });
+      this.form = JSON.parse(JSON.stringify(aaa[0]))
         this.getdeptuser()
-        // this.getManager()
+        this.$nextTick(()=>{
+          this.$refs.myphone.fromFatherphone()
+        })
+      this.getPlace()
+        this.toPlace()
     },
     // 合同续签提交
     submitRenew(){
@@ -1072,49 +895,6 @@ export default {
        }).catch(error=>{
            this.$message.error("操作失败");
        })
-    },
-      // 负责人查询
-    querySearch(queryString, callback) {
-            const keywords=this.transforKeywords
-            var params={
-                keywords:keywords
-            }
-        transforCustomer(params).then(response => {
-           var restaurants = response.rows;
-           console.log('eeeeeeeeeeeeeeee',restaurants)
-           const list = []
-             //封装要显示的数据
-           for (let v of restaurants) {
-             console.log("vvvvvvvvv", v)
-            list.push({ value: v.phonenumber + " " + v.userName, id: v.id})
-            }
-                 // 调用 callback 返回建议列表的数据,是一个数组类型
-            callback(list)
-      });
-      },
-         // 负责人查询
-    handleSelect(item) {
-        console.log(item)
-        this.transferManagerId = item.id
-
-        // this.userInfo()
-      },
-    // 获取user用户信息
-    userInfo() {
-      listUser({}).then(response => {
-          this.user=response.rows
-          var a  = this.user.filter(item=>{
-              if(this.transforphone===item.phonenumber){
-                  return item
-              }
-          })
-          var b = []
-          for(var i = 0; i<a.length;i++){
-              var c = a[i].dept
-              b.push(c.deptName)
-              }
-          this.deptName = b[0]
-      });
     },
     // 打开转移弹框
     opendialogTransfor(){
@@ -1129,7 +909,6 @@ export default {
            ids: ids,
            managerId: this.form.managerId
        }
-       console.log("params", params)
        contractTransfor(params).then(response => {
            this.$message.success("操作成功");
            this. dialogTransfor = false;
@@ -1163,17 +942,9 @@ export default {
     getManager(value,deptId) {
       this.form.managerId = value
       this.form.deptId = deptId
-      console.log('this.form.managerId',this.form.managerId)
-      console.log('this.form.deptId',this.form.deptId)
     },
   }
-
 };
 computed:{
-  // totalfee: function () {
-  //   console.log(this.fee.daibanFee)
-  //   return  this.fee.daibanFee + this.fee.guohuoFee + this.fee.systemUseFee + this.fee.yunyingManagerFee+ this.fee.jingyingManagerFee.total
-  //     + this.fee.systemMaintenanceFee
-  // }
 }
 </script>

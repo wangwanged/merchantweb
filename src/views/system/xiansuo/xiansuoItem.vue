@@ -11,14 +11,8 @@
         >
       </div>
       <div class="header_bottom">
-        <div
-          class="title_name"
-          style="font-size: 20px"
-          v-for="(item, index) in xiansuoList.phone"
-          :key="index"
-        >
-          {{ item }}
-        </div>
+        <div class="title_name"
+             style="font-size: 20px">{{xiansuoList.phone}}</div>
       </div>
     </div>
     <div class="main">
@@ -90,35 +84,7 @@
         <el-form-item required label="客户姓名" prop="name">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item required label="客户电话" prop="name">
-          <el-input v-model="form.phone"></el-input>
-        </el-form-item>
-<!--        <el-form-item label="客户电话" >-->
-<!--          <el-input-->
-<!--            style="width: 90%"-->
-<!--            v-model="phoneadd"-->
-<!--            placeholder="请输入客户电话"-->
-<!--          />-->
-<!--          <i-->
-<!--            class="el-icon-circle-plus"-->
-<!--            style="font-size: 30px; margin-left: 10px"-->
-<!--            @click="addPhone"-->
-<!--          ></i>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item>-->
-<!--          <div v-for="(item, index) in phonedecrease" :key="index">-->
-<!--            <el-input-->
-<!--              style="width: 90%"-->
-<!--              v-model="phonedecrease[index]"-->
-<!--              placeholder="请输入客户电话"-->
-<!--            />-->
-<!--            <i-->
-<!--              class="el-icon-remove"-->
-<!--              style="font-size: 30px; margin-left: 10px"-->
-<!--              @click="decreasePhone(index)"-->
-<!--            ></i>-->
-<!--          </div>-->
-<!--        </el-form-item>-->
+        <Phone ref="myphone" @stringPhone="i=>this.form.phone=i" :toSon="this.form.phone"/>
         <el-form-item label="客户等级">
           <el-select
             style="width: 100%"
@@ -284,7 +250,6 @@ export default {
     getList() {
       getXiansuo(this.id).then(response => {
         this.xiansuoList = response.data;
-        this.xiansuoList.phone = this.xiansuoList.phone.split(",");
         this.getdicts();
       });
     },
@@ -343,11 +308,14 @@ export default {
     // 转成客户按钮
     handletocustomer() {
       this.reset();
-      this.form = this.xiansuoList;
+      this.form = JSON.parse(JSON.stringify(this.xiansuoList));
+      console.log("this.form", this.form);
       this.getdeptuser();
       this.toPlace();
+      this.$nextTick(()=>{
+        this.$refs.myphone.fromFatherphone()
+      })
       this.dialogrollout = true;
-      console.log("this.form", this.form);
     },
     // 转成客户提交
     submitToCustomer() {
@@ -374,48 +342,6 @@ export default {
       this.toplace.city = this.form.city;
       this.toplace.district = this.form.district;
     },
-    // 负责人查询
-    handleSelect(item) {
-      var item = item.value;
-      this.form.transforKeywords = item.substring(12);
-      item = item.substring(0, 11);
-      this.transforphone = item;
-      this.userInfo();
-    },
-    // 负责人查询
-    querySearch(queryString, callback) {
-      const keywords = this.form.transforKeywords;
-      var params = {
-        keywords: keywords
-      };
-      transforCustomer(params).then(response => {
-        var restaurants = response.rows;
-        const list = [];
-        //封装要显示的数据
-        for (let v of restaurants) {
-          list.push({ value: v.phonenumber + " " + v.userName });
-        }
-        // 调用 callback 返回建议列表的数据,是一个数组类型
-        callback(list);
-      });
-    },
-    // 获取user用户信息
-    userInfo() {
-      listUser({}).then(response => {
-        this.user = response.rows;
-        var a = this.user.filter(item => {
-          if (this.transforphone === item.phonenumber) {
-            return item;
-          }
-        });
-        var b = [];
-        for (var i = 0; i < a.length; i++) {
-          var c = a[i].dept;
-          b.push(c.deptName);
-        }
-        this.deptName = b[0];
-      });
-    },
     goSecond() {
       //这是操作follow子组件的方法
       this.$refs.follow.handleAdd();
@@ -439,6 +365,10 @@ export default {
   margin: 0 20px;
 }
 .my-scroll-bar{
-    height: 738px;
+   height:calc(100vh - 230px ) !important;
+   overflow: scroll ;
+   &::-webkit-scrollbar {
+   	display: none;
+   }
 }
 </style>

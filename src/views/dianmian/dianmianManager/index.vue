@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px" class="formInput">
       <!-- <el-form-item prop="diandongId">
         <el-input
           v-model="queryParams.diandongId"
@@ -31,7 +31,7 @@
       <el-form-item prop="companyId">
         <el-input
           v-model="queryParams.companyId"
-          placeholder="请输入所属公司id"
+          placeholder="所属公司id"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -47,7 +47,7 @@
         />
       </el-form-item> -->
       <el-form-item prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择门店状态" clearable size="small">
+        <el-select v-model="queryParams.status" placeholder="门店状态" clearable size="small">
           <el-option
             v-for="dict in statusOptions"
             :key="dict.dictValue"
@@ -59,7 +59,7 @@
       <el-form-item prop="province">
         <el-input
           v-model="queryParams.province"
-          placeholder="请输入所属省"
+          placeholder="所属省"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -68,7 +68,7 @@
       <el-form-item prop="city">
         <el-input
           v-model="queryParams.city"
-          placeholder="请输入所属市"
+          placeholder="所属市"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -77,7 +77,7 @@
       <el-form-item prop="district">
         <el-input
           v-model="queryParams.district"
-          placeholder="请输入所属区"
+          placeholder="所属区"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -86,14 +86,14 @@
       <el-form-item prop="address">
         <el-input
           v-model="queryParams.address"
-          placeholder="请输入店面详细地址"
+          placeholder="店面详细地址"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item prop="checkResult">
-        <el-select v-model="queryParams.checkResult" placeholder="请选择验收结果" clearable size="small">
+        <el-select v-model="queryParams.checkResult" placeholder="验收结果" clearable size="small">
           <el-option
             v-for="dict in checkResultOptions"
             :key="dict.dictValue"
@@ -120,7 +120,7 @@
         />
       </el-form-item> -->
       <el-form-item prop="type">
-        <el-select v-model="queryParams.type" placeholder="请选择店面类型" clearable size="small">
+        <el-select v-model="queryParams.type" placeholder="店面类型" clearable size="small">
           <el-option
             v-for="dict in typeOptions"
             :key="dict.dictValue"
@@ -132,7 +132,7 @@
       <el-form-item prop="area">
         <el-input
           v-model="queryParams.area"
-          placeholder="请输入授权区域"
+          placeholder="授权区域"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -143,15 +143,6 @@
       </el-form-item>
     </el-form>
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['dianmian:dianmianManager:add']"
-        >新增</el-button>
-      </el-col>
       <el-col :span="1.5">
         <el-button
           type="primary"
@@ -172,7 +163,7 @@
           v-hasPermi="['dianmian:dianmianManager:remove']"
         >删除</el-button>
       </el-col>
-      <el-col :span="1.5">
+         <el-col :span="1.5" style="float:right">
         <el-button
           type="primary"
           icon="el-icon-download"
@@ -181,7 +172,16 @@
           v-hasPermi="['dianmian:dianmianManager:export']"
         >导出</el-button>
       </el-col>
-	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+        <el-col :span="1.5" style="float:right">
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['dianmian:dianmianManager:add']"
+        >新增</el-button>
+      </el-col>
+	  <!-- <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar> -->
     </el-row>
 
     <el-table v-loading="loading" :data="dianmianManagerList" @selection-change="handleSelectionChange">
@@ -189,17 +189,15 @@
       <el-table-column label="公司" align="center" prop="customer.companyName"/>
       <el-table-column label="店面名称" align="center" prop="name">
           <template slot-scope="obj">
-          <el-button
-            @click="
+            <span 
+            style="color: #1890FF;cursor: pointer;"
+              @click="
               $router.push({
                 path: '/dianmian/dianmianItem',
                 query: { id: obj.row.id }
-              })
-            "
-            size="small"
-            type="text"
-            >{{ obj.row.name }}</el-button
-          >
+              })">{{ obj.row.name }}
+              
+            </span>
           </template>
       </el-table-column>
       <el-table-column label="店面状态" align="center" prop="status" :formatter="statusFormat" />
@@ -213,17 +211,15 @@
       </el-table-column>
       <el-table-column label="对应合同" align="center" prop="contractNum" width="180">
           <template slot-scope="obj">
-          <el-button
+           <span
             @click="
               $router.push({
                 path: '/contract/contractItem',
-                query: { id: obj.row.id }
+                query: { id: obj.row.id },
               })
             "
-            size="small"
-            type="text"
-            >{{ obj.row.contractNum }}</el-button
-          >
+            style="color: #1890FF;cursor: pointer;"
+          >{{ obj.row.contractNum }}</span>
         </template>
       </el-table-column>
       <el-table-column label="店面类型" align="center" prop="type" :formatter="typeFormat" />
@@ -259,27 +255,106 @@
     />
 
     <!-- 添加或修改店面管理对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="店东id" prop="diandongId">
-          <el-input v-model="form.diandongId" placeholder="请输入店东id" />
+    <el-dialog :title="title" :visible.sync="open" width="40%" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="130px" class="elInput">
+        <div class="infoTitle">店面信息</div>
+        <el-form-item label="对应合同" prop="contractnum">
+          <!-- <el-input v-model="form.contractnum" placeholder="请输入合同编号" /> -->
+          <!-- <el-select v-model="form.contractnum" placeholder="请选择" @click.native="num">
+            <el-option
+              v-for="item in list3"
+               :key="item.value"
+              :label="item.value"
+              :value="item.value"
+            ></el-option>
+          </el-select> -->
+           <el-select
+            v-model="form.contractId"
+            filterable
+            remote
+            reserve-keyword
+            placeholder="请输入合同编号"
+            :remote-method="remoteMethod"
+            :loading="loading"
+            @change="contractChange"
+          >
+            <el-option
+              v-for="item in contractList"
+              :key="item.contractId"
+              :label="item.contractnum + '('+item.customerName+')'"
+              :value="item.contractId"
+            >{{item.contractnum}}（{{item.customerName}}）</el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="店东姓名" prop="diandongName">
+         <el-form-item label="店面类型" prop="type" v-if="form.type!=null">
+          <el-select v-model="form.type" placeholder="请选择店面类型" disabled>
+            <el-option
+              v-for="dict in typeOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option> 
+          </el-select>
+        </el-form-item>
+         <el-form-item label="店面类型" prop="type" v-else>
+          <el-select v-model="form.type" placeholder="请选择店面类型">
+            <el-option
+              v-for="dict in typeOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option> 
+          </el-select>
+        </el-form-item>
+        <el-form-item label="店面名称" prop="name">
+          <el-input v-model="form.name" placeholder="请输入门店名称" />
+        </el-form-item>
+         <el-form-item label="所属区域" prop="province">
+              <!-- <Area @place-info="getPlace" :toSon="toplace"/>  -->
+            <!-- <Area class='liandong' @place-info="getPlace" :toSon="toplace"/> -->
+             <el-select @click.native="sheng()" v-model="form.province" placeholder="请输入所属省" style="width:22%">
+                <el-option
+              v-for="item in list"
+              :key="item.code"
+              :label="item.name"
+              :value="item.code"
+            ></el-option> 
+            </el-select>
+             <el-select @click.native="shi()" v-model="form.city" placeholder="请输入所属市" style="width:22%">
+                <el-option
+              v-for="item in list1"
+              :key="item.code"
+              :label="item.name"
+              :value="item.code"
+            ></el-option> 
+            </el-select>
+              <el-select @click.native="district1()" v-model="form.district" placeholder="请输入所属区" style="width:22%">
+                <el-option
+              v-for="item in list2"
+              :key="item.code"
+              :label="item.name"
+              :value="item.code"
+            ></el-option> 
+            </el-select>
+        </el-form-item>
+         <el-form-item label="详细地址" prop="address">
+          <el-input v-model="form.address" placeholder="请输入店面详细地址" />
+        </el-form-item>
+          <el-form-item label="地址坐标" prop="longitude">
+          <el-input v-model="form.longitude" placeholder="请输入经度" style="width:33%"/>
+           <el-input v-model="form.latitude" placeholder="请输入纬度" style="width:33%"/>
+        </el-form-item>
+         <el-form-item label="店东姓名" prop="diandongName">
           <el-input v-model="form.diandongName" placeholder="请输入店东姓名" />
         </el-form-item>
         <el-form-item label="店东电话" prop="diandongPhone">
           <el-input v-model="form.diandongPhone" placeholder="请输入店东电话" />
         </el-form-item>
-        <el-form-item label="管理人id" prop="sysUserId">
-          <el-input v-model="form.sysUserId" placeholder="请输入管理人id" />
+          <el-form-item label="备注信息" prop="remark">
+          <textarea v-model="form.remark" rows='5' placeholder="请输入备注信息" ></textarea>
         </el-form-item>
-        <el-form-item label="所属公司id" prop="companyId">
-          <el-input v-model="form.companyId" placeholder="请输入所属公司id" />
-        </el-form-item>
-        <el-form-item label="门店名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入门店名称" />
-        </el-form-item>
-        <el-form-item label="门店状态" prop="status">
+        <div class="infoTitle">营业信息</div>
+        <el-form-item label="营业状态" prop="status">
           <el-select v-model="form.status" placeholder="请选择门店状态">
             <el-option
               v-for="dict in statusOptions"
@@ -289,71 +364,24 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="所属省" prop="province">
-          <el-input v-model="form.province" placeholder="请输入所属省" />
-        </el-form-item>
-        <el-form-item label="所属市" prop="city">
-          <el-input v-model="form.city" placeholder="请输入所属市" />
-        </el-form-item>
-        <el-form-item label="所属区" prop="district">
-          <el-input v-model="form.district" placeholder="请输入所属区" />
-        </el-form-item>
-        <el-form-item label="经度" prop="longitude">
-          <el-input v-model="form.longitude" placeholder="请输入经度" />
-        </el-form-item>
-        <el-form-item label="纬度" prop="latitude">
-          <el-input v-model="form.latitude" placeholder="请输入纬度" />
-        </el-form-item>
-        <el-form-item label="店面详细地址" prop="address">
-          <el-input v-model="form.address" placeholder="请输入店面详细地址" />
-        </el-form-item>
-        <el-form-item label="验收结果" prop="checkResult">
-          <el-select v-model="form.checkResult" placeholder="请选择验收结果">
-            <el-option
-              v-for="dict in checkResultOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="开店日期" prop="openDate">
-          <el-date-picker clearable size="small" style="width: 200px"
+          <el-form-item label="开业时间" prop="openDate">
+          <el-date-picker clearable size="small" style="width: 66%"
             v-model="form.openDate"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="选择开店日期">
+            placeholder="选择开业时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="合同编号" prop="contractnum">
-          <el-input v-model="form.contractnum" placeholder="请输入合同编号" />
-        </el-form-item>
-        <el-form-item label="店面类型" prop="type">
-          <el-select v-model="form.type" placeholder="请选择店面类型">
-            <el-option
-              v-for="dict in typeOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="授权区域" prop="area">
-          <el-input v-model="form.area" placeholder="请输入授权区域" />
-        </el-form-item>
-        <el-form-item label="闭店/停业时间" prop="closeDate">
-          <el-date-picker clearable size="small" style="width: 200px"
+          <el-form-item label="闭店/停业时间" prop="closeDate">
+          <el-date-picker clearable size="small" style="width: 66%"
             v-model="form.closeDate"
             type="date"
             value-format="yyyy-MM-dd"
             placeholder="选择闭店/停业时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="闭店原因" prop="closeReason">
+          <el-form-item label="闭店/停业原因" prop="closeReason">
           <el-input v-model="form.closeReason" placeholder="请输入闭店原因" />
-        </el-form-item>
-        <el-form-item label="备注信息" prop="remark">
-          <el-input v-model="form.remark" placeholder="请输入备注信息" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -366,7 +394,10 @@
 
 <script>
 import { listDianmianManager, getDianmianManager, delDianmianManager, addDianmianManager, updateDianmianManager, exportDianmianManager } from "@/api/dianmian/dianmianManager";
-
+import {getProvince,getCity,getDistrict} from '@/api/system/customer';
+import {
+  listContractManager,
+} from "@/api/fee/feeManager";
 export default {
   name: "DianmianManager",
   data() {
@@ -395,6 +426,11 @@ export default {
       checkResultOptions: [],
       // 店面类型字典
       typeOptions: [],
+           //  传给省市区
+      list:[],
+      list1:[],
+      list2:[],
+      contractList:[],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -461,18 +497,21 @@ export default {
         openDate: [
           { required: true, message: "开店日期不能为空", trigger: "blur" }
         ],
-        contractnum: [
-          { required: true, message: "合同编号不能为空", trigger: "blur" }
-        ],
+         contractnum: [
+           { required: true, message: "合同编号不能为空", trigger: "blur" }
+         ],
         type: [
           { required: true, message: "店面类型不能为空", trigger: "change" }
         ],
         area: [
           { required: true, message: "授权区域不能为空", trigger: "blur" }
         ],
-        remark: [
-          { required: true, message: "备注信息不能为空", trigger: "blur" }
-        ]
+        closeDate: [
+          { required: true, message: "闭店/停业时间不能为空", trigger: "change" }
+        ],
+        closeReason: [
+          { required: true, message: "闭店/停业原因不能为空", trigger: "blur" }
+        ],
       }
     };
   },
@@ -487,8 +526,28 @@ export default {
     this.getDicts("sys_user_need").then(response => {
       this.typeOptions = response.data;
     });
+
   },
   methods: {
+    // 获取省市区
+    sheng(){
+      getProvince().then(response => {
+      console.log(response.data);
+      this.list=response.data;
+    });
+    },
+    shi(){
+     getCity(this.form.province).then(response => {
+      console.log(response.data);
+      this.list1=response.data;
+    });
+    },
+     district1(){
+       getDistrict(this.form.city).then(response => {
+      console.log(response.data);
+      this.list2=response.data;
+    });
+    },
     /** 查询店面管理列表 */
     getList() {
       this.loading = true;
@@ -545,6 +604,26 @@ export default {
       };
       this.resetForm("form");
     },
+    contractChange(item) {
+      this.$forceUpdate();
+      this.form.contractnum = this.contractList.find(res => res.contractId == item).contractnum
+    },
+     //获取合同编号列表
+    remoteMethod(query) {
+        if (query !== '') {
+        listContractManager({keyword:query}).then((response) => {
+          this.contractList = response.rows.map((item) => {
+              return{
+                ...item,
+                contractnum: item.num,
+                contractId: item.id
+              }
+          });
+        });
+        } else {
+          this.contractList = [];
+        }
+    },
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
@@ -568,6 +647,7 @@ export default {
       const id = row.id || this.ids
       getDianmianManager(id).then(response => {
         this.form = response.data;
+        console.log(response.data);
         this.open = true;
         this.title = "修改店面管理";
       });
@@ -575,6 +655,7 @@ export default {
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
+         console.log(this.form);
         if (valid) {
           if (this.form.id != null) {
             updateDianmianManager(this.form).then(response => {
@@ -592,6 +673,7 @@ export default {
         }
       });
     },
+   
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
@@ -622,3 +704,33 @@ export default {
   }
 };
 </script>
+<style lang="less" scoped>
+// .mb8{
+//   float:right;
+// }
+.el-form{
+  margin:0 0 20px 0 !important;
+}
+.formInput .el-input{
+  width:140px !important;
+}
+.formInput .el-select{
+  width:140px !important;
+}
+.elInput .el-input{
+  width:66%;
+}
+.elInput .el-select{
+  width:66%;
+}
+.elInput textarea{
+  width:66%;
+  border: 1px solid #DCDFE6;
+  border-radius: 4px;
+}
+.infoTitle{
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 30px;
+}
+</style>

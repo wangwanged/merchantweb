@@ -14,7 +14,7 @@
           <el-button
             size="small"
             type="primary"
-            @click="dialog.dialogextend = true"
+            @click="opendialogRenew"
             >续签</el-button
           >
           <el-button size="small" type="primary" @click="handleEdit"
@@ -46,7 +46,7 @@
           <el-button
             size="small"
             type="primary"
-            @click="dialog.dialogextend = true"
+            @click="opendialogRenew"
             >续签</el-button
           >
           <el-button size="small" type="primary" @click="handleTransfer"
@@ -248,7 +248,7 @@
                       :key="index"
                     >
                       <p>{{ item.amount }}</p>
-                      <p>{{ item.type }}</p>
+                      <p >{{ feeLable(item.type)}}</p>
                     </el-col>
                   </el-row>
                   <el-table
@@ -270,6 +270,7 @@
                     </el-table-column>
                     <el-table-column
                       prop="type"
+                      :formatter="feeTypeFormat"
                       label="汇款类型"
                       min-width="100"
                     >
@@ -445,7 +446,7 @@
             >
               <el-form label-width="80px">
                 <el-form-item required label="附件名称">
-                  <el-input placeholder="aaa"></el-input>
+                  <!-- <el-input placeholder="aaa"></el-input> -->
                 </el-form-item>
                 <el-form-item label="附件说明">
                   <el-input
@@ -689,36 +690,34 @@
       <!-- 续签弹框 -->
       <el-dialog
         title="合同续签"
-        width="40%"
-        :visible.sync="dialog.dialogextend"
+        width="650px"
+        :visible.sync="dialog.dialogRenew"
       >
-        <el-form label-width="120px">
+        <el-form label-width="120px" label-position="left">
           <div class="main_title">客户信息</div>
           <el-form-item required label="选择客户">
-            <el-input v-model="contentRenew.customerNum"></el-input>
+            <el-input v-model="form.customerNum"></el-input>
           </el-form-item>
           <el-form-item required label="客户姓名">
-            <el-input v-model="contentRenew.customerName"></el-input>
+            <el-input v-model="form.customerName"></el-input>
           </el-form-item>
-          <el-form-item required label="客户电话">
-            <el-input v-model="contentRenew.customerPhone"></el-input>
-          </el-form-item>
+          <Phone ref="myphone" @stringPhone="i=>this.form.phone=i" :toSon="this.form.phone"/>
           <div class="main_title">签约信息</div>
           <el-form-item required label="合同类型">
-            <el-button size="small">{{ dict.contractTypeLabel  }}</el-button>
+            <el-button type="primary" plain size="small">续签</el-button>
           </el-form-item>
           <el-form-item required label="签约产品">
             <el-input v-model="dict.produceTypeLabel" disabled></el-input>
           </el-form-item>
           <el-form-item required label="关联合同">
-            <el-input v-model="contentRenew.rootNum" disabled></el-input>
+            <el-input v-model="form.rootNum" disabled></el-input>
           </el-form-item>
           <el-form-item required label="合同编号">
             <el-input placeholder="请输入"></el-input>
           </el-form-item>
           <el-form-item required label="签约日期">
             <el-date-picker
-              v-model="contentRenew.signDate"
+              v-model="form.signDate"
               type="date"
               placeholder="选择日期"
             >
@@ -726,7 +725,7 @@
           </el-form-item>
           <el-form-item required label="合同开始时间">
             <el-date-picker
-              v-model="contentRenew.beginDate"
+              v-model="form.beginDate"
               type="date"
               placeholder="选择日期"
             >
@@ -734,7 +733,7 @@
           </el-form-item>
           <el-form-item required label="合同结束时间">
             <el-date-picker
-              v-model="contentRenew.endDate"
+              v-model="form.endDate"
               type="date"
               placeholder="选择日期"
             >
@@ -742,56 +741,56 @@
           </el-form-item>
           <div class="main_title">店面信息</div>
           <el-form-item required label="店面名称">
-            <el-input v-model="contentRenew.dianmianName"></el-input>
+            <el-input v-model="form.dianmianName"></el-input>
           </el-form-item>
           <el-form-item required label="所属区域">
-            <el-input v-model="contentRenew.dianmianProvince"></el-input>
+            <el-input v-model="form.dianmianProvince"></el-input>
           </el-form-item>
           <el-form-item required label="详细地址">
-            <el-input v-model="contentRenew.dianmianAddress"></el-input>
+            <el-input v-model="form.dianmianAddress"></el-input>
           </el-form-item>
           <el-form-item required label="地址坐标">
-            <el-input v-model="contentRenew.dianmianLatitude"></el-input>
+            <el-input v-model="form.dianmianLatitude"></el-input>
           </el-form-item>
-          <div class="main_title">费用信息</div>
-          <el-form-item required label="加盟费">
-            <el-input
-              v-model="contentRenew.fee.jiamengjiameng"
-              placeholder="请输入"
-            ></el-input>
-          </el-form-item>
-          <el-form-item required label="运营管理费">
-            <el-input
-              v-model="contentRenew.fee.yunying"
-              placeholder="请输入"
-            ></el-input>
-          </el-form-item>
-          <el-form-item required label="系统使用费">
-            <el-input placeholder="请输入"></el-input>
-          </el-form-item>
-          <el-form-item required label="系统维护费">
-            <el-input placeholder="请输入"></el-input>
-          </el-form-item>
-          <el-form-item required label="办件费">
-            <el-input placeholder="请输入"></el-input>
-          </el-form-item>
-          <el-form-item required label="履约保证金">
-            <el-input placeholder="请输入"></el-input>
-          </el-form-item>
-          <el-form-item required label="经营管理费">
-            <el-input placeholder="请输入"></el-input>
-          </el-form-item>
+<!--          <div class="main_title">费用信息</div>-->
+<!--          <el-form-item required label="加盟费">-->
+<!--            <el-input-->
+<!--              v-model="form.fee.jiamengjiameng"-->
+<!--              placeholder="请输入"-->
+<!--            ></el-input>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item required label="运营管理费">-->
+<!--            <el-input-->
+<!--              v-model="form.fee.yunying"-->
+<!--              placeholder="请输入"-->
+<!--            ></el-input>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item required label="系统使用费">-->
+<!--            <el-input placeholder="请输入"></el-input>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item required label="系统维护费">-->
+<!--            <el-input placeholder="请输入"></el-input>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item required label="办件费">-->
+<!--            <el-input placeholder="请输入"></el-input>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item required label="履约保证金">-->
+<!--            <el-input placeholder="请输入"></el-input>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item required label="经营管理费">-->
+<!--            <el-input placeholder="请输入"></el-input>-->
+<!--          </el-form-item>-->
           <div class="main_title">备注信息</div>
           <el-input
             type="textarea"
             :rows="3"
-            v-model="contentRenew.remark"
+            v-model="form.remark"
           ></el-input>
           <el-form-item required label="签约人员" style="margin-top:30px">
-            <el-input v-model="contentRenew.signUser"></el-input>
+            <el-input v-model="form.signUser"></el-input>
           </el-form-item>
           <el-form-item required label="所属部门">
-            <el-input v-model="contentRenew.remark"></el-input>
+            <el-input v-model="form.remark"></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -1011,8 +1010,17 @@ import {
 } from "@/api/dianmian/dianmianManager";
 import { addFeeManager } from "@/api/fee/feeManager";
 import { getInfo } from "@/api/login.js";
+import {selectDictLabel} from '@/utils/ruoyi'
 import { getDicts } from '@/api/system/dict/data'
 export default {
+  filters: {
+    toLable: (key) => {
+      console.log("key",key)
+      // console.log("selectDictLabel222222",this.selectDictLabel(this.dict.feeTypeOptions, key))
+      // return key+"dddddd"
+      return this.selectDictLabel(this.dict.feeTypeOptions,key)
+    }
+  },
   data() {
     return {
       id: this.$route.query.id, //当前详情页id
@@ -1021,7 +1029,7 @@ export default {
       dialog: {
         dialogcheck: false, //合同审核弹框
         dialoguncheck: false, //合同反审核弹框
-        dialogextend: false, //合同续签弹框
+        dialogRenew: false, //合同续签弹框
         dialogedit: false, //合同编辑弹框
         dialogtransfor: false, //合同转移弹框
         dialogbreakoff: false, //合同解约弹框
@@ -1051,11 +1059,13 @@ export default {
         statusOptions: [],
         contractTypeOptions:[],  //合同类型字典
         produceTypeOptions:[],  //产品类型字典
+        feeTypeOptions:[],
 
         checkLabel: '',
         statusLabel: '',
         contractTypeLabel: '',
         produceTypeLabel: '',
+        feeTypeLabel: '',
       },
       loading: true,
     };
@@ -1069,6 +1079,9 @@ export default {
     document.querySelector("body").removeAttribute("style");
   },
   computed: {
+    feeLable() {
+      return (key) => this.selectDictLabel(this.dict.feeTypeOptions,key)
+    },
     //  合同审核按钮
     contentCheck() {
       return {
@@ -1166,17 +1179,34 @@ export default {
         var a = this.dict.statusOptions.filter(item => {
           return item.dictValue === this.contractList.status;
         });
-        this.dict.statusOptions= a[0] ? a[0].dictLabel : null;
+        this.dict.contractTypeLabel= a[0] ? a[0].dictLabel : null;
+      });
+      // 获取合同状态字典
+      this.getDicts("fee_type").then(response => {
+        this.dict.feeTypeOptions = response.data;
+        var a = this.dict.feeTypeOptions.filter(item => {
+          return item.dictValue === this.contractList.status;
+        });
+        this.dict.feeTypeLabel= a[0] ? a[0].dictLabel : null;
       });
     },
 
+    convertFeeType(type) {
+      return this.selectDictLabel(this.dict.contractTypeOptions, type);
+    },
     produceFormat(row, column) {
       return this.selectDictLabel(this.dict.produceTypeOptions, row.produce);
     },
     // 生效失效状态字典翻译
     contractTypeFormat(row, column) {
+      console.log("selectDictLabel", this.selectDictLabel(this.dict.contractTypeOptions,row.type))
       return this.selectDictLabel(this.dict.contractTypeOptions, row.type);
     },
+    // 生效失效状态字典翻译
+    feeTypeFormat(row, column) {
+      return this.selectDictLabel(this.dict.feeTypeOptions, row.type);
+    },
+
     // 表单重置
     reset() {
       this.form = {
@@ -1318,9 +1348,14 @@ export default {
           this.$message.error("操作失败");
         });
     },
+    // 续签框弹出
+    opendialogRenew(){
+      this.dialog.dialogRenew=true
+      this.reset()
+    },
     // 续签按钮操作
     handleRenew() {
-      contractRenew(this.contentRenew, this.id)
+      contractRenew(this.form, this.id)
         .then(res => {
           this.$message.success("操作成功");
           this.dialog.dialogextend = false;
@@ -1385,6 +1420,7 @@ export default {
         .catch(error => {
           this.$message.error("操作失败");
         });
+      this.getList()
     },
     // 获取附件信息
     getAttachment() {
@@ -1457,6 +1493,12 @@ export default {
 .main_right_top {
   background-color: #fff;
   padding: 20px 20px;
+  height:calc(100vh - 200px );
+  overflow: scroll !important;
+  &::-webkit-scrollbar {
+  	display: none;
+  }
+
 }
 .contract_genjin_top {
   height: 80px;
