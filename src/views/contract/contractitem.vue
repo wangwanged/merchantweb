@@ -190,7 +190,8 @@
                   </p>
                   <p class="main_content_name">
                     <span class="main_content_firstname">经营管理费：</span>
-                    <span>{{ contractList.fee.jingyingManagerFee }}</span>
+                    <!-- <span>{{ contractList.fee.jingyingManagerFee }}</span> -->
+                    <span>{{ contractList.fee.jingyingManagerFee.total }}</span>
                   </p>
                   <div class="main_title">备注信息</div>
                   <p class="main_content_name">
