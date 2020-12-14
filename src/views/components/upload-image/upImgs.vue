@@ -21,10 +21,6 @@
         <img class="pic-box" :src="uploadPicUrl" v-if="uploadPicUrl">
       </div>
     </div>
-    <div>
-      <el-button type="primary" :loading="loading" @click="handleSubmit">提交</el-button>
-      <el-button type="info" plain >取消</el-button>
-    </div>
   </div>
 </template>
 

@@ -31,7 +31,7 @@
     </GeminiScrollbar>
     <el-dialog title="写跟进" :visible.sync="dialogfollow" width="700px">
       <el-form  :model="form" :rules="rules" ref="ruleForm">
-        <el-form-item :required="true" prop="method">
+        <el-form-item prop="method" label='' :rules='[{ required: true, message: "客户名称不能为空", trigger: "blur" }]'>
           <el-input
             v-model="form.method"
             class="input"

@@ -198,6 +198,7 @@ export default {
         console.log('token.split',res)
         if (res) {
           this.token = res.data.msg;
+          console.log('this.tokenthis.token',this.token)
         }
       });
     },
