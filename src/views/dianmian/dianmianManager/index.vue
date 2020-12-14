@@ -280,7 +280,7 @@
         </el-form-item>
         <div class="infoTitle">营业信息</div>
         <el-form-item label="营业状态" prop="status">
-          <el-select v-model="form.status" placeholder="请选择门店状态">
+          <el-select v-model="form.status" placeholder="请选择门店状态"  @change="statusChange">
             <el-option
               v-for="dict in statusOptions"
               :key="dict.dictValue"
@@ -289,7 +289,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-          <el-form-item label="开业时间" prop="openDate">
+          <el-form-item label="开业时间" prop="openDate" v-show="yingye">
           <el-date-picker clearable size="small" style="width: 66%"
             v-model="form.openDate"
             type="date"
@@ -297,7 +297,7 @@
             placeholder="选择开业时间">
           </el-date-picker>
         </el-form-item>
-          <el-form-item label="闭店/停业时间" prop="closeDate">
+          <el-form-item label="闭店/停业时间" prop="closeDate" v-show="bidian">
           <el-date-picker clearable size="small" style="width: 66%"
             v-model="form.closeDate"
             type="date"
@@ -305,7 +305,7 @@
             placeholder="选择闭店/停业时间">
           </el-date-picker>
         </el-form-item>
-          <el-form-item label="闭店/停业原因" prop="closeReason">
+          <el-form-item label="闭店/停业原因" prop="closeReason" v-show="bidian">
           <el-input v-model="form.closeReason" placeholder="请输入闭店原因" />
         </el-form-item>
       </el-form>
@@ -343,6 +343,8 @@ export default {
       dianmianManagerList: [],
       // 弹出层标题
       title: "",
+      bidian:false,
+      yingye:false,
       // 是否显示弹出层
       open: false,
       // 门店状态字典
@@ -416,27 +418,21 @@ export default {
         address: [
           { required: true, message: "店面详细地址不能为空", trigger: "blur" }
         ],
-        // checkResult: [
-        //   { required: true, message: "验收结果不能为空", trigger: "change" }
+        // openDate: [
+        //   { required: true, message: "开店日期不能为空", trigger: "blur" }
         // ],
-        openDate: [
-          { required: true, message: "开店日期不能为空", trigger: "blur" }
-        ],
          contractNum: [
            { required: true, message: "合同编号不能为空", trigger: "change" }
          ],
         type: [
           { required: true, message: "店面类型不能为空", trigger: "change" }
         ],
-        area: [
-          { required: true, message: "授权区域不能为空", trigger: "blur" }
-        ],
-        closeDate: [
-          { required: true, message: "闭店/停业时间不能为空", trigger: "change" }
-        ],
-        closeReason: [
-          { required: true, message: "闭店/停业原因不能为空", trigger: "blur" }
-        ],
+        // closeDate: [
+        //   { required: true, message: "闭店/停业时间不能为空", trigger: "change" }
+        // ],
+        // closeReason: [
+        //   { required: true, message: "闭店/停业原因不能为空", trigger: "blur" }
+        // ],
       }
     };
   },
@@ -530,6 +526,19 @@ export default {
       this.form.contractNum = this.contractList.find(res => res.contractId == item).contractNum;
       this.form.sysUserId=this.contractList.find(res => res.contractId == item).managerId;
     },
+      statusChange(item){
+        console.log(item);
+        if(item=='3'){
+          this.yingye=true;
+          this.bidian=false;
+        }else if(item=='2'||item=='0'){
+          this.yingye=false;
+          this.bidian=true;
+        }else{
+           this.yingye=false;
+          this.bidian=false;
+        }
+      },
      //获取合同编号列表
     remoteMethod(query) {
         if (query !== '') {
