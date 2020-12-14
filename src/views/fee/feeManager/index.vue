@@ -272,6 +272,9 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="费用金额" prop="amount">
+          <el-input v-model="form.amount" placeholder="请输入费用金额(元)" />
+        </el-form-item>
         <el-form-item label="付款方式" prop="payMethod">
           <el-select v-model="form.payMethod" placeholder="请选择付款方式">
             <el-option
@@ -377,6 +380,9 @@ export default {
         ],
         payMethod: [
           { required: true, message: "付款方式不能为空", trigger: "change" },
+        ],
+        amount: [
+          { required: true, message: "费用金额不能为空", trigger: "blur" },
         ],
         reciever: [
           { required: true, message: "收款人不能为空", trigger: "blur" },
