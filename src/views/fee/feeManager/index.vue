@@ -174,7 +174,7 @@
     <el-table v-loading="loading" :data="feeManagerList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="合同费用表id" align="center" prop="id" /> -->
-      <el-table-column label="公司" align="center" prop="deptName" />
+      <el-table-column label="公司" align="center" prop="companyName" />
       <el-table-column label="收费时间" align="center" prop="shoukuanDate">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.shoukuanDate, "{y}-{m}-{d}") }}</span>
