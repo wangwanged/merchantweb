@@ -1,33 +1,6 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px" class="formInput">
-      <!-- <el-form-item prop="diandongId">
-        <el-input
-          v-model="queryParams.diandongId"
-          placeholder="请输入店东id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
-      <!-- <el-form-item prop="diandongName">
-        <el-input
-          v-model="queryParams.diandongName"
-          placeholder="请输入店东姓名"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
-      <!-- <el-form-item  prop="diandongPhone">
-        <el-input
-          v-model="queryParams.diandongPhone"
-          placeholder="请输入店东电话"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
       <el-form-item prop="companyId">
         <el-input
           v-model="queryParams.companyId"
@@ -37,15 +10,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <!-- <el-form-item prop="name">
-        <el-input
-          v-model="queryParams.name"
-          placeholder="请输入门店名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
       <el-form-item prop="status">
         <el-select v-model="queryParams.status" placeholder="门店状态" clearable size="small">
           <el-option
@@ -110,15 +74,6 @@
           placeholder="选择开店日期">
         </el-date-picker>
       </el-form-item>
-      <!-- <el-form-item prop="contractnum">
-        <el-input
-          v-model="queryParams.contractnum"
-          placeholder="请输入合同编号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
       <el-form-item prop="type">
         <el-select v-model="queryParams.type" placeholder="店面类型" clearable size="small">
           <el-option
@@ -181,7 +136,6 @@
           v-hasPermi="['dianmian:dianmianManager:add']"
         >新增</el-button>
       </el-col>
-	  <!-- <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar> -->
     </el-row>
 
     <el-table v-loading="loading" :data="dianmianManagerList" @selection-change="handleSelectionChange">
@@ -226,24 +180,6 @@
       <el-table-column label="授权区域" align="center" prop="area" />
       <el-table-column label="客户姓名" align="center" prop="diandongName" />
       <el-table-column label="负责人" align="center" prop="customer.username" />
-      <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['dianmian:dianmianManager:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['dianmian:dianmianManager:remove']"
-          >删除</el-button>
-        </template>
-      </el-table-column> -->
     </el-table>
 
     <pagination
@@ -258,16 +194,7 @@
     <el-dialog :title="title" :visible.sync="open" width="40%" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="130px" class="elInput">
         <div class="infoTitle">店面信息</div>
-        <el-form-item label="对应合同" prop="contractnum">
-          <!-- <el-input v-model="form.contractnum" placeholder="请输入合同编号" /> -->
-          <!-- <el-select v-model="form.contractnum" placeholder="请选择" @click.native="num">
-            <el-option
-              v-for="item in list3"
-               :key="item.value"
-              :label="item.value"
-              :value="item.value"
-            ></el-option>
-          </el-select> -->
+        <el-form-item label="对应合同" prop="contractNum">
            <el-select
             v-model="form.contractId"
             filterable
@@ -281,12 +208,12 @@
             <el-option
               v-for="item in contractList"
               :key="item.contractId"
-              :label="item.contractnum + '('+item.customerName+')'"
+              :label="item.contractNum + '('+item.customerName+')'"
               :value="item.contractId"
-            >{{item.contractnum}}（{{item.customerName}}）</el-option>
+            >{{item.contractNum}}（{{item.customerName}}）</el-option>
           </el-select>
         </el-form-item>
-         <el-form-item label="店面类型" prop="type" v-if="form.type!=null">
+         <el-form-item label="店面类型" prop="type" v-if="title=='修改店面管理'">
           <el-select v-model="form.type" placeholder="请选择店面类型" disabled>
             <el-option
               v-for="dict in typeOptions"
@@ -310,8 +237,6 @@
           <el-input v-model="form.name" placeholder="请输入门店名称" />
         </el-form-item>
          <el-form-item label="所属区域" prop="province">
-              <!-- <Area @place-info="getPlace" :toSon="toplace"/>  -->
-            <!-- <Area class='liandong' @place-info="getPlace" :toSon="toplace"/> -->
              <el-select @click.native="sheng()" v-model="form.province" placeholder="请输入所属省" style="width:22%">
                 <el-option
               v-for="item in list"
@@ -447,7 +372,7 @@ export default {
         address: null,
         checkResult: null,
         openDate: null,
-        contractnum: null,
+        contractNum: null,
         type: null,
         area: null,
       },
@@ -461,12 +386,12 @@ export default {
         diandongPhone: [
           { required: true, message: "店东电话不能为空", trigger: "blur" }
         ],
-        sysUserId: [
-          { required: true, message: "管理人id不能为空", trigger: "blur" }
-        ],
-        companyId: [
-          { required: true, message: "所属公司id不能为空", trigger: "blur" }
-        ],
+        // sysUserId: [
+        //   { required: true, message: "管理人id不能为空", trigger: "blur" }
+        // ],
+        // companyId: [
+        //   { required: true, message: "所属公司id不能为空", trigger: "blur" }
+        // ],
         name: [
           { required: true, message: "门店名称不能为空", trigger: "blur" }
         ],
@@ -491,14 +416,14 @@ export default {
         address: [
           { required: true, message: "店面详细地址不能为空", trigger: "blur" }
         ],
-        checkResult: [
-          { required: true, message: "验收结果不能为空", trigger: "change" }
-        ],
+        // checkResult: [
+        //   { required: true, message: "验收结果不能为空", trigger: "change" }
+        // ],
         openDate: [
           { required: true, message: "开店日期不能为空", trigger: "blur" }
         ],
-         contractnum: [
-           { required: true, message: "合同编号不能为空", trigger: "blur" }
+         contractNum: [
+           { required: true, message: "合同编号不能为空", trigger: "change" }
          ],
         type: [
           { required: true, message: "店面类型不能为空", trigger: "change" }
@@ -532,19 +457,16 @@ export default {
     // 获取省市区
     sheng(){
       getProvince().then(response => {
-      console.log(response.data);
       this.list=response.data;
     });
     },
     shi(){
      getCity(this.form.province).then(response => {
-      console.log(response.data);
       this.list1=response.data;
     });
     },
      district1(){
        getDistrict(this.form.city).then(response => {
-      console.log(response.data);
       this.list2=response.data;
     });
     },
@@ -582,7 +504,6 @@ export default {
         diandongName: null,
         diandongPhone: null,
         sysUserId: null,
-        companyId: null,
         name: null,
         status: null,
         province: null,
@@ -593,7 +514,7 @@ export default {
         address: null,
         checkResult: null,
         openDate: null,
-        contractnum: null,
+        contractNum: null,
         type: null,
         area: null,
         closeDate: null,
@@ -606,7 +527,8 @@ export default {
     },
     contractChange(item) {
       this.$forceUpdate();
-      this.form.contractnum = this.contractList.find(res => res.contractId == item).contractnum
+      this.form.contractNum = this.contractList.find(res => res.contractId == item).contractNum;
+      this.form.sysUserId=this.contractList.find(res => res.contractId == item).managerId;
     },
      //获取合同编号列表
     remoteMethod(query) {
@@ -615,8 +537,9 @@ export default {
           this.contractList = response.rows.map((item) => {
               return{
                 ...item,
-                contractnum: item.num,
-                contractId: item.id
+                contractNum: item.num,
+                contractId: item.id,
+                managerId: item.managerId
               }
           });
         });
@@ -647,7 +570,6 @@ export default {
       const id = row.id || this.ids
       getDianmianManager(id).then(response => {
         this.form = response.data;
-        console.log(response.data);
         this.open = true;
         this.title = "修改店面管理";
       });
@@ -655,7 +577,7 @@ export default {
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
-         console.log(this.form);
+
         if (valid) {
           if (this.form.id != null) {
             updateDianmianManager(this.form).then(response => {
