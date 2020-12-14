@@ -527,7 +527,6 @@ export default {
       this.form.sysUserId=this.contractList.find(res => res.contractId == item).managerId;
     },
       statusChange(item){
-        console.log(item);
         if(item=='3'){
           this.yingye=true;
           this.bidian=false;
