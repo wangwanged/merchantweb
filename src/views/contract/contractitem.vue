@@ -9,31 +9,37 @@
             size="small"
             type="primary"
             @click="dialog.dialogcheck = true"
-            >审核</el-button
+          >审核
+          </el-button
           >
           <el-button
             size="small"
             type="primary"
             @click="opendialogRenew"
-            >续签</el-button
+          >续签
+          </el-button
           >
           <el-button size="small" type="primary" @click="handleEdit"
-            >编辑</el-button
+          >编辑
+          </el-button
           >
           <el-button size="small" type="primary" @click="handleTransfer"
-            >转移</el-button
+          >转移
+          </el-button
           >
           <el-button
             size="small"
             type="primary"
             @click="dialog.dialogbreakoff = true"
-            >解约</el-button
+          >解约
+          </el-button
           >
           <el-button
             size="small"
             type="primary"
             @click="dialog.dialoginvalid = true"
-            >失效</el-button
+          >失效
+          </el-button
           >
         </div>
         <div v-if="contractList.checkStatus === '1'">
@@ -41,34 +47,39 @@
             size="small"
             type="primary"
             @click="dialog.dialoguncheck = true"
-            >反审核</el-button
+          >反审核
+          </el-button
           >
           <el-button
             size="small"
             type="primary"
             @click="opendialogRenew"
-            >续签</el-button
+          >续签
+          </el-button
           >
           <el-button size="small" type="primary" @click="handleTransfer"
-            >转移</el-button
+          >转移
+          </el-button
           >
           <el-button
             size="small"
             type="primary"
             @click="dialog.dialogbreakoff = true"
-            >解约</el-button
+          >解约
+          </el-button
           >
         </div>
         <div v-if="contractList.checkStatus === '2'"></div>
       </div>
       <div class="header_bottom">
-        <el-button type="primary" plain size="small">{{this.dict.produceTypeLabel}}</el-button>
+        <el-button type="primary" plain size="small">{{ this.dict.produceTypeLabel }}</el-button>
         <el-button
           type="primary"
           plain
           size="small"
           style="margin-right:15px"
-          >{{ dict.contractTypeLabel }}</el-button
+        >{{ dict.contractTypeLabel }}
+        </el-button
         >
         <span style="font-size:13px">负责人：{{ contractList.manager }}</span>
       </div>
@@ -91,7 +102,7 @@
                   </p>
                   <p class="main_content_name">
                     <span class="main_content_firstname">合同类型：</span>
-                    <el-button size="small" >{{dict.contractTypeLabel }}</el-button>
+                    <el-button size="small">{{ dict.contractTypeLabel }}</el-button>
                   </p>
                   <el-table border :data="relatedList" style="width: 100%">
                     <el-table-column
@@ -146,7 +157,7 @@
                   <p class="main_content_name">
                     <span class="main_content_firstname">所属区域：</span>
                     <span
-                      >{{ contractList.dianmianProvince }}
+                    >{{ contractList.dianmianProvince }}
                       {{ contractList.dianmianCity }}
                       {{ contractList.dianmianDistrict }}</span
                     >
@@ -158,15 +169,17 @@
                   <p class="main_content_name">
                     <span class="main_content_firstname">地址坐标：</span>
                     <span
-                      >{{ contractList.dianmianLatitude }}
+                    >{{ contractList.dianmianLatitude }}
                       {{ contractList.dianmianLongitude }}</span
                     >
                   </p>
                   <div class="main_title">财务信息</div>
                   <p class="main_content_name">
                     <span class="main_content_firstname">加盟费：</span>
-                    <span>{{Number.parseInt(contractList.fee.daibanFee) + Number.parseInt(contractList.fee.guohuoFee) + Number.parseInt(contractList.fee.systemUseFee) + Number.parseInt(contractList.fee.yunyingManagerFee)
-                    + Number.parseInt(contractList.fee.systemMaintenanceFee) + Number.parseInt(contractList.fee.jingyingManagerFee.total)}}</span>
+                    <span>{{
+                        Number.parseInt(contractList.fee.daibanFee) + Number.parseInt(contractList.fee.guohuoFee) + Number.parseInt(contractList.fee.systemUseFee) + Number.parseInt(contractList.fee.yunyingManagerFee)
+                        + Number.parseInt(contractList.fee.systemMaintenanceFee) + Number.parseInt(contractList.fee.jingyingManagerFee.total)
+                      }}</span>
                   </p>
                   <p class="main_content_name">
                     <span class="main_content_firstname">运营管理费：</span>
@@ -213,11 +226,12 @@
                   </p>
                   <p class="main_content_name">
                     <span class="main_content_firstname">审核时间：</span>
-                    <span>{{ contractList.checkDate}}</span>
+                    <span>{{ contractList.checkDate }}</span>
                   </p>
                 </div>
               </div>
-            </div></el-tab-pane
+            </div>
+          </el-tab-pane
           >
           <el-tab-pane label="费用信息" name="second">
             <div class="main">
@@ -234,7 +248,8 @@
                       size="small"
                       @click="handleAddfee"
                       v-if="contractList.checkStatus !== '2'"
-                      >新增费用</el-button
+                    >新增费用
+                    </el-button
                     >
                   </el-row>
                   <el-row
@@ -249,7 +264,7 @@
                       :key="index"
                     >
                       <p>{{ item.amount }}</p>
-                      <p >{{ feeLable(item.type)}}</p>
+                      <p>{{ feeLable(item.type) }}</p>
                     </el-col>
                   </el-row>
                   <el-table
@@ -359,18 +374,18 @@
                           ></el-option>
                         </el-select>
                       </el-form-item>
-                     <!-- <el-form-item label="付款方式" prop="payMethod">
-                        <el-input
-                          v-model="addfeeInfo.payMethod"
-                          placeholder="请选择付款方式"
-                        />
-                      </el-form-item>
-                      <el-form-item label="费用类型" prop="type">
-                        <el-input
-                          v-model="addfeeInfo.type"
-                          placeholder="请选择费用类型"
-                        />
-                      </el-form-item>-->
+                      <!-- <el-form-item label="付款方式" prop="payMethod">
+                         <el-input
+                           v-model="addfeeInfo.payMethod"
+                           placeholder="请选择付款方式"
+                         />
+                       </el-form-item>
+                       <el-form-item label="费用类型" prop="type">
+                         <el-input
+                           v-model="addfeeInfo.type"
+                           placeholder="请选择费用类型"
+                         />
+                       </el-form-item>-->
                       <!-- <el-form-item label="付款人" prop="payer">
                         <el-input
                           v-model="addfeeInfo.payer"
@@ -405,10 +420,12 @@
                     </el-form>
                     <div slot="footer" class="dialog-footer">
                       <el-button @click="dialog.dialogaddFee = false"
-                        >取 消</el-button
+                      >取 消
+                      </el-button
                       >
                       <el-button type="primary" @click="submitAddfee"
-                        >确 定</el-button
+                      >确 定
+                      </el-button
                       >
                     </div>
                   </el-dialog>
@@ -428,7 +445,8 @@
                     type="primary"
                     style="margin-top:25px"
                     @click="dialog.dialogAddattachement = true"
-                    >新增附件</el-button
+                  >新增附件
+                  </el-button
                   >
                   <el-table :data="attachmentList" border style="width: 100%">
                     <el-table-column prop="name" label="附件名称" width="180">
@@ -481,12 +499,12 @@
               </el-form>
               <span slot="footer" class="dialog-footer">
                 <el-button @click="dialog.dialogAddattachement = false"
-                  >取 消</el-button
+                >取 消</el-button
                 >
                 <el-button
                   type="primary"
                   @click="dialog.dialogAddattachement = false"
-                  >确 定</el-button
+                >确 定</el-button
                 >
               </span>
             </el-dialog>
@@ -501,8 +519,9 @@
                     type="primary"
                     class="fr"
                     style="margin:25px 0"
-                    @click="dialog.dialogopenshop = true"
-                    >开店</el-button
+                    @click="openDianmianOnclick"
+                  >开店
+                  </el-button
                   >
                   <el-table :data="openshopList" border style="width: 100%">
                     <el-table-column prop="name" label="店面名称" width="180">
@@ -527,7 +546,8 @@
                         <el-button
                           type="text"
                           @click="handleoOpenshop(scope.row.id)"
-                          >编辑</el-button
+                        >编辑
+                        </el-button
                         >
                         <!-- {{scope.row.diandongName}} -->
                       </template>
@@ -547,9 +567,9 @@
                   <el-input v-model="openshopform.name"></el-input>
                 </el-form-item>
                 <el-form-item label="所属地区">
-                    <el-input v-model="openshopform.province"></el-input>
-                    <el-input v-model="openshopform.city"></el-input>
-                    <el-input v-model="openshopform.district"></el-input>
+                  <el-input v-model="openshopform.province"></el-input>
+                  <el-input v-model="openshopform.city"></el-input>
+                  <el-input v-model="openshopform.district"></el-input>
                 </el-form-item>
                 <el-form-item label="店面地址">
                   <el-input v-model="openshopform.address"></el-input>
@@ -562,9 +582,10 @@
                 </el-form-item>
                 <el-form-item label="营业状态">
                   <el-input v-model="openshopform.status"></el-input
-                ></el-form-item>
+                  >
+                </el-form-item>
               </el-form>
-                <span slot="footer" class="dialog-footer">
+              <span slot="footer" class="dialog-footer">
                 <el-button @click="dialog.dialoghandleopen = false">取 消</el-button>
                 <el-button type="primary" @click="submitOpenshop">确 定</el-button>
                 </span>
@@ -582,24 +603,19 @@
                     v-model="addshop.name"
                   ></el-input>
                 </el-form-item>
-                <el-form-item required label="所属区域">
+                <el-form-item label="客户地区">
+                  <Area @place-info="getPlace" :toSon="toplace"></Area>
+                </el-form-item>
+                <!--<el-form-item required label="所属区域">
                   <el-input
                     placeholder="请输入"
                     v-model="addshop.name"
                   ></el-input>
-                </el-form-item>
+                </el-form-item>-->
                 <el-form-item required label="详细地址">
                   <el-input
                     placeholder="请输入"
-                    v-model="addshop.province"
-                  ></el-input>
-                  <el-input
-                    placeholder="请输入"
-                    v-model="addshop.city"
-                  ></el-input>
-                  <el-input
-                    placeholder="请输入"
-                    v-model="addshop.district"
+                    v-model="addshop.address"
                   ></el-input>
                 </el-form-item>
                 <el-form-item required label="地图坐标">
@@ -629,14 +645,15 @@
                     placeholder="请输入"
                     v-model="addshop.remark"
                   ></el-input
-                ></el-form-item>
+                  >
+                </el-form-item>
               </el-form>
               <span slot="footer" class="dialog-footer">
                 <el-button @click="dialog.dialogopenshop = false"
-                  >取 消</el-button
+                >取 消</el-button
                 >
                 <el-button type="primary" @click="openshopeSubmit"
-                  >确 定</el-button
+                >确 定</el-button
                 >
               </span>
             </el-dialog>
@@ -666,25 +683,25 @@
         </div>
       </el-dialog>
       <!-- 审核弹框 -->
-<!--            <el-dialog-->
-<!--        title="合同审核"-->
-<!--        width="30%"-->
-<!--        :visible.sync="dialog.dialogcheck"-->
-<!--      >-->
-<!--        <tr>-->
-<!--          <td><i class="el-icon-message-solid" style="font-size:70px"></i></td>-->
-<!--          <td>-->
-<!--            <strong>确认要审核合同吗？</strong>-->
-<!--            <p>-->
-<!--              合同审核后将无法进行编辑、转移、失效操作！-->
-<!--            </p>-->
-<!--          </td>-->
-<!--        </tr>-->
-<!--        <span slot="footer" class="dialog-footer">-->
-<!--          <el-button @click="dialog.dialogcheck = false">取 消</el-button>-->
-<!--          <el-button type="primary" @click="handlecheck">确 定</el-button>-->
-<!--        </span>-->
-<!--      </el-dialog>-->
+      <!--            <el-dialog-->
+      <!--        title="合同审核"-->
+      <!--        width="30%"-->
+      <!--        :visible.sync="dialog.dialogcheck"-->
+      <!--      >-->
+      <!--        <tr>-->
+      <!--          <td><i class="el-icon-message-solid" style="font-size:70px"></i></td>-->
+      <!--          <td>-->
+      <!--            <strong>确认要审核合同吗？</strong>-->
+      <!--            <p>-->
+      <!--              合同审核后将无法进行编辑、转移、失效操作！-->
+      <!--            </p>-->
+      <!--          </td>-->
+      <!--        </tr>-->
+      <!--        <span slot="footer" class="dialog-footer">-->
+      <!--          <el-button @click="dialog.dialogcheck = false">取 消</el-button>-->
+      <!--          <el-button type="primary" @click="handlecheck">确 定</el-button>-->
+      <!--        </span>-->
+      <!--      </el-dialog>-->
 
       <!-- 反审核弹框 -->
       <el-dialog
@@ -772,34 +789,34 @@
           <el-form-item required label="地址坐标">
             <el-input v-model="form.dianmianLatitude"></el-input>
           </el-form-item>
-<!--          <div class="main_title">费用信息</div>-->
-<!--          <el-form-item required label="加盟费">-->
-<!--            <el-input-->
-<!--              v-model="form.fee.jiamengjiameng"-->
-<!--              placeholder="请输入"-->
-<!--            ></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item required label="运营管理费">-->
-<!--            <el-input-->
-<!--              v-model="form.fee.yunying"-->
-<!--              placeholder="请输入"-->
-<!--            ></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item required label="系统使用费">-->
-<!--            <el-input placeholder="请输入"></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item required label="系统维护费">-->
-<!--            <el-input placeholder="请输入"></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item required label="办件费">-->
-<!--            <el-input placeholder="请输入"></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item required label="履约保证金">-->
-<!--            <el-input placeholder="请输入"></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item required label="经营管理费">-->
-<!--            <el-input placeholder="请输入"></el-input>-->
-<!--          </el-form-item>-->
+          <!--          <div class="main_title">费用信息</div>-->
+          <!--          <el-form-item required label="加盟费">-->
+          <!--            <el-input-->
+          <!--              v-model="form.fee.jiamengjiameng"-->
+          <!--              placeholder="请输入"-->
+          <!--            ></el-input>-->
+          <!--          </el-form-item>-->
+          <!--          <el-form-item required label="运营管理费">-->
+          <!--            <el-input-->
+          <!--              v-model="form.fee.yunying"-->
+          <!--              placeholder="请输入"-->
+          <!--            ></el-input>-->
+          <!--          </el-form-item>-->
+          <!--          <el-form-item required label="系统使用费">-->
+          <!--            <el-input placeholder="请输入"></el-input>-->
+          <!--          </el-form-item>-->
+          <!--          <el-form-item required label="系统维护费">-->
+          <!--            <el-input placeholder="请输入"></el-input>-->
+          <!--          </el-form-item>-->
+          <!--          <el-form-item required label="办件费">-->
+          <!--            <el-input placeholder="请输入"></el-input>-->
+          <!--          </el-form-item>-->
+          <!--          <el-form-item required label="履约保证金">-->
+          <!--            <el-input placeholder="请输入"></el-input>-->
+          <!--          </el-form-item>-->
+          <!--          <el-form-item required label="经营管理费">-->
+          <!--            <el-input placeholder="请输入"></el-input>-->
+          <!--          </el-form-item>-->
           <div class="main_title">备注信息</div>
           <el-input
             type="textarea"
@@ -983,7 +1000,9 @@
         <div class="contract_genjin_top">
           <el-row :gutter="20">
             <el-col :span="6"
-              ><el-button size="small" type="primary">解约</el-button></el-col
+            >
+              <el-button size="small" type="primary">解约</el-button>
+            </el-col
             >
             <el-col :span="6"><span>2020年3月6日</span></el-col>
             <el-col :span="6">到期解约</el-col>
@@ -1023,29 +1042,36 @@ import {
   contractAbandon,
   contractOperlog,
   getAttachmentinfo
-} from "@/api/contract/contractManager";
+} from '@/api/contract/contractManager'
 import {
   updateDianmianManager,
   addDianmianManager
-} from "@/api/dianmian/dianmianManager";
-import { addFeeManager } from "@/api/fee/feeManager";
-import { getInfo } from "@/api/login.js";
-import {selectDictLabel} from '@/utils/ruoyi'
+} from '@/api/dianmian/dianmianManager'
+import { addFeeManager } from '@/api/fee/feeManager'
+import { getInfo } from '@/api/login.js'
+import { selectDictLabel } from '@/utils/ruoyi'
 import { getDicts } from '@/api/system/dict/data'
+
 export default {
   filters: {
     toLable: (key) => {
-      console.log("key",key)
+      console.log('key', key)
       // console.log("selectDictLabel222222",this.selectDictLabel(this.dict.feeTypeOptions, key))
       // return key+"dddddd"
-      return this.selectDictLabel(this.dict.feeTypeOptions,key)
+      return this.selectDictLabel(this.dict.feeTypeOptions, key)
     }
   },
   data() {
     return {
+      //  传给省市区
+      toplace: {
+        province: '',
+        city: '',
+        district: ''
+      },
       id: this.$route.query.id, //当前详情页id
       contractList: [], //当前合同列表
-      rootNum: "", //合同根编号
+      rootNum: '', //合同根编号
       dialog: {
         dialogcheck: false, //合同审核弹框
         dialoguncheck: false, //合同反审核弹框
@@ -1064,22 +1090,22 @@ export default {
       addfeeInfo: [], //新增费用信息
       openshopList: [], //开店信息
       attachmentList: [], //附件信息
-      showTabs: "first", //tab栏显示
+      showTabs: 'first', //tab栏显示
       form: {}, //表单数据，
       addshop: {}, //开店信息数据
       openshopform: {}, //开店编辑数据
       contentBreakoff: {
         id: this.id
       },
-      checkStatus: "",
+      checkStatus: '',
       OperlogList: [], //日志列表
       dict: {
         // 字典
         checkOptions: [],
         statusOptions: [],
-        contractTypeOptions:[],  //合同类型字典
-        produceTypeOptions:[],  //产品类型字典
-        feeTypeOptions:[], // 费用类型字典
+        contractTypeOptions: [],  //合同类型字典
+        produceTypeOptions: [],  //产品类型字典
+        feeTypeOptions: [], // 费用类型字典
         payMethodOptions: [], // 付款方式字典
 
         checkLabel: '',
@@ -1089,153 +1115,85 @@ export default {
         feeTypeLabel: '',
         payMethodLabel: ''
       },
-      loading: true,
-    };
+      loading: true
+    }
   },
   mounted() {
     document
-      .querySelector("body")
-      .setAttribute("style", "background-color:rgb(242, 242, 242)");
-  },
-  beforeDestroy() {
-    document.querySelector("body").removeAttribute("style");
-  },
-  computed: {
-    feeLable() {
-      return (key) => this.selectDictLabel(this.dict.feeTypeOptions,key)
-    },
-    //  合同审核按钮
-    contentCheck() {
-      return {
-        id: this.$route.query.id,
-        signDate: this.contractList.signDate
-      };
-    },
-    //  合同续签按钮
-    contentRenew() {
-      return {
-        // customerNum: JSON.parse(JSON.stringify(this.contractList.customerNum)),
-        // customerName: JSON.parse(
-        //   JSON.stringify(this.contractList.customerName)
-        // ),
-        customerNum: this.contractList.customerNum,
-        customerName: this.contractList.customerName,
-        customerPhone: this.contractList.customerPhone,
-        type: this.contractList.type,
-        produce: this.contractList.produce,
-        rootNum: this.contractList.rootNum,
-        num: "",
-        signDate: new Date(),
-        beginDate: new Date(),
-        endDate: "",
-        dianmianName: this.contractList.dianmianName,
-        dianmianAddress: this.contractList.dianmianAddress,
-        dianmianProvince: this.contractList.dianmianProvince,
-        dianmianCity: this.contractList.dianmianCity,
-        dianmianDistrict: this.contractList.dianmianDistrict,
-        dianmianLatitude: this.contractList.dianmianLatitude,
-        dianmianLongitude: this.contractList.dianmianLongitude,
-        dianmianNum: this.contractList.dianmianNum,
-        fee: {
-          jiameng: "",
-          yunying: ""
-        },
-        remark: this.contractList.remark,
-        signUser: this.contractList.signUser
-      };
-    }
-  },
-  watch: {
-    contractList: {
-      handler(newName, oldName) {
-        this.contractList = newName;
-      }
-    }
-  },
-  created() {
-    this.getList(
-      this.getRelatedcontract,
-      this.getcontractFee,
-      this.getcontractOpenshop,
-      this.getAttachment
-    );
-    this.getcontractOperlog();
-    /*this.getDicts("sys_user_need").then(response => {
-      this.dict.produceTypeOptions = response.data;
-    });
-    this.getDicts("contract_type").then(response => {
-      this.dict.contractTypeOptions = response.data;
-    });*/
-    this.getdicts();
-    this.getDicts("pay_method").then((response) => {
-      this.dict.payMethodOptions = response.data;
-    });
+      .querySelector('body')
+      .setAttribute('style', 'background-color:rgb(242, 242, 242)')
   },
   methods: {
+    //   获取省市区的地址
+    getPlace(i, j, k) {
+      this.addshop.province = i
+      this.addshop.city = j
+      this.addshop.district = k
+    },
     // 选择负责人和部门
-    getManager(value,deptId,username) {
+    getManager(value, deptId, username) {
       this.form.userId = value
       this.form.deptId = deptId
       this.form.username = username
     },
     // 获取字典
-    getdicts(){
+    getdicts() {
       // 获取产品类型字典
-      this.getDicts("sys_user_need").then(response => {
-        this.dict.produceTypeOptions = response.data;
+      this.getDicts('sys_user_need').then(response => {
+        this.dict.produceTypeOptions = response.data
         var a = this.dict.produceTypeOptions.filter(item => {
-          return item.dictValue === this.contractList.produce;
-        });
-        this.dict.produceTypeLabel = a[0] ? a[0].dictLabel : null;
-      });
+          return item.dictValue === this.contractList.produce
+        })
+        this.dict.produceTypeLabel = a[0] ? a[0].dictLabel : null
+      })
       // 获取审核状态字
-      this.getDicts("check_status").then(response => {
-        this.dict.checkOptions = response.data;
+      this.getDicts('check_status').then(response => {
+        this.dict.checkOptions = response.data
         var a = this.dict.checkOptions.filter(item => {
-          return item.dictValue === this.contractList.checkStatus;
-        });
-        this.dict.checkLabel = a[0] ? a[0].dictLabel : null;
-      });
+          return item.dictValue === this.contractList.checkStatus
+        })
+        this.dict.checkLabel = a[0] ? a[0].dictLabel : null
+      })
       // 获取合同类型字典
-      this.getDicts("contract_type").then(response => {
-        this.dict.contractTypeOptions = response.data;
+      this.getDicts('contract_type').then(response => {
+        this.dict.contractTypeOptions = response.data
         var a = this.dict.contractTypeOptions.filter(item => {
-          return item.dictValue === this.contractList.type;
-        });
-        this.dict.contractTypeLabel = a[0] ? a[0].dictLabel : null;
-      });
+          return item.dictValue === this.contractList.type
+        })
+        this.dict.contractTypeLabel = a[0] ? a[0].dictLabel : null
+      })
       // 获取合同状态字典
-      this.getDicts("contract_status").then(response => {
-        this.dict.statusOptions = response.data;
+      this.getDicts('contract_status').then(response => {
+        this.dict.statusOptions = response.data
         var a = this.dict.statusOptions.filter(item => {
-          return item.dictValue === this.contractList.status;
-        });
-        this.dict.contractTypeLabel= a[0] ? a[0].dictLabel : null;
-      });
+          return item.dictValue === this.contractList.status
+        })
+        this.dict.contractTypeLabel = a[0] ? a[0].dictLabel : null
+      })
       // 获取合同状态字典
-      this.getDicts("fee_type").then(response => {
-        this.dict.feeTypeOptions = response.data;
+      this.getDicts('fee_type').then(response => {
+        this.dict.feeTypeOptions = response.data
         var a = this.dict.feeTypeOptions.filter(item => {
-          return item.dictValue === this.contractList.status;
-        });
-        this.dict.feeTypeLabel= a[0] ? a[0].dictLabel : null;
-      });
+          return item.dictValue === this.contractList.status
+        })
+        this.dict.feeTypeLabel = a[0] ? a[0].dictLabel : null
+      })
     },
 
     convertFeeType(type) {
-      return this.selectDictLabel(this.dict.contractTypeOptions, type);
+      return this.selectDictLabel(this.dict.contractTypeOptions, type)
     },
     produceFormat(row, column) {
-      return this.selectDictLabel(this.dict.produceTypeOptions, row.produce);
+      return this.selectDictLabel(this.dict.produceTypeOptions, row.produce)
     },
     // 生效失效状态字典翻译
     contractTypeFormat(row, column) {
-      console.log("selectDictLabel", this.selectDictLabel(this.dict.contractTypeOptions,row.type))
-      return this.selectDictLabel(this.dict.contractTypeOptions, row.type);
+      console.log('selectDictLabel', this.selectDictLabel(this.dict.contractTypeOptions, row.type))
+      return this.selectDictLabel(this.dict.contractTypeOptions, row.type)
     },
     // 生效失效状态字典翻译
     feeTypeFormat(row, column) {
-      return this.selectDictLabel(this.dict.feeTypeOptions, row.type);
+      return this.selectDictLabel(this.dict.feeTypeOptions, row.type)
     },
 
     // 表单重置
@@ -1260,217 +1218,251 @@ export default {
         endDate: null,
         status: null,
         remark: null
-      };
+      }
     },
     //   获取合同列表
-    getList(aa = () => {}, bb = () => {}, cc = () => {}, dd = () => {}) {
+    getList(aa = () => {
+    }, bb = () => {
+    }, cc = () => {
+    }, dd = () => {
+    }) {
       getContractManager(this.id).then(response => {
-        this.contractList = response.data;
+        this.contractList = response.data
         this.contractList.fee = JSON.parse(this.contractList.fee)
-        this.rootNum = response.data.rootNum;
-        this.checkStatus = response.data.checkStatus;
-        aa();
-        bb();
-        cc();
-        dd();
-      });
+        this.rootNum = response.data.rootNum
+        this.checkStatus = response.data.checkStatus
+        aa()
+        bb()
+        cc()
+        dd()
+      })
     },
     // 获取关联合同
     getRelatedcontract() {
       relatedContract(this.rootNum).then(res => {
-        this.relatedList = res.rows;
-      });
+        this.relatedList = res.rows
+      })
     },
     // 获取费用信息
     getcontractFee() {
       contractFee(this.rootNum).then(res => {
-        this.feeList = res.data;
-      });
+        this.feeList = res.data
+      })
     },
     //获取开店信息
     getcontractOpenshop() {
       contractOpenshop(this.rootNum).then(res => {
-        this.openshopList = res.rows;
-      });
+        this.openshopList = res.rows
+      })
+    },
+    // 开店提交按钮
+    openshopeSubmit() {
+      // var params = {
+      //   address: this.addshop.address,
+      //   area: this.addshop.address,
+      //   checkInfo: '',
+      //   checkResult: '',
+      //   city: this.addshop.city,
+      //   closeDate: '',
+      //   closeDays: null,
+      //   closeReason: '',
+      //   companyId: null,
+      //   contractNum: '',
+      //   createBy: '',
+      //   createTime: '',
+      //   deptId: null,
+      //   diandongId: null,
+      //   diandongName: this.addshop.diandongName,
+      //   district: this.addshop.district,
+      //   id: null,
+      //   keywords: '',
+      //   latitude: this.addshop.latitude,
+      //   longitude: this.addshop.longitude,
+      //   name: this.addshop.name,
+      //   openDate: '',
+      //   params: {},
+      //   province: this.addshop.province,
+      //   remark: this.addshop.remark,
+      //   searchValue: '',
+      //   status: this.addshop.status,
+      //   sysUserId: null,
+      //   type: '',
+      //   updateBy: '',
+      //   updateTime: ''
+      // }
+      addDianmianManager(this.addshop)
+        .then(res => {
+          this.$message.success('新增店面成功')
+          this.dialog.dialogopenshop = false
+        })
+        .catch(error => {
+        this.$message.error(error.msg)
+      })
     },
     // 开店按钮
-    openshopeSubmit() {
-      var params = {
-        address: this.addshop.address,
-        area: this.addshop.address,
-        checkInfo: "",
-        checkResult: "",
-        city: this.addshop.city,
-        closeDate: "",
-        closeDays: null,
-        closeReason: "",
-        companyId: null,
-        contractNum: "",
-        createBy: "",
-        createTime: "",
-        deptId: null,
-        diandongId: null,
-        diandongName: this.addshop.diandongName,
-        district: this.addshop.district,
-        id: null,
-        keywords: "",
-        latitude: this.addshop.latitude,
-        longitude: this.addshop.longitude,
-        name: this.addshop.name,
-        openDate: "",
-        params: {},
-        province: this.addshop.province,
-        remark: this.addshop.remark,
-        searchValue: "",
-        status: this.addshop.status,
-        sysUserId: null,
-        type: "",
-        updateBy: "",
-        updateTime: ""
-      };
-      addDianmianManager(params).then(res => {});
+    openDianmianOnclick() {
+      console.log('this.contractList', this.contractList)
+      this.dialog.dialogopenshop = true
+      this.addshop.name = this.contractList.dianmianName
+      this.addshop.contractNum = this.contractList.contractNum
+      this.addshop.longitude = this.contractList.dianmianLongitude // 经度
+      this.addshop.latitude = this.contractList.dianmianLatitude // 纬度
+      this.addshop.address = this.contractList.dianmianAddress
+      this.addshop.diandongId = this.contractList.customerId
+      this.addshop.diandongName = this.contractList.customerName
+      this.addshop.diandongPhone = this.contractList.customerPhone
+      this.addshop.sysUserId = this.contractList.managerId
+      this.addshop.deptId = this.contractList.deptId
+      this.addshop.type = this.contractList.produce
+      this.addshop.contractNum = this.contractList.num
+      this.toplace.province = this.contractList.dianmianProvince
+      this.toplace.city = this.contractList.dianmianCity
+      this.toplace.district = this.contractList.dianmianDistrict
     },
     // 开店编辑按钮
     handleoOpenshop(i) {
       contractOpenshop(this.rootNum).then(res => {
-        this.openshopform = res.rows[i];
-        this.dialog.dialoghandleopen = true;
-      });
+        this.openshopform = res.rows[i]
+        this.dialog.dialoghandleopen = true
+      })
     },
     // 开店编辑提交
     submitOpenshop() {
-      updateDianmianManager( this.openshopform).then(res => {
-           this.$message.success("操作成功");
-           this.dialog.dialoghandleopen = false;
-           this.getList()
-      }).catch(error=>{
-           this.$message.error("操作失败");
+      updateDianmianManager(this.openshopform).then(res => {
+        this.$message.success('操作成功')
+        this.dialog.dialoghandleopen = false
+        this.getList()
+      }).catch(error => {
+        this.$message.error('操作失败')
       })
     },
     // 获取合同日志跟进
     getcontractOperlog() {
       contractOperlog()
         .then(res => {
-          this.OperlogList = res.rows;
+          this.OperlogList = res.rows
         })
-        .catch(error => {});
+        .catch(error => {
+        })
     },
     // 审核按钮操作
     handlecheck() {
       contractCheck(this.contentCheck)
         .then(res => {
-          this.$message.success("操作成功");
-          this.dialog.dialogcheck = false;
-          this.getList();
+          this.$message.success('操作成功')
+          this.dialog.dialogcheck = false
+          this.getList()
         })
         .catch(error => {
-          this.$message.error("操作失败");
-        });
+          this.$message.error('操作失败')
+        })
     },
     // 反审核按钮操作
     handleuncheck() {
       contractunCheck(this.id)
         .then(res => {
-          this.$message.success("操作成功");
-          this.dialog.dialoguncheck = false;
-          this.getList();
+          this.$message.success('操作成功')
+          this.dialog.dialoguncheck = false
+          this.getList()
         })
         .catch(error => {
-          this.$message.error("操作失败");
-        });
+          this.$message.error('操作失败')
+        })
     },
     // 续签框弹出
-    opendialogRenew(){
-      this.dialog.dialogRenew=true
+    opendialogRenew() {
+      this.dialog.dialogRenew = true
       this.reset()
     },
     // 续签按钮操作
     handleRenew() {
       contractRenew(this.form, this.id)
         .then(res => {
-          this.$message.success("操作成功");
-          this.dialog.dialogextend = false;
+          this.$message.success('操作成功')
+          this.dialog.dialogextend = false
         })
         .catch(error => {
-          this.$message.error("操作失败");
-        });
+          this.$message.error('操作失败')
+        })
     },
     // 编辑按钮操作
     handleEdit() {
-      this.dialog.dialogedit = true;
-      this.reset();
-      const id = this.id;
+      this.dialog.dialogedit = true
+      this.reset()
+      const id = this.id
       getContractManager(id).then(res => {
-        console.log("sssssssssssss", res);
-        this.form = res.data;
-      });
+        console.log('sssssssssssss', res)
+        this.form = res.data
+      })
     },
     // 编辑提交按钮
     editSubmit() {
       updateContractManager(this.form)
         .then(res => {
-          this.$message.success("操作成功");
-          this.dialog.dialoginvalid = false;
+          this.$message.success('操作成功')
+          this.dialog.dialoginvalid = false
         })
         .catch(error => {
-          this.$message.error("操作失败");
-        });
+          this.$message.error('操作失败')
+        })
     },
     // 转移按钮操作
     handleTransfer() {
-      this.dialog.dialogtransfor = true;
-      this.reset();
-      const id = this.id;
+      this.dialog.dialogtransfor = true
+      this.reset()
+      const id = this.id
       getContractManager(id).then(res => {
-        this.form.managerId = res.data.managerId;
-      });
+        this.form.managerId = res.data.managerId
+      })
     },
     // 转移提交按钮
     transferSubmit() {
       const params = {
         id: this.id,
         managerId: this.form.managerId
-      };
-      contractTransfer(params).then(res => {});
+      }
+      contractTransfer(params).then(res => {
+      })
     },
     // 解约按钮操作
     breakoffSubmit() {
       const params = {
         id: this.id
-      };
-      contractBreakoff(id).then(res => {});
+      }
+      contractBreakoff(id).then(res => {
+      })
     },
     // 失效提交按钮
     handleAbandon() {
-      const id = this.id;
+      const id = this.id
       contractAbandon(id)
         .then(res => {
-          this.$message.success("操作成功");
-          this.dialog.dialoginvalid = false;
+          this.$message.success('操作成功')
+          this.dialog.dialoginvalid = false
         })
         .catch(error => {
-          this.$message.error("操作失败");
-        });
+          this.$message.error('操作失败')
+        })
       this.getList()
     },
     // 获取附件信息
     getAttachment() {
       var params = {
         contractNum: this.contractList.num
-      };
+      }
       getAttachmentinfo(params).then(res => {
-        this.attachmentList = res.rows;
-      });
+        this.attachmentList = res.rows
+      })
     },
     // 新增费用按钮
     handleAddfee() {
       getInfo().then(res => {
-        this.addfeeInfo.shoukuanDate = new Date();
-        this.addfeeInfo.reciever = res.user.userName;
-        this.dialog.dialogaddFee = true;
-      });
-      this.$nextTick(()=>{
-        this.$refs.showmanager.toParent();
+        this.addfeeInfo.shoukuanDate = new Date()
+        this.addfeeInfo.reciever = res.user.userName
+        this.dialog.dialogaddFee = true
+      })
+      this.$nextTick(() => {
+        this.$refs.showmanager.toParent()
       })
     },
     // 新增费用按钮提交
@@ -1486,24 +1478,99 @@ export default {
         checkStatus: this.addfeeInfo.checkStatus,
         shoukuanDate: this.addfeeInfo.shoukuanDate,
         amount: this.addfeeInfo.amount
-      };
+      }
       addFeeManager(data)
         .then(res => {
-          this.$message.success("操作成功");
-          this.dialog.dialogaddFee = false;
+          this.$message.success('操作成功')
+          this.dialog.dialogaddFee = false
           this.getList()
         })
         .catch(error => {
-          this.$message.error("操作失败");
-        });
+          this.$message.error('操作失败')
+        })
     }
+  },
+  beforeDestroy() {
+    document.querySelector('body').removeAttribute('style')
+  },
+  computed: {
+    feeLable() {
+      return (key) => this.selectDictLabel(this.dict.feeTypeOptions, key)
+    },
+    //  合同审核按钮
+    contentCheck() {
+      return {
+        id: this.$route.query.id,
+        signDate: this.contractList.signDate
+      }
+    },
+    //  合同续签按钮
+    contentRenew() {
+      return {
+        // customerNum: JSON.parse(JSON.stringify(this.contractList.customerNum)),
+        // customerName: JSON.parse(
+        //   JSON.stringify(this.contractList.customerName)
+        // ),
+        customerNum: this.contractList.customerNum,
+        customerName: this.contractList.customerName,
+        customerPhone: this.contractList.customerPhone,
+        type: this.contractList.type,
+        produce: this.contractList.produce,
+        rootNum: this.contractList.rootNum,
+        num: '',
+        signDate: new Date(),
+        beginDate: new Date(),
+        endDate: '',
+        dianmianName: this.contractList.dianmianName,
+        dianmianAddress: this.contractList.dianmianAddress,
+        dianmianProvince: this.contractList.dianmianProvince,
+        dianmianCity: this.contractList.dianmianCity,
+        dianmianDistrict: this.contractList.dianmianDistrict,
+        dianmianLatitude: this.contractList.dianmianLatitude,
+        dianmianLongitude: this.contractList.dianmianLongitude,
+        dianmianNum: this.contractList.dianmianNum,
+        fee: {
+          jiameng: '',
+          yunying: ''
+        },
+        remark: this.contractList.remark,
+        signUser: this.contractList.signUser
+      }
+    }
+  },
+  watch: {
+    contractList: {
+      handler(newName, oldName) {
+        this.contractList = newName
+      }
+    }
+  },
+  created() {
+    this.getList(
+      this.getRelatedcontract,
+      this.getcontractFee,
+      this.getcontractOpenshop,
+      this.getAttachment
+    )
+    this.getcontractOperlog()
+    /*this.getDicts("sys_user_need").then(response => {
+      this.dict.produceTypeOptions = response.data;
+    });
+    this.getDicts("contract_type").then(response => {
+      this.dict.contractTypeOptions = response.data;
+    });*/
+    this.getdicts()
+    this.getDicts('pay_method').then((response) => {
+      this.dict.payMethodOptions = response.data
+    })
   }
-};
+}
 </script>
 <style lang="less" scoped>
 .genjin_top {
   border-bottom: 1px solid rgb(184, 181, 181);
 }
+
 /deep/ .el-tabs__item {
   width: 100px;
   height: 50px;
@@ -1511,9 +1578,11 @@ export default {
   line-height: 50px;
   background-color: rgb(204, 204, 204);
 }
+
 /deep/ .el-tabs__item:hover {
   color: black;
 }
+
 /deep/ .is-active {
   height: 50px;
   border: 0px;
@@ -1525,37 +1594,46 @@ export default {
   padding: 0px;
   box-sizing: border-box;
 }
+
 .main_right_top {
   background-color: #fff;
   padding: 20px 20px;
-  height:calc(100vh - 200px );
+  height: calc(100vh - 200px);
   overflow: scroll !important;
+
   &::-webkit-scrollbar {
-  	display: none;
+    display: none;
   }
 
 }
+
 .contract_genjin_top {
   height: 80px;
   line-height: 80px;
 }
-/deep/.el-tabs__header {
+
+/deep/ .el-tabs__header {
   margin: 0px !important;
 }
-/deep/.el-tabs__nav-wrap::after {
+
+/deep/ .el-tabs__nav-wrap::after {
   height: 0px !important;
 }
+
 /deep/ .el-tabs__nav-wrap {
   margin-bottom: 0px;
 }
+
 /deep/ .el-tabs__active-bar {
   height: 0px;
 }
+
 .contract_genjin_bottom .time {
   height: 60px;
   line-height: 60px;
   margin: 0 15px;
 }
+
 .contract_genjin_bottom span {
   display: inline-block;
   height: 50px;
